@@ -1,0 +1,50 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/Datlichhen_Sequence.png}
+    \caption{Sequence Diagram cho UC Đặt lịch hẹn}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/Datlichhen_Activity.png}
+    \caption{Activity Diagram cho UC Đặt lịch hẹn}
+\end{figure}
+\textbf{Mô tả: }
+\textbf{Luồng sự kiện chính: Đặt lịch thành công}
+\begin{enumerate}
+    \item Sinh viên truy cập vào trang \textbf{đặt lịch} của một giảng viên cụ thể.
+    \item \textbf{UI} gửi yêu cầu tìm lịch rảnh của Tutor tới \textbf{System} .
+    \item \textbf{System} thực hiện truy vấn \textbf{Database} để lấy đồng thời:
+    \begin{itemize}
+        \item Thông tin chi tiết của giảng viên (tên, email);
+        \item Danh sách các khung giờ rảnh (\texttt{time\_available}).
+    \end{itemize}
+    \item \textbf{System} tổng hợp dữ liệu và trả về cho \textbf{UI} để hiển thị đầy đủ cho Sinh viên.
+    \item Sinh viên xem lịch và chọn một khung giờ phù hợp, sau đó nhấn nút \textbf{Xác nhận}.
+    \item \textbf{UI} gửi yêu cầu đặt lịch kèm theo thông tin cần thiết đến \textbf{System}.
+    \item \textbf{System} tạo một bản ghi yêu cầu mới và lưu vào \textbf{Database} với trạng thái ban đầu là \texttt{pending} (đang chờ duyệt).
+    \item \textbf{System} trả về thông báo thành công cho \textbf{UI}.
+    \item \textbf{UI} hiển thị thông báo:
+    \textit{“Yêu cầu đã được gửi, vui lòng chờ Tutor duyệt.”}
+\end{enumerate}
+
+\textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}
+
+\begin{enumerate}
+    \item \textbf{Thông tin không hợp lệ:} \\
+    Nếu thông tin mà Sinh viên gửi lên không hợp lệ (ví dụ: không chọn khung giờ hoặc nội dung yêu cầu trống), 
+    \textbf{System} sẽ từ chối xử lý và trả về thông báo lỗi cho \textbf{UI}. 
+    \textbf{UI} hiển thị:
+    \textit{“Thời gian bạn chọn không hợp lệ, vui lòng chọn lại”}. Lúc này, giao diện màn hình quay về trang chọn thời gian và nhập nội dung hỗ trợ.
+
+    \item \textbf{Không có lịch trống:} \\
+    Khi \textbf{System} truy vấn \textbf{Database} ở bước xem lịch, nếu kết quả trả về là danh sách rỗng,
+    \textbf{System} sẽ thông báo cho \textbf{UI}. 
+    \textbf{UI} hiển thị:
+    \textit{“Tutor đã hết lịch trống.”}
+
+    \item \textbf{Lỗi khi lưu dữ liệu:}\\
+    Trong quá trình lưu thông tin đặt lịch, nếu xảy ra lỗi (ví dụ: mất kết nối, lỗi truy vấn), 
+    \textbf{Database} ném ngoại lệ. \textbf{System} trả về thông báo lỗi chung cho người dùng.
+    \textit{“Hệ thống đang gặp sự cố, vui lòng thử lại sau.”}
+\end{enumerate}
+

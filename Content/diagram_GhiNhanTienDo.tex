@@ -1,0 +1,84 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/GNTĐ SQ.drawio.png}
+    \caption{Sequence Diagram cho UC Ghi nhận tiến độ}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/AC GNTĐ.drawio.png}
+    \caption{Activity Diagram cho UC Ghi nhận tiến độ }
+\end{figure}
+
+\textbf{Mô tả:}\\
+Use case mô tả quy trình Tutor ghi nhận tiến độ học tập hoặc kết quả buổi học của sinh viên trong hệ thống Tutor Support System. Tiến độ bao gồm nội dung mô tả, đánh giá, mức độ hoàn thành và các ghi chú liên quan.
+
+
+\textbf{Luồng sự kiện chính: Ghi nhận tiến độ thành công}
+\begin{enumerate}
+    \item \textbf{Tutor} truy cập vào hệ thống \textbf{Tutor Support System}.
+    \item \textbf{System} hiển thị giao diện chính với mục chức năng ``\textbf{Ghi nhận tiến độ}''.
+    \item \textbf{Tutor} chọn chức năng ``Ghi nhận tiến độ''.
+    \item \textbf{System} hiển thị danh sách sinh viên hoặc buổi học mà Tutor đang phụ trách.
+    \item \textbf{Tutor} chọn một sinh viên hoặc buổi học cần ghi nhận tiến độ.
+    \item \textbf{System} hiển thị form ghi nhận tiến độ, bao gồm: mô tả, đánh giá, mức độ hoàn thành, kết quả học tập.
+    \item \textbf{Tutor} nhập đầy đủ các thông tin tiến độ.
+    \item \textbf{Tutor} nhấn nút ``\textbf{Gửi báo cáo}''.
+    \item \textbf{System} kiểm tra dữ liệu nhập (các trường bắt buộc, định dạng).
+    \item Nếu dữ liệu hợp lệ, \textbf{System} lưu tiến độ vào cơ sở dữ liệu.
+    \item \textbf{System} gửi thông báo xác nhận ghi nhận thành công.
+    \item \textbf{System} hiển thị thông báo ``\textbf{Ghi nhận tiến độ thành công}''. 
+\end{enumerate}
+
+
+\textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}
+
+\begin{enumerate}
+
+    \item \textbf{Chọn nhầm sinh viên hoặc buổi học:}\\
+    Nếu Tutor chọn sai đối tượng:
+    \begin{itemize}
+        \item \textbf{System} hiển thị thông báo yêu cầu chọn lại.
+    \end{itemize}
+    Use Case quay lại bước chọn sinh viên/buổi học (bước 5).
+
+    \vspace{0.2cm}
+    \item \textbf{Tutor hủy thao tác trước khi gửi báo cáo:}\\
+    Nếu Tutor quay lại hoặc thoát form ghi nhận:
+    \begin{itemize}
+        \item \textbf{System} hủy các dữ liệu đang nhập.
+    \end{itemize}
+    Use Case quay về danh sách sinh viên/buổi học.
+
+    \vspace{0.2cm}
+    \item \textbf{Dữ liệu nhập không hợp lệ:}\\
+    Khi Tutor nhập thiếu thông tin hoặc sai định dạng:
+    \begin{itemize}
+        \item \textbf{System} hiển thị lỗi tương ứng trực tiếp trên form.
+    \end{itemize}
+    Use Case quay lại bước 7.
+
+    \vspace{0.2cm}
+    \item \textbf{Lỗi kết nối cơ sở dữ liệu:}\\
+    Nếu hệ thống không thể lưu tiến độ:
+    \begin{itemize}
+        \item \textbf{System} hiển thị thông báo: ``Không thể lưu tiến độ. Vui lòng thử lại sau.''
+    \end{itemize}
+    Use Case kết thúc không thành công.
+
+    \vspace{0.2cm}
+    \item \textbf{Lỗi khi gửi thông báo xác nhận:}\\
+    Nếu tiến độ đã được lưu nhưng hệ thống không gửi được thông báo:
+    \begin{itemize}
+        \item \textbf{System} hiển thị cảnh báo: ``Ghi nhận thành công nhưng không gửi được thông báo.''
+    \end{itemize}
+    Use Case kết thúc.
+
+\end{enumerate}
+
+
+
+
+
+
+
+

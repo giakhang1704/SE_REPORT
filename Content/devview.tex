@@ -1,0 +1,134 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/Developmentview.png}
+    \caption{Component Diagram cho hệ thống}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\subsubsection{Subsystem 1: Authentication}
+\textbf{Mục tiêu.}
+Subsystem \emph{Authentication} chịu trách nhiệm xác thực người dùng và
+kiểm soát truy cập dựa trên vai trò (role). Mọi yêu cầu cần đăng nhập,
+kiểm tra token hoặc kiểm tra quyền đều đi qua subsystem này.
+
+
+\begin{itemize}
+    \item \textbf{Các component nội bộ:}
+    \begin{itemize}
+        \item \texttt{SSOIntegration}: kết nối tới hệ thống HCMUT\_SSO và
+              HCMUT\_DATACORE để xác thực và đồng bộ thông tin người dùng.
+        \item \texttt{TokenManager}: tạo và kiểm tra tính hợp lệ của token đăng nhập.
+        \item \texttt{RoleManager}: quản lý role/permission và cung cấp chức năng
+              kiểm tra quyền cho các action nghiệp vụ.
+        \item \texttt{SessionManager}: quản lý phiên làm việc (session) của người dùng,
+              ví dụ gia hạn hoặc huỷ session khi logout.
+    \end{itemize}
+\end{itemize}
+
+
+%-------------------------------------------------------
+\subsubsection{Subsystem 2: StudentManager}
+
+\textbf{Mục tiêu.}
+Subsystem \emph{StudentManager} quản lý các chức năng phía sinh viên như:
+đăng ký tutor, tra cứu tutor
+phù hợp, xem thông tin cá nhân,...
+\begin{itemize}
+\item\textbf{Các component nội bộ:}
+\begin{itemize}
+  \item \texttt{StudentService}: xử lý các thao tác liên quan đến hồ sơ sinh viên
+        và giao diện sinh viên (xem thông tin bản thân, trạng thái tham gia).
+  \item \texttt{TutorRegistration}: tiếp nhận và xử lý yêu cầu đăng ký tutor
+        từ sinh viên.
+  \item \texttt{MatchingEngine}: thực hiện ghép cặp sinh viên--tutor, đề xuất Tutor
+\end{itemize}
+\end{itemize}
+
+%-------------------------------------------------------
+\subsubsection{Subsystem 3: TutorManager}
+
+\textbf{Mục tiêu.}
+Subsystem \emph{TutorManager} quản lý thông tin tutor, lịch rảnh và tiến độ
+học tập của sinh viên,... do tutor phụ trách.
+\begin{itemize}
+\item\textbf{Các component nội bộ:}
+\begin{itemize}
+  \item \texttt{ScheduleManager}: quản lý lịch rảnh và lịch làm việc của tutor.
+  \item \texttt{TutorService}: xử lý các thao tác cập nhật thông tin, lịch rảnh của tutor.
+  \item \texttt{ProgressTracker}: lưu trữ và truy vấn tiến độ học tập của sinh viên qua các buổi tư vấn.
+\end{itemize}
+\end{itemize}
+
+
+%-------------------------------------------------------
+\subsubsection{Subsystem 4: Appointment}
+
+\textbf{Mục tiêu.}
+Subsystem \emph{Appointment} quản lý toàn bộ vòng đời của cuộc hẹn
+và buổi tư vấn (scheduling \& consultation), đồng thời cung cấp dịch vụ
+gửi thông báo chung cho toàn hệ thống.
+\begin{itemize}
+\item\textbf{Các component nội bộ:}
+\begin{itemize}
+  \item \texttt{AppointmentService}: xử lý đặt lịch, xem lịch, huỷ lịch hẹn giữa sinh viên và tutor.
+  \item \texttt{ConsultationService}: quản lý các buổi tư vấn theo nhóm hoặc lớp,
+        cho phép tạo, đăng ký và huỷ tham gia.
+  \item \texttt{NotificationService}: gửi email hoặc thông báo trong hệ thống
+        tới sinh viên, tutor và coordinator.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Subsystem 5: Document}
+
+\textbf{Mục tiêu.}
+Subsystem \emph{Document} quản lý tài liệu học tập được sử dụng trong
+quá trình tư vấn, bao gồm lưu trữ nội bộ và tích hợp với hệ thống thư viện.
+\begin{itemize}
+\item\textbf{Các component nội bộ:}
+\begin{itemize}
+  \item \texttt{DocumentService}: cung cấp CRUD tài liệu trong hệ thống nội bộ.
+  \item \texttt{LibraryIntegration}: đóng vai trò adapter kết nối với external
+        system HCMUT\_LIBRARY.
+  \item \texttt{FileUploadManager}: xử lý và kiểm tra file upload
+        (định dạng, kích thước, \ldots).
+\end{itemize}
+\end{itemize}
+
+
+
+%-------------------------------------------------------
+\subsubsection{Subsystem 6: FeedbackManager}
+
+\textbf{Mục tiêu.}
+Subsystem \emph{FeedbackManager} thu thập feedback từ sinh viên,
+quản lý dữ liệu tiến độ phục vụ đánh giá và tính toán các chỉ số
+chất lượng hoạt động tutor.
+\begin{itemize}
+\item\textbf{Các component nội bộ.}
+\begin{itemize}
+  \item \texttt{FeedbackService}: tiếp nhận, lưu trữ và cung cấp dữ liệu feedback.
+  \item \texttt{ProgressRecordService}: ghi nhận và truy xuất lịch sử tiến độ
+        (view progress history) phục vụ đánh giá.
+  \item \texttt{EvaluationManager}: kết hợp feedback và tiến độ để tính
+        điểm chất lượng và các thống kê đánh giá.
+\end{itemize}
+\end{itemize}
+
+%-------------------------------------------------------
+\subsubsection{Subsystem 7: Coordinator}
+
+\textbf{Mục tiêu.}
+Subsystem \emph{Coordinator} chịu trách nhiệm điều phối \emph{khung chương trình chung}
+(common program framework) cho hoạt động tutor và tổng hợp, gửi các báo cáo
+thống kê . 
+\begin{itemize}
+\item\textbf{Các component nội bộ:}
+ \begin{itemize}
+  \item \texttt{CoordinatorService}: cung cấp API chính dành cho vai trò coordinator.
+  \item \texttt{CurriculumManager}: quản lý và cập nhật khung chương trình chung,
+        bao gồm cấu trúc buổi tư vấn, các chủ đề và quy tắc áp dụng.
+  \item \texttt{ReportGenerator}: thu thập số liệu từ các subsystem khác
+        và tạo báo cáo tổng hợp.
+\end{itemize}
+\end{itemize}

@@ -1,0 +1,56 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/ST Lịch rảnh.drawio.png}
+    \caption{State Diagram cho thiết lập lịch rảnh}
+\end{figure}
+\begin{table}[h!]
+\centering
+\caption{Bảng mô tả trạng thái trong UC thiết lập lịch rảnh}
+\begin{tabular}{|p{4cm}|p{10.5cm}|}
+\hline
+\textbf{Trạng thái} & \textbf{Mô tả} \\ \hline
+
+Đang tạo lịch rảnh &
+Sinh viên đang nhập thông tin khung giờ rảnh và hệ thống hiển thị form để người dùng điền. Hệ thống chờ người dùng xác nhận. \\ \hline
+
+Chờ xác nhận &
+Hệ thống đã nhận yêu cầu hợp lệ và đang xử lý. Hệ thống hiển thị trạng thái chờ trong thời gian ngắn (đếm ngược). \\ \hline
+
+Đã thêm thành công &
+Yêu cầu tạo lịch rảnh đã được lưu thành công. Hệ thống gửi thông báo thành công đến người dùng. \\ \hline
+
+Bị lỗi &
+Quá trình gửi yêu cầu hoặc xử lý gặp lỗi (timeout, mất kết nối, lỗi hệ thống). Hệ thống hiển thị thông báo lỗi và yêu cầu thực hiện lại. \\ \hline
+
+Bị huỷ &
+Người dùng tự hủy thao tác hoặc hệ thống hủy yêu cầu do lỗi nghiêm trọng. Thông báo hủy được gửi đến người dùng. \\ \hline
+
+\end{tabular}
+\end{table}
+\begin{table}[h!]
+\centering
+\caption{Bảng Stimulus (Event/Transition) trong UC thiết lập lịch rảnh}
+\begin{tabular}{|p{4cm}|p{10.5cm}|}
+\hline
+\textbf{Stimulus / Event} & \textbf{Mô tả} \\ \hline
+
+Xác nhận (invalid) : showError() &
+Người dùng nhấn nút xác nhận nhưng dữ liệu nhập không hợp lệ. Hệ thống hiển thị lỗi và giữ nguyên trạng thái Đang tạo lịch rảnh. \\ \hline
+
+Xác nhận (valid) : saveRequest() &
+Người dùng gửi yêu cầu hợp lệ. Hệ thống lưu yêu cầu và chuyển sang trạng thái Chờ xác nhận. \\ \hline
+
+Timeout : showErrorMessage() &
+Trong trạng thái Chờ xác nhận, hệ thống bị timeout xử lý. Hệ thống chuyển sang trạng thái Bị lỗi. \\ \hline
+
+Success : sendSuccessNotification() &
+Yêu cầu đã được xử lý thành công trong trạng thái Chờ xác nhận. Hệ thống chuyển sang trạng thái Đã thêm thành công. \\ \hline
+
+Mất kết nối : showErrorMessage() &
+Khi đang xử lý, hệ thống mất kết nối. Hệ thống chuyển sang trạng thái Bị lỗi. \\ \hline
+
+Hủy : cancelRequest() &
+Người dùng chủ động hủy thao tác. Hệ thống chuyển sang trạng thái Bị hủy. \\ \hline
+
+\end{tabular}
+\end{table}

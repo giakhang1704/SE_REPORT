@@ -1,0 +1,153 @@
+\subsubsection{Đăng ký Tutor}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-07 \\ \hline
+\textbf{Use Case Name} & Đăng ký Tutor \\ \hline
+\textbf{Actor(s)} & Sinh viên \\ \hline
+\textbf{Description} & Cho phép sinh viên đăng ký tham gia chương trình Tutor/Mentor và chọn Tutor phù hợp. \\ \hline
+\textbf{Trigger} & Sinh viên truy cập hệ thống và chọn chức năng “Đăng ký Tutor”. \\ \hline
+\textbf{Pre–Condition(s)} & - Sinh viên đăng nhập thành công. \newline - Chương trình Tutor đang mở đăng ký. \\ \hline
+\textbf{Post–Condition(s)} & - Yêu cầu đăng ký tutor được lưu và chờ duyệt trong 12 giờ. \newline - Sau khi duyệt thành công, sinh viên sẽ được gắn cặp với tutor đã đăng ký. Nếu như hủy sẽ bắt đầu lại. \\ \hline
+\textbf{Normal Flow} & 
+1. Sinh viên vào chức năng Đăng ký Tutor. \newline
+2. Hệ thống hiển thị giao diện cho phép sinh viên chọn lĩnh vực/môn học cần hỗ trợ. \newline
+3. Sinh viên điền thông tin và bấm tiếp theo. \newline
+4. Hệ thống hiển thị danh sách tutor phù hợp. \newline
+5. Sinh viên chọn Tutor hoặc chọn gợi ý Tutor thông minh. \newline
+6. Sinh viên bấm xác nhận đăng ký. \newline
+7. Hệ thống lưu yêu cầu đăng ký với trạng thái Chờ duyệt (12h). \newline
+8. Sau 12h, hệ thống xác nhận đăng ký thành công. \\ \hline
+\textbf{Alternative Flow} & 
+3a. Sinh viên không điền thông tin nhưng bấm tiếp theo. \newline
+3a.1. Hệ thống thông báo lỗi yêu cầu nhập lại. \newline
+3a.2. Quay lại bước 2. \newline
+4a. Không có tutor phù hợp. \newline
+4a.1. Hệ thống thông báo và đưa lựa chọn “Đăng ký tutor khác”. \newline
+4a.2. Nếu sinh viên đồng ý, hệ thống hiển thị toàn bộ tutor còn slot đăng ký, quay về bước 5. \newline
+4a.3. Nếu sinh viên không đồng ý, hệ thống quay lại màn hình chính. Kết thúc usecase. \newline
+6a. Sinh viên không xác nhận đăng ký, chọn kết thúc. \newline
+6a.1. Hệ thống quay về màn hình chính. Kết thúc usecase. \newline
+6b. Sinh viên không xác nhận đăng ký, chọn sửa đổi. \newline
+6b.1. Quay về bước 2. \newline
+8a. Sinh viên nhấn hủy đăng ký trong khi chờ duyệt. \newline
+8a.1. Hệ thống hiển thị hủy thành công, đưa lựa chọn sinh viên có muốn đăng ký mới. \newline
+8a.2. Nếu sinh viên đồng ý quay về bước 2. \newline
+8a.3. Nếu sinh viên không đồng ý quay về màn hình chính, kết thúc usecase. \\ \hline
+\textbf{Exception Flow} & 
+- Lỗi mạng trong quá trình đăng ký → Hệ thống hiển thị thông báo lỗi mạng, yêu cầu sinh viên thực hiện lại sau. \newline
+- Đợt đăng ký Tutor đã kết thúc → Hệ thống hiển thị thông báo “Đợt đăng ký Tutor đã kết thúc” → Kết thúc Use Case. \newline
+- Lỗi lưu dữ liệu đăng ký → Hệ thống hiển thị thông báo “Không lưu được dữ liệu, vui lòng thử lại” → Quay về bước 6 Normal Flow. \\ \hline
+\end{longtable}
+
+%====================================================
+\subsubsection{Đặt lịch hẹn}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-08 \\ \hline
+\textbf{Use Case Name} & Đặt lịch hẹn \\ \hline
+\textbf{Actor(s)} & Sinh viên, Tutor \\ \hline
+\textbf{Description} & Cho phép sinh viên đặt lịch hẹn riêng với tutor dựa trên lịch rảnh do tutor cung cấp và nhập nội dung cần được hỗ trợ cho buổi hẹn. \\ \hline
+\textbf{Trigger} & Sinh viên chọn chức năng “Đặt lịch hẹn” trong hệ thống. \\ \hline
+\textbf{Pre–Condition(s)} & - Sinh viên đã đăng nhập thành công. \newline - Sinh viên đã chọn tutor. \newline - Tutor đã cung cấp lịch rảnh. \\ \hline
+\textbf{Post–Condition(s)} & - Yêu cầu đặt lịch hẹn được lưu ở trạng thái chờ duyệt. \newline - Tutor nhận thông báo về yêu cầu. \\ \hline
+\textbf{Normal Flow} & 
+1. Sinh viên truy cập chức năng “Đặt lịch hẹn”. \newline
+2. Hệ thống hiển thị lịch rảnh của tutor. \newline
+3. Sinh viên chọn khoảng thời gian phù hợp và nhập nội dung cần hỗ trợ. \newline
+4. Sinh viên xác nhận đặt lịch. \newline
+5. Hệ thống lưu yêu cầu và gửi thông báo cho tutor. \\ \hline
+\textbf{Alternative Flow} & 
+3a. Nếu sinh viên không chọn thời gian hoặc không nhập nội dung: \newline
+3a1. Hệ thống thông báo lỗi và yêu cầu nhập lại. \newline
+3a2. Quay lại bước 3. \newline
+3b. Nếu tutor không còn lịch rảnh: \newline
+3b1. Hệ thống thông báo Tutor bận. \newline
+3b2. Hệ thống quay về màn hình chính. Kết thúc usecase. \\ \hline
+\textbf{Exception Flow} & 
+- Lỗi hệ thống hoặc mất kết nối → Hệ thống thông báo lỗi và yêu cầu sinh viên thử lại. \\ \hline
+\end{longtable}
+
+%====================================================
+\subsubsection{Phản hồi chất lượng buổi học}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-09 \\ \hline
+\textbf{Use Case Name} & Phản hồi chất lượng buổi học \\ \hline
+\textbf{Actor(s)} & Sinh viên (Student) \\ \hline
+\textbf{Description} & Sinh viên muốn gửi phản hồi về chất lượng buổi học hoặc chất lượng hỗ trợ của Tutor. \\ \hline
+\textbf{Trigger} & Sau khi kết thúc buổi học, sinh viên chọn mục “Phản hồi chất lượng”. \\ \hline
+\textbf{Pre–Condition(s)} & Sinh viên đã đăng nhập vào hệ thống. \newline Sinh viên đã tham gia ít nhất một buổi học với Tutor. \\ \hline
+\textbf{Post–Condition(s)} & Phản hồi được lưu trữ thành công trong hệ thống. \newline Hệ thống gửi thông báo đến Tutor và ghi nhận phản hồi cho báo cáo tổng hợp. \\ \hline
+\textbf{Normal Flow} & 
+1. Sinh viên truy cập mục “Phản hồi chất lượng”. \newline
+2. Hệ thống hiển thị form phản hồi (mức độ hài lòng, nội dung chi tiết). \newline
+3. Sinh viên nhập nội dung phản hồi và chọn mức độ đánh giá. \newline
+4. Sinh viên nhấn “Gửi”. \newline
+5. Hệ thống kiểm tra hợp lệ, đủ thông tin cần nhập \newline
+6. Hệ thống lưu phản hồi vào cơ sở dữ liệu. \newline
+7. Hệ thống gửi thông báo xác nhận cho sinh viên. \\ \hline
+\textbf{Alternative Flow} & 
+5a.1 Hệ thống kiểm tra thấy inh viên không nhập đủ nội dung phản hồi. \newline
+5a1. Hệ thống hiển thị thông báo: “Vui lòng nhập nội dung phản hồi trước khi gửi”. \newline
+5a2. Quay lại bước 2.\newline
+4a. Sinh viên chọn “Hủy” thay vì gửi phản hồi. \newline
+4a1. Hệ thống hủy thao tác và không lưu thông tin. \newline
+4a2. Use case kết thúc sớm. \\ \hline
+\textbf{Exception Flow} & 
+6a.   Hệ thống gặp lỗi cơ sở dữ liệu. \newline
+6a1. Hệ thống hiển thị thông báo: “Gửi phản hồi thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”. \newline
+6a2. Hệ thống ghi log lỗi và giữ trạng thái chưa gửi phản hồi. \newline
+6a3. Use case kết thúc không thành công. \\ \hline
+\end{longtable}
+
+%====================================================
+\subsubsection{Đăng ký buổi tư vấn}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-10 \\ \hline
+\textbf{Use Case Name} & Đăng ký buổi tư vấn \\ \hline
+\textbf{Description} & Cho phép sinh viên đăng ký buổi tư vấn với tutor đã chọn trước đó. \\ \hline
+\textbf{Trigger} & Sinh viên chọn chức năng “Đăng ký buổi tư vấn” trong hệ thống. \\ \hline
+\textbf{Primary Actor} & Sinh viên \\ \hline
+\textbf{Secondary Actor} & Tutor \\ \hline
+\textbf{Pre-condition} & - Sinh viên đã đăng nhập thành công. \newline - Sinh viên đã chọn tutor. \newline - Tutor đã mở lịch hẹn. \\ \hline
+\textbf{Post-condition} & - Sinh viên đã đăng ký thành công buổi tư vấn với tutor. \newline - Hệ thống giảm slot còn lại. \newline - Tutor và sinh viên đều nhận thông báo xác nhận. \\ \hline
+\textbf{Normal flow} & 
+1. Sinh viên chọn chức năng “Đăng ký buổi tư vấn”. \newline
+2. Hệ thống hiển thị danh sách buổi tư vấn còn slot. \newline
+3. Sinh viên chọn buổi tư vấn phù hợp. \newline
+4. Hệ thống ghi nhận đăng ký, hiển thị thông báo "Đăng ký thành công" và gửi xác nhận. \newline
+5. Hệ thống tự động cập nhật số lượng sinh viên tham gia. \\ \hline
+\textbf{Alternative flow} & 
+2a. Không có buổi tư vấn còn slot. \newline
+- Hệ thống hiển thị “Không có sẵn buổi tư vấn” và quay về màn hình chính. \\ \hline
+\textbf{Exception flow} & 
+- Lỗi hệ thống hoặc mất kết nối → Hệ thống hiển thị “Không thể đăng ký, vui lòng thử lại sau”. \\ \hline
+\end{longtable}
+
+%====================================================
+\subsubsection{Hủy đăng ký buổi gặp mặt}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-11 \\ \hline
+\textbf{Use Case Name} & Hủy đăng ký buổi gặp mặt \\ \hline
+\textbf{Description} & Cho phép sinh viên hủy buổi tư vấn, lịch hẹn đã đăng ký với tutor khi có thay đổi trong lịch trình hoặc không thể tham gia. \\ \hline
+\textbf{Trigger} & Sinh viên chọn chức năng “Hủy đăng ký buổi gặp mặt”. \\ \hline
+\textbf{Primary Actor} & Sinh viên \\ \hline
+\textbf{Secondary Actor} & Tutor \\ \hline
+\textbf{Pre-condition} & - Sinh viên đã đăng nhập. \newline - Sinh viên đã đăng ký buổi gặp mặt. \newline - Buổi gặp mặt chưa bắt đầu. \\ \hline
+\textbf{Post-condition} & - Hủy thành công, hệ thống cập nhật slot. \newline - Sinh viên nhận thông báo hủy. \\ \hline
+\textbf{Normal flow} & 
+1. Sinh viên chọn “Hủy đăng ký”. \newline
+2. Hệ thống hiển thị danh sách buổi gặp mặt. \newline
+3. Sinh viên chọn buổi muốn hủy. \newline
+4. Hệ thống yêu cầu xác nhận. \newline
+5. Sinh viên xác nhận. \newline
+6. Hệ thống kiểm tra thời gian. \newline
+7. Hệ thống gửi thông báo “Hủy thành công”. \\ \hline
+\textbf{Alternative flow} & 
+2a. Không có buổi gặp mặt đã đăng ký → Hệ thống hiển thị “Không có buổi gặp mặt nào”. \newline
+6a. Buổi gặp mặt đã bắt đầu → Hệ thống hiển thị “Không thể hủy vì buổi gặp mặt đã bắt đầu”. \\ \hline
+\textbf{Exception flow} & 
+- Lỗi hệ thống hoặc mất kết nối → Hệ thống hiển thị “Không thể hủy, vui lòng thử lại sau”. \\ \hline
+\end{longtable}

@@ -1,0 +1,46 @@
+\subsubsection{Ghi nhận tiến độ học tập}
+
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Use Case Name} & Ghi nhận tiến độ học tập của sinh viên \\ \hline
+\textbf{Actor(s)} & Giảng viên (Tutor) \\ \hline
+
+\textbf{Description} & Tutor ghi nhận/cập nhật tiến độ học tập của một (hoặc một nhóm) sinh viên sau buổi tư vấn: mức độ hoàn thành, điểm/đánh giá, nhận xét, minh chứng. \\ \hline
+
+\textbf{Trigger} & Tutor chọn chức năng “Ghi nhận tiến độ” từ màn hình quản lý buổi tư vấn. \\ \hline
+
+\textbf{Pre–Condition(s)} &
+Tutor đã đăng nhập hệ thống thông qua HCMUT\_SSO. \newline
+Tutor đã được phân công/ghép cặp với sinh viên. \\ \hline
+
+\textbf{Post–Condition(s)} &
+Bản ghi tiến độ được lưu thành công và gắn với buổi tư vấn/sinh viên. \newline
+Hệ thống cập nhật báo cáo tiến độ, ghi audit log. \newline
+Sinh viên nhận được thông báo (nếu có cấu hình gửi thông báo). \\ \hline
+\textbf{Normal Flow} &
+1. Tutor mở danh sách buổi tư vấn và chọn “Ghi nhận tiến độ”. \newline
+2. Hệ thống hiển thị biểu mẫu tiến độ. \newline
+3. Tutor nhập thông tin cần thiết và bấm “Lưu”. \newline
+4. Hệ thống kiểm tra tính hợp lệ dữ liệu (trường bắt buộc, định dạng, dung lượng tệp đính kèm). \newline
+5. Hệ thống lưu bản ghi, cập nhật báo cáo tiến độ. \newline
+6. Hệ thống hiển thị thông báo “Ghi nhận tiến độ thành công”. \newline
+7. Hệ thống gửi thông báo tới sinh viên. \\ \hline
+\textbf{Alternative Flow} &
+3a. Tutor chọn “Lưu nháp” thay vì “Lưu”. \newline
+3a1. Hệ thống lưu bản ghi ở trạng thái Draft, không gửi thông báo. \newline
+3a2. Tutor có thể quay lại chỉnh sửa và nộp sau. \newline\newline
+3b. Tutor mở lại một bản ghi cũ để chỉnh sửa. \newline
+3b1. Hệ thống hiển thị dữ liệu cũ. \newline
+3b2. Tutor cập nhật thông tin, bấm “Lưu”. \newline
+3b3. Hệ thống cập nhật phiên bản mới, lưu lịch sử thay đổi. \\ \hline
+
+\textbf{Exception Flow} &
+4a. Dữ liệu không hợp lệ (ví dụ thiếu trường bắt buộc, sai định dạng, file quá dung lượng). \newline
+4a1. Hệ thống hiển thị thông báo lỗi chi tiết và yêu cầu sửa lại. \newline
+4a2. Use case quay lại bước 2. \newline
+
+5a. Hệ thống lỗi cơ sở dữ liệu/DB error khi lưu bản ghi. \newline
+5a1. Hệ thống hiển thị thông báo: “Lưu thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”. \newline
+5a2. Hệ thống ghi log lỗi và giữ nguyên dữ liệu cũ. \newline
+5a3. Use case kết thúc không thành công. \\ \hline
+\end{longtable}

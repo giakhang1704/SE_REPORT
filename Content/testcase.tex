@@ -1,0 +1,786 @@
+\newpage
+\subsubsection{Đăng nhập}
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC01-TC01 - Đăng nhập thành công qua HCMUT\_SSO \\
+\hline
+\textbf{Test description} &
+User có tài khoản hợp lệ và có quyền sử dụng hệ thống, đăng nhập thành công thông qua HCMUT\_SSO, phiên làm việc được tạo và được chuyển đến trang chính tương ứng với vai trò. \\
+\hline
+\textbf{Related screens} &
+- Trang chủ Tutor Support System với nút ``Đăng nhập qua HCMUT\_SSO''. \\
+& - Trang đăng nhập HCMUT\_SSO (form BKNetID + mật khẩu). \\
+& - Trang chính sau đăng nhập (dashboard tương ứng role: Sinh viên / Tutor / Điều phối viên). \\
+\hline
+\textbf{Pre-conditions} &
+1. User có tài khoản hợp lệ trong hệ thống HCMUT\_SSO (BKNetID + mật khẩu đúng). \\
+& 2. Tài khoản thuộc nhóm được phép dùng Tutor Support System (role hợp lệ). \\
+& 3. HCMUT\_SSO và HCMUT\_DATACORE đang hoạt động bình thường. \\
+& 4. User chưa đăng nhập vào Tutor Support System trên trình duyệt hiện tại. \\
+\hline
+\textbf{Actions} &
+1. User truy cập trang chủ Tutor Support System. \\
+& 2. User nhấn nút ``Đăng nhập qua HCMUT\_SSO''. \\
+& 3. Hệ thống chuyển hướng sang trang đăng nhập HCMUT\_SSO. \\
+& 4. User nhập đúng BKNetID và mật khẩu, sau đó nhấn nút đăng nhập. \\
+& 5. HCMUT\_SSO xác thực thông tin đăng nhập thành công và trả về token xác thực cho Tutor Support System. \\
+& 6. Tutor Support System dùng token truy vấn HCMUT\_DATACORE để lấy thông tin cơ bản (họ tên, email, role, trạng thái tài khoản, \ldots). \\
+& 7. Hệ thống kiểm tra role và trạng thái tài khoản, tạo phiên làm việc cho user. \\
+& 8. Hệ thống chuyển hướng user đến trang chính tương ứng với vai trò (dashboard Sinh viên / Tutor / Điều phối viên). \\
+\hline
+\textbf{Inputs} &
+- BKNetID: tài khoản hợp lệ \\
+& - Mật khẩu: mật khẩu tương ứng, hợp lệ. \\
+\hline
+\textbf{Expected Outputs} &
+- User được xác thực thành công từ HCMUT\_SSO. \\
+& - Dữ liệu người dùng được lấy thành công từ HCMUT\_DATACORE. \\
+& - Phiên làm việc (session) của user được tạo trong Tutor Support System. \\
+& - User được chuyển tới đúng trang chính theo vai trò, không có thông báo lỗi. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC01_TC02: SAI THÔNG TIN ĐĂNG NHẬP (E1) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC01-TC02 - Sai thông tin đăng nhập (mật khẩu/BKNetID không đúng) \\
+\hline
+\textbf{Test description} &
+User nhập sai BKNetID hoặc mật khẩu tại HCMUT\_SSO, hệ thống hiển thị thông báo lỗi trên form và không đăng nhập vào Tutor Support System. \\
+\hline
+\textbf{Related screens} &
+- Trang chủ Tutor Support System. \\
+& - Trang đăng nhập HCMUT\_SSO (form đăng nhập). \\
+\hline
+\textbf{Pre-conditions} &
+1. HCMUT\_SSO đang hoạt động bình thường. \\
+& 2. User chưa đăng nhập vào Tutor Support System. \\
+\hline
+\textbf{Actions} &
+1. User truy cập trang chủ Tutor Support System và nhấn ``Đăng nhập qua HCMUT\_SSO''. \\
+& 2. Hệ thống chuyển sang trang đăng nhập HCMUT\_SSO. \\
+& 3. User nhập BKNetID hoặc mật khẩu không chính xác, nhấn đăng nhập. \\
+\hline
+\textbf{Inputs} &
+- BKNetID(đúng) hoặc một mã bất kỳ. \\
+& - Mật khẩu không khớp mật khẩu thật \\
+\hline
+\textbf{Expected Outputs} &
+- HCMUT\_SSO hiển thị thông báo lỗi trực tiếp trên form, ví dụ: ``Thông tin đăng nhập không chính xác.''. \\
+& - User vẫn ở trên trang đăng nhập HCMUT\_SSO, không được chuyển hướng về Tutor Support System. \\
+& - Không có phiên làm việc nào được tạo ở Tutor Support System . \\
+\hline
+\textbf{Testing environment} &
+Web\\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC01_TC03: TÀI KHOẢN BỊ KHÓA / HẾT HẠN / YÊU CẦU ĐỔI MẬT KHẨU (E2) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC01-TC03 - Tài khoản bị khóa / hết hạn / yêu cầu đổi mật khẩu \\
+\hline
+\textbf{Test description} &
+User nhập đúng BKNetID và mật khẩu nhưng tài khoản ở trạng thái bị khóa, hết hạn hoặc bắt buộc đổi mật khẩu; HCMUT\_SSO hiển thị thông báo tương ứng và user không đăng nhập được vào Tutor Support System. \\
+\hline
+\textbf{Related screens} &
+Trang đăng nhập HCMUT\_SSO (form đăng nhập). \\
+\hline
+\textbf{Pre-conditions} &
+1. Tài khoản BKNetID tồn tại nhưng đang ở trạng thái: bị khóa / hết hạn / yêu cầu đổi mật khẩu. \\
+& 2. HCMUT\_SSO hoạt động bình thường. \\
+& 3. User chưa có phiên đăng nhập Tutor Support System. \\
+\hline
+\textbf{Actions} &
+1. User từ trang chủ Tutor Support System nhấn ``Đăng nhập qua HCMUT\_SSO'' để mở trang đăng nhập SSO. \\
+& 2. User nhập đúng BKNetID và mật khẩu của tài khoản đang bị khóa/hết hạn/yêu cầu đổi mật khẩu. \\
+& 3. User nhấn đăng nhập. \\
+\hline
+\textbf{Inputs} &
+- BKNetID: tài khoản tồn tại nhưng bị khóa/hết hạn. \\
+& - Mật khẩu: hợp lệ với tài khoản đó. \\
+\hline
+\textbf{Expected Outputs} &
+- HCMUT\_SSO hiển thị thông báo lỗi tương ứng trên form đăng nhập (E2.1). \\
+& - User không được chuyển hướng về Tutor Support System, không có token xác thực được trả về. \\
+& - Use case kết thúc không thành công tại SSO, không tạo phiên làm việc ở Tutor Support System (E2.2). \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC01_TC04: KHÔNG CÓ QUYỀN TRUY CẬP HỆ THỐNG (E3) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC01-TC04- Đăng nhập bằng tài khoản không có quyền sử dụng Tutor Support System \\
+\hline
+\textbf{Test description} &
+User đăng nhập SSO thành công nhưng role không thuộc nhóm được phép truy cập Tutor Support System; hệ thống hiển thị thông báo ``Bạn không có quyền truy cập hệ thống.'' và không tạo phiên làm việc. \\
+\hline
+\textbf{Related screens} &
+- Trang chủ Tutor Support System. \\
+& - Trang đăng nhập HCMUT\_SSO. \\
+& - Trang thông báo lỗi quyền truy cập của Tutor Support System. \\
+\hline
+\textbf{Pre-conditions} &
+1. User có tài khoản hợp lệ trong HCMUT\_SSO. \\
+& 2. Role của user \textbf{không} nằm trong tập role được phép dùng Tutor Support System. \\
+& 3. HCMUT\_SSO và HCMUT\_DATACORE hoạt động bình thường. \\
+\hline
+\textbf{Actions} &
+1. User từ trang chủ Tutor Support System nhấn ``Đăng nhập qua HCMUT\_SSO''. \\
+& 2. User đăng nhập thành công trên HCMUT\_SSO (đúng BKNetID và mật khẩu). \\
+& 3. Tutor Support System nhận token, truy vấn HCMUT\_DATACORE lấy thông tin user. \\
+& 4. Hệ thống kiểm tra role, phát hiện user không thuộc nhóm được phép sử dụng. \\
+\hline
+\textbf{Inputs} &
+- BKNetID + mật khẩu của user có role không hợp lệ (ví dụ thuộc hệ thống khác). \\
+\hline
+\textbf{Expected Outputs} &
+- Tutor Support System hiển thị thông báo: ``Bạn không có quyền truy cập hệ thống.'' . \\
+& - Phiên đăng nhập không được tạo; user không truy cập được vào bất kỳ trang chức năng nào. \\
+& - Use case kết thúc không thành công, nhưng phiên SSO có thể vẫn tồn tại độc lập. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC01_TC05: LỖI KẾT NỐI ĐẾN HCMUT_SSO (E4) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC01-TC05 - Lỗi kết nối đến HCMUT\_SSO \\
+\hline
+\textbf{Test description} &
+Tutor Support System không thể kết nối đến dịch vụ HCMUT\_SSO khi user yêu cầu đăng nhập; hệ thống báo lỗi và use case kết thúc không thành công. \\
+\hline
+\textbf{Related screens} &
+Trang chủ / trang đăng nhập của Tutor Support System (nơi hiển thị nút ``Đăng nhập qua HCMUT\_SSO''). \\
+\hline
+\textbf{Pre-conditions} &
+1. HCMUT\_SSO bị ngừng hoạt động hoặc kết nối mạng từ Tutor Support System đến SSO bị lỗi. \\
+& 2. User chưa đăng nhập vào Tutor Support System. \\
+\hline
+\textbf{Actions} &
+1. User truy cập trang chủ Tutor Support System. \\
+& 2. User nhấn nút ``Đăng nhập qua HCMUT\_SSO''. \\
+& 3. Hệ thống cố gắng chuyển hướng/kết nối tới HCMUT\_SSO nhưng bị lỗi kết nối. \\
+\hline
+\textbf{Inputs} &
+Không có dữ liệu nhập từ user ngoài thao tác nhấn nút đăng nhập SSO. \\
+\hline
+\textbf{Expected Outputs} &
+- Tutor Support System hiển thị thông báo: ``Không thể kết nối đến dịch vụ xác thực, vui lòng thử lại sau.'' . \\
+& - Không có phiên làm việc được tạo, user vẫn ở trang login/landing của Tutor Support System. \\
+\hline
+\textbf{Testing environment} &
+Web. \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC01_TC06: LỖI ĐỒNG BỘ DỮ LIỆU HCMUT_DATACORE (E5) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC01-TC06 - Lỗi đồng bộ dữ liệu từ HCMUT\_DATACORE \\
+\hline
+\textbf{Test description} &
+User đăng nhập SSO thành công, nhưng Tutor Support System không lấy được thông tin người dùng từ HCMUT\_DATACORE; hệ thống hiển thị thông báo lỗi, hủy phiên đăng nhập và không cho truy cập hệ thống. \\
+\hline
+\textbf{Related screens} &
+- Trang đăng nhập HCMUT\_SSO. \\
+& - Trang thông báo lỗi của Tutor Support System sau khi nhận token. \\
+\hline
+\textbf{Pre-conditions} &
+1. User có tài khoản hợp lệ và đăng nhập được vào HCMUT\_SSO. \\
+& 2. Dịch vụ HCMUT\_DATACORE gặp lỗi (không truy cập được, trả về lỗi, hoặc dữ liệu không đầy đủ). \\
+\hline
+\textbf{Actions} &
+1. User từ trang chủ Tutor Support System chọn ``Đăng nhập qua HCMUT\_SSO'' và đăng nhập thành công trên SSO. \\
+& 2. Tutor Support System nhận token từ HCMUT\_SSO. \\
+& 3. Hệ thống dùng token truy vấn HCMUT\_DATACORE để lấy thông tin người dùng. \\
+& 4. Việc truy vấn thất bại hoặc trả về dữ liệu lỗi/thiếu. \\
+\hline
+\textbf{Inputs} &
+- BKNetID + mật khẩu hợp lệ (đăng nhập SSO thành công). \\
+\hline
+\textbf{Expected Outputs} &
+- Tutor Support System hiển thị thông báo: ``Không thể tải thông tin người dùng, vui lòng thử lại sau.'' . \\
+& - Hệ thống hủy phiên đăng nhập hiện tại, không cho user truy cập bất kỳ chức năng nào . \\
+& - Use case kết thúc không thành công (E5.3). \\
+\hline
+\textbf{Testing environment} &
+Web. \\
+\hline
+\end{longtable}
+
+
+\newpage
+\subsubsection{Đăng xuất}
+% ================== UC02_TC01: ĐĂNG XUẤT THÀNH CÔNG ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC02-TC01 - Đăng xuất thành công \\
+\hline
+\textbf{Test description} &
+User đang đăng nhập và chủ động chọn chức năng Đăng xuất; hệ thống kết thúc phiên làm việc, vô hiệu hóa token và chuyển về trang đăng nhập với thông báo thành công. \\
+\hline
+\textbf{Related screens} &
+- Trang bất kỳ trong Tutor Support System có hiển thị menu người dùng / biểu tượng tài khoản. \\
+& - Hộp thoại xác nhận ``Bạn có chắc chắn muốn đăng xuất?''. \\
+& - Trang đăng nhập Tutor Support System. \\
+\hline
+\textbf{Pre-conditions} &
+1. User (Sinh viên / Tutor / Điều phối viên) đã đăng nhập thành công vào hệ thống. \\
+& 2. Phiên làm việc của user đang hoạt động, token xác thực còn hiệu lực. \\
+\hline
+\textbf{Actions} &
+1. User nhấn vào biểu tượng tài khoản hoặc menu người dùng ở góc trên. \\
+& 2. Hệ thống hiển thị menu với tùy chọn ``Đăng xuất''. \\
+& 3. User chọn mục ``Đăng xuất''. \\
+& 4. Hệ thống hiển thị hộp thoại xác nhận ``Bạn có chắc chắn muốn đăng xuất?'' với hai nút: ``Đăng xuất'' và ``Hủy''. \\
+& 5. User chọn nút xác nhận Đăng xuất. \\
+& 6. Hệ thống vô hiệu hóa token xác thực hiện tại. \\
+& 7. Hệ thống xóa thông tin phiên làm việc (session, cookie liên quan). \\
+& 8. Hệ thống chuyển hướng user về trang đăng nhập. \\
+& 9. Hệ thống hiển thị thông báo ``Đăng xuất thành công!'' trên trang đăng nhập. \\
+\hline
+\textbf{Inputs} &
+Không có dữ liệu nhập dạng text; chỉ có thao tác bấm menu và xác nhận Đăng xuất. \\
+\hline
+\textbf{Expected Outputs} &
+- Phiên làm việc của user bị xóa; token xác thực bị vô hiệu hóa. \\
+& - User được chuyển về trang đăng nhập, không thể truy cập lại các trang nội bộ nếu không đăng nhập lại. \\
+& - Thông báo ``Đăng xuất thành công!'' được hiển thị rõ ràng. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC02_TC02: HỦY ĐĂNG XUẤT (ALTERNATIVE FLOW 5a) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC02-TC02 - Hủy thao tác đăng xuất \\
+\hline
+\textbf{Test description} &
+User chọn Đăng xuất nhưng bấm ``Hủy'' trong hộp thoại xác nhận; hệ thống đóng hộp thoại và user tiếp tục sử dụng hệ thống như bình thường. \\
+\hline
+\textbf{Related screens} &
+Trang bất kỳ trong hệ thống + hộp thoại xác nhận Đăng xuất. \\
+\hline
+\textbf{Pre-conditions} &
+1. User đã đăng nhập và phiên làm việc đang hoạt động. \\
+\hline
+\textbf{Actions} &
+1. User mở menu người dùng và chọn ``Đăng xuất''. \\
+& 2. Hệ thống hiển thị hộp thoại xác nhận ``Bạn có chắc chắn muốn đăng xuất?''. \\
+& 3. User chọn nút ``Hủy'' trên hộp thoại xác nhận. \\
+\hline
+\textbf{Inputs} &
+Thao tác bấm vào nút ``Hủy'' trên hộp thoại xác nhận Đăng xuất. \\
+\hline
+\textbf{Expected Outputs} &
+- Hệ thống đóng hộp thoại xác nhận (không còn hiển thị trên màn hình). \\
+& - Phiên làm việc và token xác thực của user vẫn giữ nguyên, không bị xóa. \\
+& - User vẫn ở lại trang hiện tại và tiếp tục sử dụng hệ thống bình thường. \\
+\hline
+\textbf{Testing environment} &
+Chrome / Windows 10; hệ thống backend hoạt động bình thường. \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC02_TC03: LỖI VÔ HIỆU HÓA TOKEN (EXCEPTION E1) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC02-TC03 - Lỗi khi vô hiệu hóa token đăng nhập \\
+\hline
+\textbf{Test description} &
+Trong quá trình đăng xuất, hệ thống gặp lỗi khi gọi backend để vô hiệu hóa token; hệ thống ghi log lỗi, xóa thông tin phiên làm việc phía client và chuyển user về trang đăng nhập. \\
+\hline
+\textbf{Related screens} &
+- Trang bất kỳ trong hệ thống. \\
+& - Hộp thoại xác nhận Đăng xuất. \\
+& - Trang đăng nhập. \\
+\hline
+\textbf{Pre-conditions} &
+1. User đã đăng nhập và phiên làm việc đang hoạt động. \\
+& 2. Môi trường kiểm thử được cấu hình mô phỏng lỗi ở bước vô hiệu hóa token trên server (backend trả lỗi). \\
+\hline
+\textbf{Actions} &
+1. User mở menu người dùng và chọn ``Đăng xuất''. \\
+& 2. Hệ thống hiển thị hộp thoại xác nhận, user chọn xác nhận Đăng xuất. \\
+& 3. Hệ thống gửi yêu cầu vô hiệu hóa token đến backend và nhận lỗi. \\
+\hline
+\textbf{Inputs} &
+Thao tác xác nhận Đăng xuất; không có input text. \\
+\hline
+\textbf{Expected Outputs} &
+- Backend ghi lại log lỗi vô hiệu hóa token (E1.1). \\
+& - Ở phía client, hệ thống vẫn xóa thông tin phiên làm việc hiện tại (session, cookie) . \\
+& - User được chuyển hướng về trang đăng nhập; từ đó không thể truy cập lại trang nội bộ nếu chưa đăng nhập lại . \\
+& - Có thể (tuỳ thiết kế) hiển thị thông báo chung ``Đã đăng xuất, nhưng có lỗi nội bộ, vui lòng đăng nhập lại sau.''. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+
+\newpage
+% ================== UC02_TC04: PHIÊN ĐÃ HẾT HẠN TRƯỚC KHI ĐĂNG XUẤT (EXCEPTION E2) ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC02-TC04 - Phiên làm việc đã hết hạn trước khi người dùng chọn Đăng xuất \\
+\hline
+\textbf{Test description} &
+Phiên làm việc của user đã hết hạn do timeout; khi user thao tác Đăng xuất, hệ thống phát hiện session hết hạn và chuyển trực tiếp về trang đăng nhập với thông báo tương ứng. \\
+\hline
+\textbf{Related screens} &
+Trang bất kỳ trong hệ thống (có thể đã cũ) và trang đăng nhập. \\
+\hline
+\textbf{Pre-conditions} &
+1. User đã từng đăng nhập vào hệ thống. \\
+& 2. Thời gian không hoạt động vượt quá thời gian timeout phiên; session trên server đã bị hủy. \\
+& 3. Trình duyệt của user vẫn còn trang hệ thống mở (UI chưa refresh). \\
+\hline
+\textbf{Actions} &
+1. User trên trang cũ nhấn vào menu người dùng và chọn ``Đăng xuất''. \\
+& 2. Hệ thống gửi yêu cầu đăng xuất, nhưng phát hiện phiên làm việc đã hết hạn. \\
+\hline
+\textbf{Inputs} &
+Thao tác chọn ``Đăng xuất'' trên UI sau khi phiên đã hết hạn. \\
+\hline
+\textbf{Expected Outputs} &
+- Hệ thống không xử lý như đăng xuất thông thường mà nhận diện phiên đã hết hạn. \\
+& - User được chuyển hướng ngay về trang đăng nhập. \\
+& - Trên trang đăng nhập hiển thị thông báo, ví dụ: ``Phiên làm việc đã hết hạn.''. \\
+& - User không còn truy cập được các trang nội bộ nếu không đăng nhập lại. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+
+\newpage
+\subsubsection{Đăng ký Tutor}
+
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC07-TC01 — Đăng ký Tutor thành công \\ \hline
+\textbf{Test description} & Sinh viên đăng ký Tutor với đầy đủ thông tin hợp lệ \\ \hline
+\textbf{Related screens} & Màn hình Đăng ký Tutor \\ \hline
+\textbf{Pre-conditions} & 1. Sinh viên đã đăng nhập \\ 
+& 2. Chương trình Tutor đang mở đăng ký \\ \hline
+\textbf{Actions} & 1. Sinh viên mở chức năng “Đăng ký Tutor” \\
+& 2. Hệ thống hiển thị giao diện chọn môn học/lĩnh vực \\
+& 3. Sinh viên chọn môn học Nguyên lý ngôn ngữ lập trình và bấm “Tiếp theo” \\
+& 4. Hệ thống hiển thị danh sách tutor phù hợp \\
+& 5. Sinh viên chọn đăng ký tutor Nguyễn Thị B và bấm xác nhận \\
+& 6. Hệ thống hiển thị màn hình Chờ duyệt 12h với nút “Hủy đăng ký” \\ \hline
+\textbf{Inputs} & Môn học: Nguyên lý ngôn ngữ lập trình; Tutor: Nguyễn Thị B \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống hiển thị danh sách tutor phù hợp \\
+& 2. Hệ thống hiển thị trạng thái Chờ duyệt 12h \\
+& 3. Yêu cầu đăng ký được lưu trong hệ thống \\
+& 4. Nút Hủy đăng ký khả dụng \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+
+\newpage
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC07-TC02 — Bỏ trống thông tin môn học \\ \hline
+\textbf{Test description} & Sinh viên không chọn môn học ở bước 1 \\ \hline
+\textbf{Related screens} & Màn hình nhập thông tin \\ \hline
+\textbf{Pre-conditions} & 1. Sinh viên đã đăng nhập \\ 
+& 2. Chương trình Tutor đang mở đăng ký \\ \hline
+\textbf{Actions} & 1. Sinh viên mở chức năng “Đăng ký Tutor” \\
+& 2. Hệ thống hiển thị giao diện chọn môn học \\
+& 3. Sinh viên bỏ trống môn học \\
+& 4. Sinh viên Bấm “Tiếp theo” \\ \hline
+\textbf{Inputs} & Môn học: (trống) \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống hiển thị thông báo lỗi “Vui lòng nhập đầy đủ thông tin” \\
+& 2. Không chuyển sang màn hình hiển thị danh sách tutor. \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+\newpage
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC07-TC03 — Hủy đăng ký trong khi chờ duyệt và đăng ký mới \\ \hline
+\textbf{Test description} & Sinh viên hủy yêu cầu đăng ký tutor đang chờ duyệt và ngay lập tức thực hiện đăng ký mới \\ \hline
+\textbf{Related screens} & Màn hình Chờ duyệt 12h \\ \hline
+\textbf{Pre-conditions} & 1. Sinh viên đã đăng nhập \\
+& 2. Yêu cầu đăng ký tutor đang ở trạng thái Chờ duyệt 12h \\ \hline
+\textbf{Actions} & 1. Sinh viên mở chức năng “Đăng ký Tutor” \\
+& 2. Hệ thống hiển thị màn hình Chờ duyệt 12h \\
+& 3. Nhấn nút Hủy đăng ký \\
+& 4. Xác nhận hủy \\
+& 5. Hệ thống hiển thị thông báo “Hủy thành công” \\
+& 6. Sinh viên chọn Đăng kí mới \\
+& 7. Hệ thống quay về hiển thị danh sách tutor phù hợp \\
+& 8. Sinh viên chọn tutor mới và bấm “Xác nhận” \\ \hline
+\textbf{Inputs} & Tutor: Nguyễn Thị B \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống hiển thị “Hủy thành công” \\& 2. Cập nhật trạng thái slot tutor cũ \\
+& 3. Nếu chọn đăng ký mới → hệ thống hiển thị danh sách tutor \\
+& 4. Sinh viên có thể chọn tutor mới và hoàn tất đăng ký \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+
+\newpage
+\subsubsection{Đặt lịch hẹn}
+
+\begin{longtable}{|l|p{12cm}|}
+\hline
+
+\textbf{Test case} & UC08-TC01 — Đặt lịch hẹn thành công \\ \hline
+\textbf{Test description} & Sinh viên đặt lịch hẹn với tutor dựa trên lịch rảnh và nội dung hỗ trợ hợp lệ \\ \hline
+\textbf{Related screens} & Màn hình Đặt lịch hẹn \\ \hline
+\textbf{Pre-conditions} & 1. Sinh viên đã đăng nhập \newline
+2. Sinh viên đã chọn tutor \newline
+3. Tutor đã cung cấp lịch rảnh \\ \hline
+\textbf{Actions} & 1. Sinh viên mở chức năng “Đặt lịch hẹn” \newline
+2. Hệ thống hiển thị lịch rảnh của tutor \newline
+3. Sinh viên chọn khoảng thời gian phù hợp và nhập nội dung hỗ trợ \newline
+4. Nhấn “Xác nhận” \\ \hline
+\textbf{Inputs} & Tutor: Nguyễn Thị B, Ngày giờ: 15/11/2025 14:00-15:00, Nội dung: Hướng dẫn bài tập Nguyên lý ngôn ngữ lập trình \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống lưu yêu cầu lịch hẹn ở trạng thái Chờ duyệt \newline
+2. Tutor nhận thông báo yêu cầu mới \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+
+\newpage
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC08-TC02 — Đặt lịch hẹn thiếu thông tin \\ \hline
+\textbf{Test description} & Sinh viên không nhập nội dung \\ \hline
+\textbf{Related screens} & Màn hình Đặt lịch hẹn \\ \hline
+\textbf{Pre-conditions} & 1. Sinh viên đã đăng nhập \newline
+2. Sinh viên đã chọn tutor \newline
+3. Tutor đã cung cấp lịch rảnh \\ \hline
+\textbf{Actions} & 1. Sinh viên mở chức năng “Đặt lịch hẹn” \newline
+2. Không chọn thời gian hoặc không nhập nội dung \newline
+3. Nhấn “Xác nhận” \\ \hline
+\textbf{Inputs} & Ngày giờ: 15/11/2025 14:00-15:00; Nội dung: (trống) \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống hiển thị thông báo lỗi và yêu cầu nhập lại \newline
+2. Quay lại màn hình nhập thông tin \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+\newpage
+\subsubsection{Phản hồi chất lượng buổi học}
+% ================== TEST CASE 1 ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC09-TC01 - Gửi phản hồi chất lượng buổi học thành công \\
+\hline
+\textbf{Test description} &
+Sinh viên gửi phản hồi hợp lệ cho một buổi học đã diễn ra, hệ thống lưu phản hồi, cập nhật lịch sử \\
+\hline
+\textbf{Related screens} &
+- Tab ``Phản hồi chất lượng''. \\
+& - Màn hình ``Gửi phản hồi''. \\
+\hline
+\textbf{Pre-conditions} &
+1. Sinh viên đã có ít nhất một buổi hẹn đã tham gia. \\
+& 2. Tab ``Phản hồi chất lượng'' đang hiển thị và có buổi hẹn mà sinh viên đã tham gia \\
+\hline
+\textbf{Actions} &
+1. Sinh viên nhấn nút ``Phản hồi chất lượng'' của buổi hẹn. \\
+& 2. Hệ thống mở màn hình ``Gửi phản hồi'' cho buổi hẹn đó. \\
+& 3. Sinh viên đánh giá số sao \\
+& 4. Sinh viên nhập nội dung vào ô ``Nhận xét'', ví dụ: ``Giải bài mẫu chi tiết, dễ hiểu.''. \\
+& 5. Sinh viên nhấn nút ``Gửi''. \\
+& 6. Hệ thống kiểm tra dữ liệu hợp lệ (đã chọn sao và nhận xét không rỗng). \\
+& 7. Hệ thống lưu phản hồi vào cơ sở dữ liệu. \\
+& 8. Hệ thống cập nhật khung ``Lịch sử phản hồi'' với dòng phản hồi mới. \\
+& 9. Hệ thống hiển thị thông báo gửi phản hồi thành công. \\
+\hline
+\textbf{Inputs} &
+- Mức đánh giá: 5/5 sao. \\
+& - Nhận xét: ``Giải bài mẫu chi tiết, dễ hiểu.''. \\
+\hline
+\textbf{Expected Outputs} &
+- Phản hồi mới được lưu đúng sinh viên, đúng buổi hẹn \\
+& - Khung ``Lịch sử phản hồi'' hiển thị nội dung đã đánh giá, ví dụ: ngày 2025-10-26, điểm 5/5, nội dung ``Giải bài mẫu chi tiết, dễ hiểu.''. \\
+& - Sinh viên thấy thông báo gửi thành công, không có thông báo lỗi. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+\newpage
+% ================== TEST CASE 2 ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC09-TC02 - Gửi phản hồi thiếu nội dung nhận xét \\
+\hline
+\textbf{Test description} &
+Sinh viên chỉ chọn số sao, bỏ trống ô nhận xét rồi nhấn ``Gửi''; hệ thống phát hiện thiếu thông tin, hiển thị thông báo lỗi và không lưu phản hồi. \\
+\hline
+\textbf{Related screens} &
+- Tab ``Phản hồi chất lượng''. \\
+& - Màn hình ``Gửi phản hồi''. \\
+\hline
+\textbf{Pre-conditions} &
+1. Sinh viên đã có ít nhất một buổi hẹn đã tham gia. \\
+& 2. Tab ``Phản hồi chất lượng'' đang hiển thị và có buổi hẹn mà sinh viên đã tham gia \\
+\hline
+\textbf{Actions} &
+1. Sinh viên nhấn ``Phản hồi chất lượng'' cho buổi hẹn. \\
+& 2. Màn hình ``Gửi phản hồi'' hiển thị. \\
+& 3. Sinh viên chọn số sao. \\
+& 4. Sinh viên để trống ô ``Nhận xét''. \\
+& 5. Sinh viên nhấn nút ``Gửi''. \\
+\hline
+\textbf{Inputs} &
+- Mức đánh giá: 4/5 sao. \\
+& - Nhận xét: để trống. \\
+\hline
+\textbf{Expected Outputs} &
+- Hệ thống không lưu bất kỳ phản hồi nào vào cơ sở dữ liệu. \\
+& - Hệ thống hiển thị thông báo lỗi, ví dụ: ``Vui lòng nhập nội dung phản hồi trước khi gửi.''. \\
+& - Màn hình ``Gửi phản hồi'' vẫn giữ nguyên: 4 sao vẫn được chọn, ô ``Nhận xét'' vẫn trống để sinh viên nhập lại. \\
+& - Khung ``Lịch sử phản hồi'' không thay đổi. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+\newpage
+% ================== TEST CASE 3 ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC09-TC03 - Hủy gửi phản hồi chất lượng \\
+\hline
+\textbf{Test description} &
+Sinh viên mở màn hình ``Gửi phản hồi'' nhưng nhấn ``Hủy'' thay vì ``Gửi''; hệ thống không lưu dữ liệu và quay về danh sách buổi hẹn. \\
+\hline
+\textbf{Related screens} &
+- Tab ``Phản hồi chất lượng''. \\
+& - Màn hình ``Gửi phản hồi''. \\
+\hline
+\textbf{Pre-conditions} &
+1. Sinh viên đã có ít nhất một buổi hẹn đã tham gia. \\
+& 2. Tab ``Phản hồi chất lượng'' đang hiển thị và có buổi hẹn mà sinh viên đã tham gia \\
+\hline
+\textbf{Actions} &
+1. Sinh viên nhấn ``Phản hồi chất lượng'' cho buổi hẹn. \\
+& 2. Màn hình ``Gửi phản hồi'' hiển thị. \\
+& 3. Sinh viên có thể chọn số sao và/hoặc nhập vài từ vào ô ``Nhận xét'' (tuỳ ý). \\
+& 4. Sinh viên nhấn nút ``Hủy'' thay vì ``Gửi''. \\
+\hline
+\textbf{Inputs} &
+Có thể đã nhập một số dữ liệu tạm (ví dụ chọn 3/5 sao, nhận xét ngắn), nhưng chưa thực hiện gửi. \\
+\hline
+\textbf{Expected Outputs} &
+- Hệ thống không lưu bất kỳ phản hồi nào vào cơ sở dữ liệu. \\
+& - Hệ thống đóng màn hình ``Gửi phản hồi'' và quay lại tab ``Phản hồi chất lượng'' (danh sách buổi hẹn). \\
+& - Khi mở lại màn hình ``Gửi phản hồi'' cho cùng buổi hẹn, khung ``Lịch sử phản hồi'' không có phản hồi mới. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+
+\newpage
+% ================== TEST CASE 4 ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC09-TC04 - Lỗi hệ thống khi lưu phản hồi \\
+\hline
+\textbf{Test description} &
+Trong lúc sinh viên gửi phản hồi hợp lệ, hệ thống gặp lỗi cơ sở dữ liệu hoặc lỗi backend; hệ thống báo thất bại, ghi log lỗi và không làm mất dữ liệu đã nhập trên form. \\
+\hline
+\textbf{Related screens} &
+- Tab ``Phản hồi chất lượng''. \\
+& - Màn hình ``Gửi phản hồi''. \\
+\hline
+\textbf{Pre-conditions} &
+1. Tài khoản sinh viên tồn tại và đang hoạt động, đã đăng nhập. \\
+& 2. Có buổi hẹn đã tham gia và hiển thị trong tab ``Phản hồi chất lượng''. \\
+& 3. Môi trường kiểm thử được cấu hình mô phỏng lỗi khi lưu vào cơ sở dữ liệu. \\
+\hline
+\textbf{Actions} &
+1. Sinh viên nhấn ``Phản hồi chất lượng'' cho buổi hẹn ngày 26/10/2025. \\
+& 2. Màn hình ``Gửi phản hồi'' hiển thị. \\
+& 3. Sinh viên chọn 5 sao. \\
+& 4. Sinh viên nhập nhận xét, ví dụ: ``Buổi học rất hữu ích.''. \\
+& 5. Sinh viên nhấn nút ``Gửi''. \\
+& 6. Backend cố gắng lưu dữ liệu nhưng gặp lỗi cơ sở dữ liệu. \\
+\hline
+\textbf{Inputs} &
+- Mức đánh giá: 5/5 sao. \\
+& - Nhận xét: ``Buổi học rất hữu ích.''. \\
+\hline
+\textbf{Expected Outputs} &
+- Hệ thống không tạo bản ghi phản hồi mới trong cơ sở dữ liệu. \\
+& - Hệ thống hiển thị thông báo lỗi, ví dụ: ``Gửi phản hồi thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật.''. \\
+& - Dữ liệu trên form không bị mất: 5 sao vẫn được chọn, nội dung nhận xét vẫn còn để sinh viên có thể thử gửi lại. \\
+& - Lỗi được ghi log ở phía server để phục vụ việc theo dõi và khắc phục. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+\newpage
+% ================== TEST CASE: KHÔNG CHỌN SAO ==================
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} &
+UC09-TC05 - Gửi phản hồi không chọn mức sao đánh giá \\
+\hline
+\textbf{Test description} &
+Sinh viên chỉ nhập nội dung nhận xét, không chọn sao đánh giá rồi nhấn ``Gửi''; hệ thống phát hiện thiếu mức đánh giá, hiển thị thông báo lỗi và không lưu phản hồi. \\
+\hline
+\textbf{Related screens} &
+- Tab ``Phản hồi chất lượng''. \\
+& - Màn hình ``Gửi phản hồi''. \\
+\hline
+\textbf{Pre-conditions} &
+1. Tài khoản sinh viên tồn tại, đang hoạt động và đã đăng nhập. \\
+& 2. Có ít nhất một buổi hẹn đã tham gia, hiển thị trong tab ``Phản hồi chất lượng'' với nút ``Phản hồi chất lượng''. \\
+\hline
+\textbf{Actions} &
+1. Tại tab ``Phản hồi chất lượng'', sinh viên nhấn nút ``Phản hồi chất lượng'' của buổi hẹn. \\
+& 2. Hệ thống mở màn hình ``Gửi phản hồi'' cho buổi hẹn đó. \\
+& 3. Sinh viên không chọn bất kỳ sao nào (mức đánh giá để trống). \\
+& 4. Sinh viên nhập nhận xét vào ô ``Nhận xét'', ví dụ: ``Buổi học khá ổn.''. \\
+& 5. Sinh viên nhấn nút ``Gửi''. \\
+\hline
+\textbf{Inputs} &
+- Mức đánh giá: không chọn (trống). \\
+& - Nhận xét: ``Buổi học khá ổn.''. \\
+\hline
+\textbf{Expected Outputs} &
+- Hệ thống không lưu phản hồi vào cơ sở dữ liệu. \\
+& - Hệ thống hiển thị thông báo lỗi, ví dụ: ``Vui lòng chọn mức đánh giá trước khi gửi.''. \\
+& - Màn hình ``Gửi phản hồi'' vẫn giữ lại nội dung đã nhập trong ô ``Nhận xét'' để sinh viên không phải gõ lại. \\
+& - Sau lỗi, nếu quay lại tab ``Phản hồi chất lượng'', khung ``Lịch sử phản hồi'' của buổi hẹn không có thêm phản hồi mới. \\
+\hline
+\textbf{Testing environment} &
+Web \\
+\hline
+\end{longtable}
+\newpage
+\subsubsection{Xem danh sách buổi gặp mặt}
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC-10-TC01 — Xem danh sách buổi gặp mặt \\ \hline
+\textbf{Test description} & Sinh viên hoặc tutor xem danh sách các buổi gặp mặt đã đăng ký thành công hoặc đã được duyệt \\ \hline
+\textbf{Related screens} & Màn hình Danh sách buổi gặp mặt \\ \hline
+\textbf{Pre-conditions} & 1. Sinh viên/Tutor đã đăng nhập \newline
+2. Nếu là sinh viên thì phải đã đăng ký tutor \newline
+3. Có ít nhất một buổi gặp đã đăng ký / được tạo \\ \hline
+\textbf{Actions} & 1. Mở chức năng “Danh sách buổi gặp mặt” \newline
+2. Hệ thống hiển thị danh sách các buổi gặp \newline
+3. Nhấn vào một buổi để xem chi tiết \newline
+4. Hệ thống hiển thị thông tin chi tiết buổi đó \newline
+5. Người dùng nhấn Quay lại / Back \newline
+6. Hệ thống quay về danh sách buổi gặp mặt \\ \hline
+\textbf{Inputs} & Chọn buổi gặp với Chủ đề: Công nghệ phần mềm \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống hiển thị chi tiết buổi gặp \newline
+2. Quay lại danh sách, các buổi gặp vẫn hiển thị đúng \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+\newpage
+\subsubsection{Hủy buổi gặp mặt}
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC-11-TC01 — Hủy buổi gặp mặt với lý do \\ \hline
+\textbf{Test description} & Actor (Sinh viên/Tutor) hủy buổi gặp đã lên lịch và nhập lý do hủy \\ \hline
+\textbf{Related screens} & Màn hình hủy đăng ký buổi gặp mặt / hủy buổi gặp mặt \\ \hline
+\textbf{Pre-conditions} & 1. Actor đã đăng nhập \newline
+2. Buổi gặp chưa bắt đầu \newline
+3. Buổi gặp đã được đăng ký, lên lịch \\ \hline
+\textbf{Actions} & 1. Actor vào mục hủy đăng ký buổi gặp mặt / hủy buổi gặp mặt \newline
+2. Hệ thống hiển thị danh sách buổi gặp đã đăng ký / đã lên lịch \newline
+3. Actor chọn một buổi gặp cụ thể \newline
+4. Hệ thống hiển thị form nhập lý do hủy \newline
+5. Actor nhập lý do và bấm Xác nhận \newline
+6. Hệ thống cập nhật slot rảnh của Tutor và trạng thái buổi gặp \newline
+7. Hệ thống gửi thông báo xác nhận hủy: \newline
+a. Nếu actor là Sinh viên → gửi thông báo cho Tutor \newline
+b. Nếu actor là Tutor → gửi thông báo cho Sinh viên và Tutor \\ \hline
+\textbf{Inputs} & Actor: Sinh viên/Tutor, Buổi gặp: 15/11/2025 14:00-15:00 , Lý do hủy: “Bận đột xuất” \\ \hline
+\textbf{Expected Outputs} & 1. Hệ thống hiển thị “Hủy thành công” \newline
+2. Cập nhật trạng thái slot: \newline
+• Nếu actor là Sinh viên → mở slot Tutor, buổi gặp bị hủy cho sinh viên \newline
+• Nếu actor là Tutor → buổi gặp bị hủy cho cả Tutor và Sinh viên \newline
+3. Gửi thông báo hủy cho actor liên quan \\ \hline
+\textbf{Testing environment} & Web – Windows 11 \\ \hline
+\end{longtable}
+\newpage
+\subsubsection{Xử lý yêu cầu đặt lịch hẹn}
+
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC-18-TC01 - Tutor đồng ý lịch hẹn\\ \hline
+\textbf{Test description} & Tutor chấp nhận (đồng ý) một yêu cầu đặt lịch hẹn đang chờ xử lý từ sinh viên. \\ \hline
+\textbf{Related screens} & - Giao diện danh sách yêu cầu lịch hẹn\newline 
+- Giao diện xem chi tiết lịch hẹn\\ \hline
+\textbf{Pre-conditions} & - Tutor đã đăng nhập vào hệ thống \newline
+- Giao diện danh sách lịch hẹn đang hiển thị\newline 
+- Tồn tại ít nhất một lịch hẹn với trạng thái đang chờ xử lí \\ \hline
+\textbf{Actions} & - Từ giao diện danh sách yêu cầu lịch hẹn, tutor chọn một lịch hẹn để xem chi tiết \newline
+- Hệ thống hiển thị thông tin chi tiết của lịch hẹn bao gồm họ tên sinh viên, nội dung, thời gian, và hình thức\newline
+- Tutor nhấn nút "Phê duyệt"\newline 
+- Hệ thống xử lí yêu cầu và hiển thị thông báo "Yêu cầu đã được phê duyệt"\newline
+- Tutor chọn "Quay lại" hệ thống quay lại giao diện danh sách lịch hẹn\\ \hline
+\textbf{Inputs} & - Danh sách yêu cầu lịch hẹn\\ \hline
+\textbf{Expected Outputs} & Hệ thống xác nhận "Yêu cầu đã được phê duyệt" và gửi thông báo đến sinh viên đó\\ \hline
+\textbf{Testing environment} & Giao diện web chạy trên trình duyệt, và vai trò người dùng là Tutor \\ \hline
+\end{longtable}
+\newpage
+\begin{longtable}{|l|p{12cm}|}
+\hline
+\textbf{Test case} & UC-18-TC02 - Tutor từ chối lịch hẹn\\ \hline
+\textbf{Test description} & Tutor từ chối một yêu cầu đặt lịch hẹn đang chờ xử lý từ sinh viên. \\ \hline
+\textbf{Related screens} & - Giao diện danh sách yêu cầu lịch hẹn\newline 
+- Giao diện xem chi tiết lịch hẹn\newline
+- Pop-up "Lý do từ chối"\\ \hline
+\textbf{Pre-conditions} & - Tutor đã đăng nhập vào hệ thống \newline
+- Giao diện danh sách lịch hẹn đang hiển thị\newline 
+- Tồn tại ít nhất một lịch hẹn với trạng thái đang chờ xử lí \\ \hline
+\textbf{Actions} & - Từ giao diện danh sách yêu cầu lịch hẹn, tutor chọn một lịch hẹn để xem chi tiết \newline
+- Hệ thống hiển thị thông tin chi tiết của lịch hẹn bao gồm họ tên sinh viên, nội dung, thời gian, và hình thức\newline
+- Tutor nhấn nút "Từ chối"\newline 
+- Hệ thống hiển thị Pop-up "Lý do từ chối", yêu cầu nhập lý do.\newline
+- Tutor nhập lý do vào ô text và chọn "Xác nhận từ chối"\newline
+- Hệ thống xử lý yêu cầu và thông báo "Đã từ chối lịch hẹn" \newline
+- Tutor chọn "Quay lại" hệ thống quay lại giao diện danh sách lịch hẹn\\ \hline
+\textbf{Inputs} & - Danh sách yêu cầu lịch hẹn\\ \hline
+\textbf{Expected Outputs} & Hệ thống xác nhận "Đã từ chối lịch hẹn" và gửi thông báo đến sinh viên đó\\ \hline
+\textbf{Testing environment} & Giao diện web chạy trên trình duyệt, và vai trò người dùng là Tutor \\ \hline
+\end{longtable}

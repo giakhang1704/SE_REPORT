@@ -1,0 +1,67 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/AC QMK.drawio.png}
+    \caption{Activity Diagram cho UC Quên mật khẩu }
+\end{figure}
+
+\textbf{Mô tả:}
+Use Case mô tả quy trình người dùng yêu cầu đặt lại mật khẩu tài khoản thông qua hệ thống HCMUT\_SSO. Người dùng nhập BKID, nhận email khôi phục, truy cập liên kết đặt lại mật khẩu và tạo mật khẩu mới.
+
+
+\textbf{Luồng sự kiện chính: Khôi phục mật khẩu thành công}
+\begin{enumerate}
+    \item \textbf{Người dùng} truy cập trang đăng nhập và chọn nút ``\textbf{Quên mật khẩu}''.
+    \item \textbf{SSO} hiển thị form yêu cầu nhập BKID.
+    \item \textbf{Người dùng} nhập BKID.
+    \item \textbf{SSO} kiểm tra email tương ứng với BKID.
+    \item Nếu email hợp lệ, \textbf{SSO} gửi email chứa liên kết khôi phục mật khẩu.
+    \item \textbf{Người dùng} mở email và nhấn vào liên kết đặt lại mật khẩu.
+    \item \textbf{SSO} hiển thị form đặt lại mật khẩu.
+    \item \textbf{Người dùng} nhập mật khẩu mới và xác nhận mật khẩu.
+    \item \textbf{SSO} kiểm tra tính hợp lệ của mật khẩu mới.
+    \item \textbf{SSO} cập nhật mật khẩu vào hệ thống.
+    \item \textbf{SSO} hiển thị thông báo ``\textbf{Thay đổi mật khẩu thành công}''.
+\end{enumerate}
+
+
+\textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}
+
+\begin{enumerate}
+
+    \item \textbf{Email không hợp lệ hoặc không tồn tại:}\\
+    Nếu BKID không có email hợp lệ:
+    \begin{itemize}
+        \item \textbf{SSO} hiển thị thông báo ``Email không hợp lệ'' trên form.
+    \end{itemize}
+    Use Case kết thúc không thành công.
+
+
+    \item \textbf{Người dùng không nhận được email:}\\
+    Nếu người dùng chờ nhưng không nhận email:
+    \begin{itemize}
+        \item Người dùng chọn ``\textbf{Gửi lại email}''.
+        \item \textbf{SSO} gửi lại email khôi phục.
+        \item \textbf{SSO} hiển thị thông báo ``Email đã được gửi lại''.
+    \end{itemize}
+
+
+    \item \textbf{Liên kết khôi phục hết hạn hoặc không hợp lệ:}\\
+    \begin{itemize}
+        \item \textbf{SSO} hiển thị thông báo ``Liên kết không hợp lệ hoặc đã hết hạn''.
+    \end{itemize}
+    Use Case kết thúc; người dùng phải thực hiện lại từ đầu.
+
+
+    \item \textbf{Mật khẩu mới không hợp lệ:}\\
+    Khi người dùng nhập mật khẩu mới không đạt yêu cầu:
+    \begin{itemize}
+        \item \textbf{SSO} hiển thị lỗi tương ứng (quá ngắn, không trùng khớp…).
+    \end{itemize}
+    Use Case quay lại bước nhập mật khẩu mới.
+    \item \textbf{Lỗi hệ thống khi cập nhật mật khẩu:}\\
+    \begin{itemize}
+        \item \textbf{SSO} hiển thị thông báo lỗi: ``Không thể thay đổi mật khẩu. Vui lòng thử lại sau.'' 
+    \end{itemize}
+    Use Case kết thúc không thành công.
+
+\end{enumerate}

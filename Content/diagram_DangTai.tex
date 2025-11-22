@@ -1,0 +1,67 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Image/seq_DangTaiLieu.drawio.png}
+    \caption{Sequence diagram:  Đăng tải tài liệu}
+    \label{fig:placeholder}
+\end{figure}
+
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Image/act_DangTaiLieu.drawio.png}
+    \caption{Activity diagram: Đăng tải tài liệu}
+    \label{fig:placeholder}
+\end{figure}
+
+\noindent \textbf{Mô tả}
+
+\noindent \textbf{Luồng sự kiện chính: Đăng tải tài liệu thành công}
+
+\begin{enumerate}
+  \item Tutor bấm vào mục ``Đăng tải tài liệu'' trong trang ``Khóa học''.
+  \item Hệ thống hiển thị form đăng tải tài liệu.
+  \item Tutors nhấn ``Chọn file'' và chọn tệp cần đăng hoặc kéo / thả file cần đăng.
+  \item Hệ thống kiểm tra ràng buộc:
+    \begin{enumerate}
+      \item Kiểm tra định dạng tệp có được hỗ trợ.
+      \item Kiểm tra dung lượng tệp không vượt quá 2GB.
+    \end{enumerate}
+  \item Nếu hợp lệ, Hệ thống tải tệp lên kho lưu trữ.
+  \item Hệ thống thông báo ``Tài liệu đã được đăng tải. Chờ duyệt.''
+  \item Hệ thống gửi yêu cầu duyệt sang \textit{HCMUT\_LIBRARY}.
+  \item \textit{HCMUT\_LIBRARY} duyệt tài liệu và chấp nhận.
+  \item Hệ thống hiển thị thông báo ``Đã duyệt'' và tài liệu xuất hiện trong danh sách của khóa học.
+  \item Use Case kết thúc thành công.
+\end{enumerate}
+
+\noindent \textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}
+
+\noindent\textbf{Hủy đăng tải}
+\begin{enumerate}
+  \item Ở bước 2, Tutor chọn ``Hủy''.
+  \item Hệ thống quay về giao diện ``Khóa học''. Use Case kết thúc.
+\end{enumerate}
+
+\noindent \textbf{Định dạng không được hỗ trợ}
+\begin{enumerate}
+  \item Ở bước 4(a), nếu tệp không đúng định dạng cho phép, hệ thống thông báo ``Định dạng không hợp lệ''.
+  \item Quay về bước 3 để tutor chọn file lại.
+\end{enumerate}
+
+\noindent \textbf{Dung lượng vượt quá giới hạn}
+\begin{enumerate}
+  \item Ở bước 4(b), nếu dung lượng $> \text{2GB}$, \textit{Hệ thống} thông báo ``Dung lượng file vượt quá 2GB''.
+  \item Quay về bước 3 để tutor chọn file lại.
+\end{enumerate}
+
+\noindent \textbf{Lỗi lưu trữ / mất kết nối}
+\begin{enumerate}
+  \item Trong bước 5, nếu lỗi phát sinh, Hệ thống thông báo ``Không thể kết nối. Vui lòng thử lại sau.''
+  \item Use Case tạm dừng; Tutor có thể thực hiện lại từ bước 1 khi kết nối ổn định.
+\end{enumerate}
+
+\noindent \textbf{Từ chối phê duyệt}
+\begin{enumerate}
+  \item Ở bước 8, nếu bị từ chối, Hệ thống hiển thị ``Tài liệu bị từ chối'' (kèm lý do nếu có).
+  \item Tutor có thể chỉnh sửa/đổi tệp và đăng lại từ bước 1. Use Case kết thúc không thành công.
+\end{enumerate}

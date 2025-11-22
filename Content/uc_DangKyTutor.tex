@@ -1,0 +1,71 @@
+\subsubsection{Đăng ký Tutor}
+
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+
+\hline
+\textbf{Use Case Name} & Đăng ký Tutor \\ \hline
+\endfirsthead
+
+\hline
+\textbf{Use Case Name} & Đăng ký Tutor (tiếp) \\ \hline
+\endhead
+
+\textbf{Actor(s)} & Sinh viên \\ \hline
+
+\textbf{Description} &
+Cho phép sinh viên đăng ký tham gia chương trình Tutor/Mentor và chọn hoặc được gợi ý Tutor phù hợp. \\ \hline
+
+\textbf{Trigger} &
+Sinh viên truy cập hệ thống và chọn chức năng “Đăng ký Tutor”. \\ \hline
+
+\textbf{Pre–Condition(s)} &
+- Sinh viên đăng nhập thành công. \newline
+- Chương trình Tutor đang mở đăng ký. \\ \hline
+
+\textbf{Post–Condition(s)} &
+- Sinh viên được ghi nhận là đã đăng ký chương trình Tutor. \newline
+- Hệ thống ghi nhận nhu cầu/ưu tiên, tạo hồ sơ ghép cặp Tutor–Sinh viên. \newline
+- Thông báo gửi cho sinh viên, tutor và điều phối viên. \newline
+- Cập nhật báo cáo và ghi log hệ thống. \\ \hline
+
+\textbf{Normal Flow} &
+1. Sinh viên vào chức năng Đăng ký Tutor. \newline
+2. Hệ thống hiển thị giao diện cho phép sinh viên chọn lĩnh vực/môn học, thời gian rãnh cần hỗ trợ. \newline
+3. Sinh viên điền thông tin đầy đủ và bấm tiếp theo. \newline
+4. Hệ thống hiển thị danh sách tutor phù hợp. \newline
+5. Sinh viên chọn Tutor (hoặc chọn chế độ hệ thống tự xếp Tutor). \newline
+6. Sinh viên bấm xác nhận đăng ký. \newline
+7. Hệ thống lưu dữ liệu đăng ký, gắn cặp Tutor–Sinh viên. \newline
+8. Hệ thống gửi thông báo cho Tutor và sinh viên, đồng thời cập nhật trạng thái cho điều phối viên. \newline
+9. Sinh viên không tiếp tục đăng ký, bấm kết thúc. \newline
+10. Hệ thống thông báo “Chúc mừng bạn hoàn tất đăng ký”. Kết thúc usecase. \\ \hline
+
+\textbf{Alternative Flow} &
+3a. Sinh viên không điền đầy đủ thông tin nhưng bấm tiếp theo. \newline
+3a1. Hệ thống hiển thị thông báo lỗi yêu cầu điền đầy đủ. \newline
+3a2. Quay lại bước 2. \newline\newline
+4a. Hệ thống thông báo không có tutor phù hợp. \newline
+4a1. Hệ thống gửi thông báo đến điều phối viên và hiển thị “Chúng tôi sẽ nhắc bạn khi có kết quả hỗ trợ sắp xếp được tutor phù hợp trong vòng 1 tuần làm việc.”. \newline
+4a2. Hệ thống đưa lựa chọn “Đăng ký môn khác”. \newline
+4a3. Nếu sinh viên đồng ý quay lại bước 2. \newline
+4a4. Nếu sinh viên không đồng ý, hệ thống quay lại màn hình chính. Kết thúc usecase. \newline\newline
+5a. Sinh viên tự chọn tutor thủ công. \newline
+5a1. Sinh viên bấm chọn tutor yêu thích từ danh sách. \newline
+5a2. Quay về bước 6. \newline\newline
+5b. Sinh viên để hệ thống tự động chọn Tutor. \newline
+5b1. Hệ thống gán ngẫu nhiên sinh viên với một tutor phù hợp. \newline
+5b2. Quay về bước 6. \newline\newline
+6a. Sinh viên không xác nhận đăng ký, chọn kết thúc. \newline
+6a1. Hệ thống quay về màn hình chính. \newline
+6a2. Kết thúc usecase. \newline\newline
+6b. Sinh viên không xác nhận đăng ký, chọn sửa đổi. \newline
+6b1. Quay về bước 2. \newline\newline
+9a. Sinh viên tiếp tục đăng ký. \newline
+9a1. Quay về bước 2. \\ \hline
+
+\textbf{Exception Flow} &
+- Lỗi mạng trong quá trình đăng ký → Hệ thống hiển thị thông báo lỗi mạng, yêu cầu sinh viên thực hiện lại sau. \newline
+- Đợt đăng ký Tutor đã kết thúc → Hệ thống hiển thị thông báo “Đợt đăng ký Tutor đã kết thúc” → Kết thúc Use Case. \newline
+- Lỗi lưu dữ liệu đăng ký → Hệ thống hiển thị thông báo “Không lưu được dữ liệu, vui lòng thử lại” → Quay về bước 6 Normal Flow. \\ \hline
+
+\end{longtable}

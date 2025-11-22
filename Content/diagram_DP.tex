@@ -1,0 +1,77 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/seq_DPV.drawio.png}
+    \caption{Sequence Diagram cho UC Điều phối khung chương trình}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/act_DPV.drawio.png}
+    \caption{Activity Diagram cho UC Điều phối khung chương trình}
+\end{figure}
+
+
+\textbf{Mô tả:}
+\textbf{Luồng chính: Cập nhật hoặc tạo khung chương trình thành công}
+\begin{enumerate}
+\item \textbf{Điều phối viên} truy cập vào hệ thống và chọn chức năng “\texttt{Quản lý khung chương trình}”.
+\item \textbf{Hệ thống (UI)} gửi yêu cầu truy vấn danh sách khung chương trình hiện có đến \textbf{Bộ điều khiển}.
+\item \textbf{Bộ điều khiển} thực hiện lệnh \texttt{SELECT} tới \textbf{CSDL} và nhận kết quả trả về.
+\item \textbf{Hệ thống} hiển thị danh sách các khung chương trình hiện có trên giao diện cho điều phối viên.
+\item \textbf{Điều phối viên} chọn thao tác:
+\begin{itemize}
+\item \texttt{Tạo khung chương trình mới}, hoặc
+\item \texttt{Cập nhật khung chương trình cũ}.
+\end{itemize}
+\item Hệ thống hiển thị form nhập thông tin khung chương trình tương ứng (mới hoặc đã điền sẵn).
+\item \textbf{Điều phối viên} nhập đầy đủ thông tin cần thiết (chủ đề, nội dung, thời lượng, mô tả...) và nhấn nút \texttt{Lưu}.
+\item \textbf{Hệ thống} nhận dữ liệu, gửi đến \textbf{Bộ điều khiển} để kiểm tra ràng buộc:
+\begin{itemize}
+\item Đủ các trường thông tin bắt buộc.
+\item Chủ đề chưa bị trùng.
+\end{itemize}
+\item Nếu hợp lệ, \textbf{Bộ điều khiển} thực hiện \texttt{INSERT} hoặc \texttt{UPDATE} vào \textbf{CSDL}.
+\item \textbf{CSDL} phản hồi thành công (\texttt{OK}).
+\item \textbf{Hệ thống} hiển thị thông báo “Cập nhật khung chương trình thành công” và gửi thông báo đến các \textbf{Tutor}.
+\item Use case kết thúc thành công.
+\end{enumerate}
+
+
+\textbf{Luồng phụ và luồng lỗi:}
+
+\begin{enumerate}
+\item \textbf{Điều phối viên chọn “Hủy” thao tác}
+\begin{itemize}
+\item Khi đang ở form tạo/cập nhật, nếu điều phối viên chọn “Hủy”, hệ thống quay lại giao diện chính và không lưu bất kỳ thay đổi nào.
+\item Use case kết thúc sớm.
+\end{itemize}
+
+\item \textbf{Thiếu trường thông tin}
+\begin{itemize}
+\item Khi điều phối viên nhấn “Lưu” nhưng chưa nhập đủ các trường bắt buộc (chủ đề, nội dung...), \textbf{Bộ điều khiển} phát hiện lỗi ràng buộc.
+\item Hệ thống hiển thị thông báo lỗi:
+\begin{quote}
+“Thiếu thông tin, vui lòng nhập đầy đủ các trường bắt buộc.”
+\end{quote}
+\item Giao diện quay lại form nhập dữ liệu để người dùng bổ sung.
+\end{itemize}
+
+\item \textbf{Chủ đề đã tồn tại}
+\begin{itemize}
+\item Khi thực hiện kiểm tra ràng buộc, nếu phát hiện chủ đề nhập vào đã tồn tại trong CSDL, hệ thống hiển thị thông báo:
+
+“Chủ đề này đã tồn tại, vui lòng chọn tên khác.”
+
+\item Use case kết thúc mà không lưu dữ liệu.
+\end{itemize}
+
+\item \textbf{Lỗi CSDL (Database Error)}
+\begin{itemize}
+\item Trong quá trình lưu dữ liệu, nếu xảy ra lỗi như mất kết nối hoặc lỗi truy vấn, \textbf{Bộ điều khiển} nhận phản hồi \texttt{ERROR}.
+\item Hệ thống ghi log lỗi vào bộ ghi log nội bộ.
+\item UI hiển thị thông báo:
+
+“Lưu khung chương trình thất bại. Vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật.”
+
+\item Use case kết thúc không thành công.
+\end{itemize}
+\end{enumerate}

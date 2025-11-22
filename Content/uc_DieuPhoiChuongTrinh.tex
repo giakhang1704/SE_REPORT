@@ -1,0 +1,85 @@
+\newpage
+\subsubsection{Điều phối khung chương trình chung cho các tutor}
+
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-05 \\ \hline
+\textbf{Use Case Name} & Điều phối khung chương trình chung cho các tutor \\ \hline
+\textbf{Actor(s)} & Điều phối viên (Coordinator) \\ \hline
+\textbf{Description} & Điều phối viên soạn thảo và kiểm soát khung chương trình chung cho các tutor, từ đó hướng dẫn các tutor thực hiện và đảm bảo tính đồng bộ trong các buổi tư vấn. \\ \hline
+\textbf{Trigger} & Điều phối viên truy cập vào mục ``Quản lý khung chương trình''. \\ \hline
+\textbf{Pre--Condition(s)} &
+Điều phối viên đã đăng nhập vào hệ thống. \newline
+Điều phối viên có quyền quản trị và chỉnh sửa khung chương trình. \\ \hline
+\textbf{Post--Condition(s)} &
+Khung chương trình  được tạo và lưu thành công; hệ thống gửi thông báo đến các tutor. \\ \hline
+
+\textbf{Normal Flow} &
+1. Điều phối viên mở ``Quản lý khung chương trình''. \newline
+2. Hệ thống hiển thị danh sách khung chương trình và các tùy chọn. \newline
+3. Điều phối viên chọn ``Tạo khung chương trình mới''. \newline
+4. Hệ thống hiển thị form  với các trường (chủ đề, thời gian, tài liệu, yêu cầu học tập). \newline
+5. Điều phối viên điền thông tin và nhấn``Lưu''. \newline
+6. Hệ thống kiểm tra ràng buộc (các trường thông tin bắt buộc, trùng chủ đề) và lưu khung chương trình. \newline
+7. Hệ thống gửi thông báo cho các tutor về khung chương trình mới. \\ \hline
+
+\textbf{Alternative Flow(s)} &
+3a1. Điều phối viên chọn ``Cập nhật khung chương trình cũ'' và chọn một khung từ danh sách. \newline
+3a2. Hệ thống hiển thị form đã điền sẵn. \newline
+3a3. Điều phối viên chỉnh sửa thông tin và nhấn ``Lưu''. \newline
+3a4. Hệ thống kiểm tra ràng buộc và cập nhật khung chương trình. \newline
+3a5. Hệ thống gửi thông báo cho các tutor về khung chương trình đã cập nhật. \newline\newline
+
+3b. Điều phối viên chọn ``Hủy''; hệ thống quay về danh sách khung chương trình. Use case kết thúc không thay đổi dữ liệu.  \newline\newline
+
+6a1. Hệ thống hiển thị lỗi (thiếu dữ liệu / chủ đề đã tồn tại). \newline
+6a2. Hệ thống hiển thị lại form thông tin; Điều phối viên chỉnh sửa và quay lại Bước 5.
+
+\\ \hline
+
+\textbf{Exception Flow} &
+6e1. Hệ thống thông báo: ``Lưu chương trình thất bại, vui lòng thử lại sau''. \newline
+6e2. Hệ thống ghi log lỗi, trạng thái dữ liệu chưa được lưu. \newline
+6e3. Use case kết thúc không thành công. \\ \hline
+\end{longtable}
+
+
+
+\subsubsection{Gửi báo cáo đến các phòng ban}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-06 \\ \hline
+\textbf{Use Case Name} & Gửi báo cáo cho các phòng ban \\ \hline
+\textbf{Actor(s)} & Điều phối viên (Coordinator) \\ \hline
+\textbf{Description} & Điều phối viên chọn báo cáo được hệ thống tạo và gửi đến các đơn vị liên quan (Phòng Đào tạo, Phòng CTSV, Khoa/Bộ môn) dưới định dạng phù hợp. \\ \hline
+\textbf{Trigger} & Điều phối viên mở mục “Báo cáo” và chọn gửi báo cáo đã có cho các phòng ban. \\ \hline
+\textbf{Pre–Condition(s)} &
+Điều phối viên đã đăng nhập và có quyền gửi báo cáo. \newline
+Báo cáo đã được tạo/sinh sẵn (theo kỳ, theo môn, theo chương trình). \\ \hline
+\textbf{Post–Condition(s)} &
+Báo cáo được gửi thành công tới phòng ban đã chọn. \newline
+Hệ thống ghi nhận nhật ký gửi (thời gian, người gửi, nơi nhận, định dạng). \\ \hline
+\textbf{Normal Flow} &
+1. Điều phối viên vào mục “Báo cáo” và chọn một báo cáo có sẵn. \newline
+2. Hệ thống hiển thị thông tin báo cáo (tên, kỳ, phạm vi, bản xem trước). \newline
+3. Điều phối viên chọn nơi nhận: Phòng Đào tạo, Phòng CTSV, Khoa/Bộ môn (có thể chọn nhiều). \newline
+4. Điều phối viên chọn định dạng xuất (PDF/Excel) và kênh gửi (email/link nội bộ). \newline
+5. Điều phối viên nhấn “Gửi”. \newline
+6. Hệ thống tạo file (nếu cần), gửi tới nơi nhận đã chọn, ghi audit log. \newline
+7. Hệ thống hiển thị “Gửi báo cáo thành công” và cung cấp mã tra cứu. \\ \hline
+\textbf{Alternative Flow} &
+4a. Điều phối viên thêm ghi chú kèm báo cáo. \newline
+4a1. Hệ thống đính kèm ghi chú vào email/thông điệp gửi. \newline
+4a2. Quay lại bước 5. \newline\newline
+3b. Điều phối viên chọn lịch gửi định kỳ (hàng tháng/quý). \newline
+3b1. Hệ thống lưu lịch và sẽ tự động gửi theo chu kỳ. \\ \hline
+\textbf{Exception Flow} &
+2a. Không tồn tại báo cáo cho phạm vi đã chọn. \newline
+2a1. Hệ thống thông báo “Chưa có báo cáo phù hợp”, gợi ý tạo báo cáo trước. \newline
+2a2. Use case kết thúc. \newline\newline
+5a. Lỗi dịch vụ gửi (email/notification). \newline
+5a1. Hệ thống hiển thị “Gửi thất bại”, ghi log lỗi và giữ báo cáo ở trạng thái chưa gửi. \newline
+5a2. Điều phối viên có thể thử gửi lại hoặc tải file về để gửi thủ công. \\ \hline
+\end{longtable}
+
+

@@ -1,0 +1,51 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/phanhoi-Trang-5.drawio.png}
+    \caption{State Diagram cho yêu cầu đăng ký Tutor}
+\end{figure}
+
+\begin{table}[H]
+\centering
+\caption{Bảng mô tả trạng thái}
+\begin{tabular}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Trạng thái} & \textbf{Mô tả} \\ \hline
+Đang tạo yêu cầu & Sinh viên đang nhập thông tin để tạo yêu cầu. \\ \hline
+Chờ duyệt & Yêu cầu đã được gửi thành công và đang chờ hệ thống tự động duyệt trong vòng 12 giờ. \\ \hline
+Đã duyệt & Yêu cầu được hệ thống tự động duyệt sau 12 giờ và không bị sinh viên bấm hủy. \\ \hline
+Bị hủy & Sinh viên hủy yêu cầu (trong lúc tạo hoặc trong 12 giờ sau khi gửi). \\ \hline
+Bị lỗi & Xảy ra lỗi hệ thống hoặc mất kết nối mạng. \\ \hline
+\end{tabular}
+\end{table}
+\begin{table}[H]
+\centering
+\caption{Bảng Stimulus (Event/Transition)}
+\begin{tabular}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Stimulus} & \textbf{Mô tả} \\ \hline
+
+nộp [valid] / saveRequest() &
+Sinh viên gửi yêu cầu với dữ liệu hợp lệ, hệ thống lưu yêu cầu vào cơ sở dữ liệu và chuyển sang trạng thái chờ duyệt. \\ \hline
+
+nộp [invalid] / showError() &
+Sinh viên gửi yêu cầu nhưng dữ liệu không hợp lệ. Hệ thống hiển thị lỗi và giữ nguyên trạng thái tạo yêu cầu. \\ \hline
+
+Hủy tạo yêu cầu &
+Sinh viên hủy khi đang tạo yêu cầu (yêu cầu chưa được lưu). \\ \hline
+
+Hủy [time < 12h]  &
+Sinh viên hủy yêu cầu sau khi đã gửi (trong 12 giờ). Hệ thống cập nhật trạng thái thành “Đã hủy”. \\ \hline
+
+duyệt tự động [sau 12h và chưa bị hủy]  &
+Hệ thống tự động duyệt yêu cầu sau 12 giờ nếu sinh viên không hủy. \\ \hline
+
+Lỗi mạng &
+Lỗi kết nối trong quá trình gửi yêu cầu, hệ thống thông báo lỗi. \\ \hline
+
+nộp [lỗi CSDL] &
+Lỗi hệ thống khi lưu dữ liệu vào cơ sở dữ liệu. \\ \hline
+
+
+
+\end{tabular}
+\end{table}

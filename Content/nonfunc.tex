@@ -1,0 +1,58 @@
+\subsection{Yêu cầu phi chức năng (Non-functional Requirements)}
+
+
+\subsubsection{Hiệu năng và khả năng mở rộng (Performance \& Scalability)}
+\begin{itemize}
+    \item \textbf{Phản hồi hệ thống:} Hệ thống phải cung cấp phản hồi trong vòng 3 giây đối với các thao tác tiêu chuẩn (ví dụ: đăng nhập, xem tài liệu , xem hồ sơ cá nhân,...).
+    \item \textbf{Xử lý đồng thời:} Hệ thống phải hỗ trợ ít nhất 5,000 sinh viên sử dụng đồng thời mà không gián đoạn dịch vụ.
+    \item \textbf{Thời gian phản hồi các thao tác nặng:} Các thao tác như ghép cặp AI, tạo báo cáo, tải tài liệu phải hoàn thành trong $<=$ 2 giây cho 95\% các yêu cầu.
+    \item \textbf{Khả năng mở rộng:} Hệ thống có thể mở rộng để phục vụ tối đa 8,000 sinh viên mà không gián đoạn dịch vụ.
+\end{itemize}
+
+\subsubsection{Bảo mật và tuân thủ pháp lý (Security \& Compliance)}
+\begin{itemize}
+    \item \textbf{Mã hóa dữ liệu:} 100\% dữ liệu nhạy cảm (thông tin cá nhân, điểm số, nhật ký học tập) phải được mã hóa theo TLS 1.3 khi truyền tải và AES-256 khi lưu trữ.
+    \item \textbf{Xác thực người dùng:} Tích hợp HCMUT\_SSO, chỉ cho phép đăng nhập thông qua Single Sign-On (SSO). Vai trò người dùng được đồng bộ tự động từ hệ thống tập trung.
+    \item \textbf{Phân quyền truy cập:} Kiểm soát truy cập theo vai trò (RBAC), quyền truy cập được kiểm tra định kỳ 6 tháng. Chỉ cho phép người dùng truy cập dữ liệu và tài liệu mà họ được phép.
+    \item \textbf{Bảo vệ chống tấn công:} Chống DDoS, SQL injection, XSS; kiểm tra bảo mật định kỳ hàng quý.
+    \item \textbf{Tuân thủ pháp lý:} Hệ thống phải tuân thủ Luật An ninh Mạng 2018, GDPR và các quy định địa phương liên quan đến dữ liệu cá nhân và giao dịch học thuật.
+\end{itemize}
+
+\subsubsection{Tính khả dụng và khôi phục (Availability \& Disaster Recovery)}
+\begin{itemize}
+    \item \textbf{Tính khả dụng:} Hệ thống phải đảm bảo uptime $>=$ 99\%, tương đương không quá 88 giờ downtime/năm, đặc biệt trong các giai đoạn cao điểm như kỳ thi hoặc thời hạn nộp bài.
+    \item \textbf{Khôi phục sau sự cố:} Thời gian khôi phục sau sự cố (RTO) $<=$ 3 giờ, phục hồi dữ liệu trong vòng 24 giờ (RPO $<=$ 24 giờ).
+    \item \textbf{Bảo trì:} Thời gian bảo trì $<=$ 5 giờ/tháng, thực hiện trong giờ thấp điểm (0h00–1h00), thông báo trước ít nhất 24 giờ.
+\end{itemize}
+
+\subsubsection{Khả năng tương thích (Compatibility)}
+\begin{itemize}
+    \item Hệ thống tương thích với các trình duyệt phổ biến: Chrome, Firefox, Edge (phiên bản mới nhất).
+    \item Hỗ trợ cả thiết bị máy tính và thiết bị di động.
+    \item Tích hợp với HCMUT\_DATACORE và HCMUT\_LIBRARY để đảm bảo dữ liệu đồng bộ và chính xác.
+\end{itemize}
+
+\subsubsection{Khả năng sử dụng (Usability)}
+\begin{itemize}
+    \item Giao diện trực quan, song ngữ (Tiếng Việt/Anh), người dùng mới có thể nắm bắt cách sử dụng cơ bản trong khoảng thời gian 10 phút.
+    \item Thông báo lỗi rõ ràng, hiển thị song ngữ và kèm hướng dẫn khắc phục.
+\end{itemize}
+
+\subsubsection{Khả năng bảo trì (Maintainability)}
+\begin{itemize}
+    \item Hệ thống module hóa (ví dụ: module quản lý lịch, module tải tài liệu, module ghép cặp AI) để dễ dàng cập nhật mà không ảnh hưởng toàn hệ thống.
+    \item Tài liệu kỹ thuật đầy đủ, đảm bảo lập trình viên tương lai có thể hiểu và chỉnh sửa hệ thống dễ dàng.
+\end{itemize}
+
+\subsubsection{Hỗ trợ kỹ thuật (Technical Support)}
+\begin{itemize}
+    \item 100\% yêu cầu hỗ trợ kỹ thuật phải được phản hồi trong vòng 2 giờ làm việc.
+    \item Vấn đề phải được giải quyết trong vòng 24 giờ từ khi tiếp nhận.
+\end{itemize}
+\subsubsection{Độ tin cậy (Reliability)}
+\begin{itemize}
+    \item \textbf{Tỷ lệ lỗi của người dùng:} Khi thực hiện các thao tác trong hệ thống (ví dụ: đăng nhập, ghép cặp Tutor-Sinh viên, tải tài liệu), tỷ lệ lỗi do người dùng không được vượt quá 5\%.
+    \item \textbf{Chống lỗi tạm thời (Fault Tolerance):} Hệ thống phải có cơ chế tự động phục hồi khi gặp các lỗi tạm thời, ví dụ: mất kết nối với HCMUT\_DATACORE hoặc lỗi tải tài liệu. 
+    \item \textbf{Thông báo sự cố:} Khi sự cố kéo dài, hệ thống phải thông báo rõ ràng cho người dùng và hướng dẫn các bước khắc phục (ví dụ: thử lại thao tác hoặc liên hệ bộ phận hỗ trợ).
+\end{itemize}
+

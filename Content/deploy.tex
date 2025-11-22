@@ -1,0 +1,41 @@
+\begin{figure} [H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/deploymentdiagram.drawio.png}
+    \caption{Deployment Diagram cho hệ thống}
+    \label{fig:placeholder}
+\end{figure}
+
+\begin{enumerate}
+    \item Client Computer (Máy tính máy khách)
+    \begin{itemize}
+        \item Thiết bị này đại diện cho phía client, nơi người dùng cuối truy cập vào hệ thống thông qua web browser (trình duyệt web).
+        \item Giao diện phía client được hiện thực bằng HTML 5 (cùng với CSS, JavaScript), là artifact được tải về từ Web Server và render bởi trình duyệt.
+        \item Component trình duyệt đảm nhiệm việc gửi yêu cầu tới máy chủ và hiển thị kết quả cho người dùng.
+        \item Thiết bị này kết nối đến Web Server thông qua giao thức HTTPS (trên nền TCP/IP).
+    \end{itemize}
+    \item Web Server (Máy chủ Web)
+    \begin{itemize}
+        \item Máy chủ này chạy trên hệ điều hành Ubuntu 22.4 và sử dụng Nginx (một artifact phần mềm) làm máy chủ web.
+        \item Phục vụ nội dung tĩnh: Lưu trữ và cung cấp artifact là Frontend Build (html, css, js) cho Client.
+        \item Reverse Proxy: Nhận yêu cầu từ Client và chuyển tiếp (forward) các yêu cầu nghiệp vụ đến Application Server.
+        \item Máy chủ Web giao tiếp với Client và Application Server qua giao thức HTTP/HTTPS (trên nền TCP/IP).
+    \end{itemize}
+    \item Application Server (Máy chủ Ứng dụng)
+    \begin{itemize}
+        \item Máy chủ này chạy trên hệ điều hành Ubuntu 22.4, phục vụ cho việc xử lý logic nghiệp vụ (backend) của hệ thống.
+        \item Nó sử dụng JVM (Java Virtual Machine) làm môi trường thực thi để chạy server (máy chủ ứng dụng) Tomcat.
+        \item Thành phần chính được triển khai là artifact my\_app.war (Web Application Archive), chứa toàn bộ logic nghiệp vụ (ví dụ: các lớp Service, Controller, và logic truy cập dữ liệu).
+        \item Máy chủ Ứng dụng giao tiếp với Web Server, Database Server và hệ thống HCMUT\_SSO qua các giao thức trên nền TCP/IP.
+    \end{itemize}
+    \item Database Server (Máy chủ Cơ sở dữ liệu)
+    \begin{itemize}
+        \item Máy chủ này chạy trên hệ điều hành Ubuntu 22.4 và sử dụng MySQL làm hệ quản trị cơ sở dữ liệu (database system).
+        \item Máy chủ Cơ sở dữ liệu kết nối với Máy chủ Ứng dụng qua giao thức JDBC (trên nền TCP/IP) để trao đổi dữ liệu.
+    \end{itemize}
+    \item HCMUT\_SSO (Hệ thống Xác thực)
+    \begin{itemize}
+        \item Đây là một External system (hệ thống bên ngoài) cung cấp dịch vụ xác thực tập trung (Single Sign-On).
+        \item Nó cung cấp một hệ thống xác thực người dùng, phục vụ cho việc đăng nhập và bảo mật truy cập vào hệ thống, giúp ứng dụng không cần tự quản lý mật khẩu.
+        \item Hệ thống xác thực kết nối với Máy chủ Ứng dụng qua giao thức HTTP/HTTPS (trên nền TCP/IP).
+    \end{itemize}
+\end{enumerate}

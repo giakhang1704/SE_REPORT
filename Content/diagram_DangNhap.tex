@@ -1,0 +1,56 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/ĐN SQ.drawio.png}
+    \caption{Sequence Diagram cho UC Đăng nhập}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/ĐN AC.drawio.png}
+    \caption{Activity Diagram cho UC Đăng nhập}
+\end{figure}
+\textbf{Mô tả:}
+
+\textbf{Luồng sự kiện chính: Đăng nhập thành công}
+\begin{enumerate}
+    \item \textbf{Người dùng} truy cập vào trang chủ của hệ thống \textbf{Tutor Support System}.
+    \item \textbf{System} hiển thị giao diện đăng nhập với nút “\textbf{Đăng nhập qua HCMUT\_SSO}”.
+    \item \textbf{Người dùng} nhấn vào nút “Đăng nhập qua HCMUT\_SSO”.
+    \item \textbf{System} chuyển hướng người dùng đến trang đăng nhập của \textbf{HCMUT\_SSO}.
+    \item \textbf{Người dùng} nhập thông tin đăng nhập (\texttt{BKNetID} và mật khẩu).
+    \item \textbf{HCMUT\_SSO} xác thực thông tin đăng nhập.
+    \item Nếu thông tin hợp lệ, \textbf{HCMUT\_SSO} trả về \textbf{auth token} cho \textbf{Tutor Support System}.
+    \item \textbf{Tutor Support System} sử dụng token để truy vấn \textbf{HCMUT\_DATACORE} và lấy thông tin người dùng (họ tên, mã số, email, vai trò, trạng thái).
+    \item \textbf{Tutor Support System} kiểm tra quyền truy cập:
+    \begin{itemize}
+        \item Nếu người dùng có vai trò hợp lệ, hệ thống phân quyền và khởi tạo phiên đăng nhập.
+    \end{itemize}
+    \item \textbf{System} chuyển hướng người dùng đến trang chủ tương ứng với vai trò (Sinh viên / Tutor / Điều phối viên).
+\end{enumerate}
+
+\textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}
+
+\begin{enumerate}
+
+    \item \textbf{Thông tin đăng nhập không chính xác:}\\
+    Nếu người dùng nhập sai BKNetID hoặc mật khẩu:
+    \begin{itemize}
+        \item \textbf{HCMUT\_SSO} hiển thị thông báo lỗi trực tiếp trên form đăng nhập.
+    \end{itemize}
+    Use Case quay lại bước nhập thông tin đăng nhập (bước 5).
+
+    \item \textbf{Tài khoản bị khóa :}\\
+    Nếu tài khoản không thể xác thực do trạng thái tài khoản không hợp lệ:
+    \begin{itemize}
+        \item \textbf{HCMUT\_SSO} hiển thị thông báo lỗi tương ứng trên form đăng nhập.
+    \end{itemize}
+    Use Case kết thúc không thành công tại SSO.
+
+    \item \textbf{Không có quyền truy cập hệ thống:}\\
+    Nếu người dùng đăng nhập thành công nhưng vai trò không thuộc nhóm được phép sử dụng hệ thống:
+    \begin{itemize}
+        \item \textbf{Tutor Support System} hiển thị thông báo:
+        \textit{“Bạn không có quyền truy cập hệ thống.”}
+    \end{itemize}
+    Phiên đăng nhập không được tạo; Use Case kết thúc.
+
+\end{enumerate}

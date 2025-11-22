@@ -1,0 +1,414 @@
+% ================== USE CASE 12 ==================
+\subsubsection{Tạo buổi tư vấn}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-12 \\ \hline
+\textbf{Use Case Name} & Tạo buổi tư vấn \\ \hline
+\textbf{Actor(s)} & Tutor \\ \hline
+\textbf{Description} & 
+Tutor muốn tạo một buổi tư vấn  để sinh viên có thể đăng ký tham gia sau đó. Buổi tư vấn có thể nhằm hỗ trợ học tập, hướng nghiệp hoặc phát triển kỹ năng mềm. \\ \hline
+
+\textbf{Trigger} & 
+Tutor muốn tạo mới một buổi tư vấn và nhấn vào nút “Tạo buổi tư vấn”. \\ \hline
+
+\textbf{Pre–Condition(s)} &   
+- Tutor đã đăng nhập thành công vào hệ thống. \newline
+- Kết nối mạng ổn định và hệ thống đang hoạt động bình thường. \\ \hline
+
+\textbf{Post–Condition(s)} & 
+Buổi tư vấn được tạo thành công và hiển thị trong danh sách buổi tư vấn mở cho sinh viên đăng ký.  
+Hệ thống gửi thông báo xác nhận cho Tutor.  
+Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
+
+\textbf{Normal Flow} & 
+
+    1. Tutor bấm vào nút “Tạo buổi tư vấn”.\newline
+    2. Hệ thống hiển thị form nhập thông tin buổi tư vấn (ngày/giờ, tiêu đề, mô tả nội dung, hình thức tổ chức — online hoặc trực tiếp, và số lượng sinh viên tối đa nếu có).\newline
+    3. Tutor nhập đầy đủ thông tin và bấm “Xác nhận”.\newline
+    4. Hệ thống kiểm tra xung đột thời gian với lịch rảnh và các buổi tư vấn/lịch hẹn khác.\newline
+    5. Hệ thống tạo buổi tư vấn mới, lưu vào cơ sở dữ liệu và cập nhật lịch rảnh của Tutor.\newline
+    6. Hệ thống gửi thông báo xác nhận cho Tutor và hiển thị buổi tư vấn trong danh sách để sinh viên có thể đăng ký.\newline
+ \\ \hline
+
+\textbf{Alternative Flow} & 
+\begin{enumerate}
+    \item[4a.] Hệ thống phát hiện xung đột thời gian (trùng với buổi khác hoặc thời gian không hợp lệ như đã qua).
+    \begin{enumerate}
+        \item[4a1.] Hệ thống hiển thị thông báo lỗi: “Thời gian không hợp lệ hoặc bị trùng với lịch khác”.
+        \item[4a2.] Giao diện quay lại bước 3 để Tutor chỉnh sửa.
+    \end{enumerate}
+        \end{enumerate}
+     
+
+\begin{enumerate}
+    \item[3a.] Tutor hủy thao tác.
+    \begin{enumerate}
+        \item[3a1.] Trong quá trình nhập thông tin, Tutor chọn “Hủy thao tác”.
+        \item[3a2.] Hệ thống không tạo buổi tư vấn mới.
+        \item[3a3.] Use case kết thúc sớm.
+           \end{enumerate}
+     
+   
+\end{enumerate} \\ \hline
+
+\textbf{Exception Flow} & 
+- Mất kết nối mạng trong quá trình thao tác → Hệ thống hiển thị thông báo lỗi kết nối. \newline
+- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”. 
+     \begin{enumerate}
+    \item[5a.] Sau khi kiểm tra thời gian và lưu dữ liệu (bước 5), hệ thống gặp lỗi cơ sở dữ liệu (DB error).
+    \begin{enumerate}
+        \item[5a1.] Hệ thống hiển thị thông báo: “Tạo buổi tư vấn thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”.
+        \item[5a2.] Hệ thống ghi log lỗi và không tạo buổi tư vấn.
+        \item[5a3.] Use case kết thúc không thành công.
+    \end{enumerate}
+\end{enumerate} \\ \hline
+
+\end{longtable}
+
+% ================== USE CASE 13 ==================
+\subsubsection{Hủy buổi gặp}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-13 \\ \hline
+\textbf{Use Case Name} & Hủy buổi gặp \\ \hline
+\textbf{Actor(s)} & Tutor \\ \hline
+\textbf{Description} & 
+Tutor muốn hủy một buổi gặp đã được lên lịch với sinh viên (lịch hẹn hoặc buổi tư vấn). \\ \hline
+\textbf{Trigger} & 
+Tutor nhấn vào nút “Hủy lịch” để thực hiện hủy một buổi hẹn đã có. \\ \hline
+\textbf{Pre–Condition(s)} & 
+Tutor đã đăng nhập vào hệ thống.  
+Tutor đã thiết lập khoảng thời gian rảnh.  
+Sinh viên đã đăng ký chương trình với Tutor và có thể đặt lịch. \\ \hline
+\textbf{Post–Condition(s)} & 
+Buổi gặp được hủy thành công.  
+Hệ thống gửi thông báo tự động cho Tutor và sinh viên.  
+Hệ thống cập nhật lại lịch rảnh của Tutor. \\ \hline
+
+\textbf{Normal Flow} & 
+
+    1. Tutor bấm vào nút “Hủy lịch”.\newline
+    2. Hệ thống hiển thị danh sách buổi gặp đã lên lịch.\newline
+    3. Tutor chọn một buổi gặp cụ thể.\newline
+    4. Hệ thống hiển thị form nhập lý do hủy.\newline
+    5. Tutor nhập lý do\newline
+    6. Tutor bấm “Xác nhận”. \newline
+     7. Hệ thống kiểm tra Tutor đã nhập lý do.\newline
+     8. Hệ thống cập nhật lịch rảnh và lịch hẹn của Tutor.\newline
+    9. Hệ thống gửi thông báo thành công.\newline
+ \\ \hline
+
+\textbf{Alternative Flow} & 
+\begin{enumerate}
+    \item[2a.] Hệ thống kiểm tra và phát hiện không có buổi gặp nào đã được lên lịch.
+    \begin{enumerate}
+        \item[2a1.] Hệ thống hiển thị thông báo: “Hiện tại không có buổi gặp nào để hủy”.
+        \item[2a2.] Use case kết thúc sớm.
+    \end{enumerate}
+
+    \item[6a.] Tutor hủy thao tác.
+    \begin{enumerate}
+        \item[6a1.] Trong quá trình nhập lý do, Tutor chọn “Hủy thao tác”.
+        \item[6a2.] Hệ thống giữ nguyên lịch hẹn cũ.
+        \item[6a3.] Use case kết thúc sớm.
+    \end{enumerate}
+
+    \item[7a.] Tutor bỏ trống lý do hủy.
+    \begin{enumerate}
+        \item[7a1.] Hệ thống hiển thị thông báo: “Vui lòng nhập lý do hủy”.
+        \item[7a2.] Giao diện hệ thống trở lại bước 4.
+    \end{enumerate}
+
+\end{enumerate} \\ \hline
+
+\textbf{Exception Flow} & 
+
+- Mất kết nối mạng trong quá trình thao tác → Hệ thống hiển thị thông báo lỗi kết nối. \newline
+- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”. 
+\begin{enumerate}
+    \item[8a.] Hệ thống cố gắng cập nhật nhưng gặp lỗi cơ sở dữ liệu.
+    \begin{enumerate}
+        \item[8a1.] Hệ thống hiển thị thông báo: “Cập nhật thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”.
+        \item[8a2.] Hệ thống ghi log lỗi và giữ nguyên lịch hẹn cũ.
+        \item[8a3.] Use case kết thúc không thành công.
+    \end{enumerate}
+\end{enumerate} \\ \hline
+\end{longtable}
+
+% ================== USE CASE 14 ==================
+\subsubsection{Ghi nhận tiến độ học tập của sinh viên}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-14 \\ \hline
+\textbf{Use Case Name} & Ghi nhận tiến độ học tập của sinh viên \\ \hline
+\textbf{Actor(s)} & Tutor \\ \hline
+\textbf{Description} & Tutor muốn ghi nhận và cập nhật tiến độ học tập của sinh viên dựa trên các buổi tư vấn hoặc hỗ trợ, để theo dõi hiệu quả học tập và tổng hợp báo cáo gửi cho phòng/ban. \\ \hline
+\textbf{Trigger} & Tutor muốn ghi nhận tiến độ học tập của sinh viên sau một buổi tư vấn. Tutor nhấn vào nút “Ghi Nhận Tiến Độ”. \\ \hline
+\textbf{Pre–Condition(s)} & Tutor đã đăng nhập vào hệ thống. Tutor đã thực hiện ít nhất một buổi tư vấn/hỗ trợ với sinh viên. Dữ liệu sinh viên (họ tên, MSSV, trạng thái học tập) đã được đồng bộ từ HCMUT\_DATACORE. \\ \hline
+\textbf{Post–Condition(s)} & Tiến độ học tập của sinh viên được cập nhật thành công trong hệ thống. Hệ thống gửi thông báo cho tutor và sinh viên . \\ \hline
+\textbf{Normal Flow} & 
+\begin{enumerate}
+    \item Tutor truy cập mục “Ghi Nhận Tiến Độ” ở trang chủ.
+    \item Hệ thống hiển thị danh sách sinh viên đã được ghép đôi với Tutor và các buổi tư vấn liên quan.
+    \item Tutor chọn một sinh viên và buổi tư vấn cụ thể.
+    \item Hệ thống hiển thị form nhập tiến độ (nội dung học, đánh giá, ghi chú).
+    \item Tutor nhập thông tin tiến độ (bắt buộc: nội dung học, đánh giá; tùy chọn: ghi chú) và bấm “Xác nhận”.
+    \item Hệ thống kiểm tra tính hợp lệ của dữ liệu.
+    \item Hệ thống lưu thông tin tiến độ.
+    \item Hệ thống gửi thông báo xác nhận cho Tutorvà sih viên.
+\end{enumerate} \\ \hline
+\textbf{Alternative Flow} & 
+\begin{enumerate}
+    \item[6a.] Hệ thống kiểm tra tính hợp lệ của dữ liệu và phát hiện trường bắt buộc bị bỏ trống.
+    \begin{enumerate}
+        \item[6a1.] Hệ thống hiển thị thông báo: “Vui lòng điền đầy đủ thông tin bắt buộc”.
+        \item[6a2.] Giao diện hệ thống trở lại bước 5.
+    \end{enumerate}
+    \item[5a.] Trong quá trình nhập thông tin, Tutor chọn “Hủy ghi nhận”.
+    \begin{enumerate}
+        \item[5a1.] Hệ thống quay lại màn hình trang chủ.
+        \item[5a2.] Use case kết thúc sớm.
+    \end{enumerate}
+\end{enumerate} \\ \hline
+\textbf{Exception Flow} & 
+\begin{enumerate}
+    \item[7a.] Sau khi kiểm tra dữ liệu (bước 6) và cố gắng lưu/đồng bộ (bước 7), hệ thống mất kết nối mạng.
+    \begin{enumerate}
+        \item[7a1.] Hệ thống hiển thị thông báo: “Không thể kết nối. Vui lòng thử lại sau”.
+        \item[7a2.] Hệ thống ghi log lỗi và không cập nhật dữ liệu.
+        \item[7a3.] Use case kết thúc không thành công.
+    \end{enumerate}
+    \item[7b.] Sau khi kiểm tra dữ liệu (bước 6) và cố gắng lưu/đồng bộ (bước 7), hệ thống gặp lỗi server không phản hồi.
+    \begin{enumerate}
+        \item[7b1.] Hệ thống hiển thị thông báo: “Có lỗi xảy ra, vui lòng thử lại sau”.
+        \item[7b2.] Hệ thống ghi log lỗi và không cập nhật dữ liệu.
+        \item[7b3.] Use case kết thúc không thành công.
+    \end{enumerate}
+\end{enumerate} \\ \hline
+\end{longtable}
+
+% ================== USE CASE 15 ==================
+\subsubsection{Thiết lập lịch rảnh}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-15 \\ \hline
+\textbf{Use Case Name} & Thiết lập lịch rảnh \\ \hline
+\textbf{Actor(s)} & Tutor \\ \hline
+\textbf{Description} & Tutor cập nhật lịch rảnh của mình lên hệ thống để phục vụ việc xếp lịch học. \\ \hline
+
+\textbf{Trigger} & Tutor nhấn vào nút “Thêm lịch rảnh”. \\ \hline
+
+\textbf{Pre–Condition(s)} &
+Thiết bị đảm bảo kết nối internet và hệ thống duy trì hoạt động. \newline
+Tài khoản đăng nhập đã được phân quyền tutor. \newline
+Tutor đã đăng nhập vào hệ thống web. \\ \hline
+
+\textbf{Post–Condition(s)} &
+Lịch rảnh của Tutor được thêm mới vào hệ thống và hiển thị trong danh sách lịch rảnh. \\ \hline
+
+\textbf{Normal Flow} &
+1. Tutor bấm vào nút “Thêm lịch rảnh” ở trang chủ. \newline
+2. Hệ thống hiển thị biểu mẫu thêm lịch rảnh. \newline
+3. Tutor nhập thông tin ngày giờ và khoảng thời gian rảnh. \newline
+4. Tutor bấm vào nút “Xác nhận”. \newline
+5. Hệ thống hiển thị thông báo “Thêm lịch rảnh thành công”. \\ \hline
+
+\textbf{Alternative Flow} &
+3b. Tutor bấm nút “Hủy”: \newline
+3b1. Hệ thống quay lại màn hình trang chủ. \newline
+3b2. Không lưu lại bất kỳ thông tin nào đã nhập. 
+3a. Tutor không điền đủ thông tin về thời gian. \newline
+3a1. Hệ thống hiển thị thông báo lỗi: “Không điền đủ thông tin”. \newline
+3a2. Hệ thống yêu cầu Tutor nhập đủ các trường bắt buộc trước khi tiếp tục. \newline
+4a. Lịch rảnh mới thêm trùng với lịch rảnh cũ. \newline
+4a1. Hệ thống hiển thị cảnh báo: “Lịch rảnh này đã tồn tại”. \newline
+4a2. Hệ thống yêu cầu Tutor chỉnh sửa lại thông tin thời gian. \newline
+\\ \hline
+\textbf{Exception Flow} &
+
+- Mất kết nối mạng trong quá trình thêm lịch → Hệ thống hiển thị thông báo lỗi “Không thể kết nối. Vui lòng thử lại sau”. \newline
+- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”. \\ \hline
+
+\end{longtable}
+
+% ================== USE CASE 16 ==================
+\subsubsection{ Đăng tải tài liệu}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-16 \\ \hline
+\textbf{Use Case Name} &  Đăng tải tài liệu \\ \hline
+\textbf{Actor(s)} & Tutor,  HCMUT\_LIBRARY  \\ \hline
+\textbf{Description} & 
+Tutor đăng tải tài liệu học tập (giáo trình, slide, …) lên hệ thống thư viện để chia sẻ cho sinh viên. 
+Tài liệu phải chờ quản trị viên (HCMUT\_LIBRARY) duyệt trước khi hiển thị chính thức. \\ \hline
+
+\textbf{Trigger} & Tutor bấm vào nút “Đăng tải tài liệu”. \\ \hline
+
+\textbf{Pre–Condition(s)} & 
+- Tutor đã đăng nhập thành công vào hệ thống. \newline
+- Tài khoản Tutor có quyền thêm tài liệu. \newline
+- Kết nối mạng ổn định và hệ thống đang hoạt động bình thường. \\ \hline
+
+\textbf{Post–Condition(s)} & 
+- Tài liệu được lưu vào hệ thống ở trạng thái “Chờ duyệt”. \newline
+- Sau khi HCMUT\_LIBRARY duyệt thành công, tài liệu được hiển thị cho sinh viên. \\ \hline
+
+\textbf{Normal Flow} & 
+1. Tutor chọn chức năng “Đăng tải tài liệu” từ giao diện hệ thống. \newline
+2. Hệ thống hiển thị giao diện đăng tải tài liệu. \newline
+3. Tutor chọn file. \newline
+4. Hệ thống tải tài liệu lên. \newline
+5. Hệ thống kiểm tra định dạng, dung lượng file. \newline
+6. Hệ thống lưu tài liệu ở trạng thái “Chờ duyệt”. \newline
+7. Hệ thống hiển thị thông báo “Yêu cầu đăng tải đã được gửi. Tài liệu sẽ được hiển thị sau khi quản trị viên phê duyệt”. \newline
+8. HCMUT\_LIBRARY kiểm duyệt tài liệu. \newline
+9. Nếu được duyệt, tài liệu được cập nhật trạng thái “Đã duyệt” và hiển thị cho sinh viên. \\ \hline
+
+\textbf{Alternative Flow} & 
+\begin{enumerate}
+    \item[3a.] Tutor chọn “Hủy”.
+    \begin{enumerate}
+        \item[3a1.] Hệ thống hủy thao tác đăng tải.
+        \item[3a2.] Quay lại màn hình trước đó, không lưu bất kỳ thông tin nào.
+    \end{enumerate}
+    \item[5a.] File sai định dạng.
+    \begin{enumerate}
+        \item[5a1.] Hệ thống hiển thị thông báo “Định dạng không được hỗ trợ”.
+        \item[5a2.] Quay lại bước 3.
+    \end{enumerate}
+    \item[5b.] File vượt dung lượng ($>$2GB).
+    \begin{enumerate}
+        \item[5b1.] Hệ thống hiển thị thông báo “File của bạn lớn hơn 2GB”.
+        \item[5b2.] Quay lại bước 3.
+    \end{enumerate}
+\end{enumerate}
+\\ \hline
+
+
+\textbf{Exception Flow} & 
+- Lỗi lưu trữ hoặc mất kết nối → Hệ thống hiển thị thông báo “Không thể kết nối. Vui lòng thử lại sau”. \newline
+- HCMUT\_LIBRARY từ chối duyệt → Hệ thống gửi thông báo cho Tutor “Tài liệu bị từ chối. Vui lòng kiểm tra lại nội dung hoặc liên hệ quản trị viên.” \\ \hline
+
+\end{longtable}
+
+
+% ================== USE CASE 17 ==================
+\subsubsection{Xóa tài liệu}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-17 \\ \hline
+\textbf{Use Case Name} & Xóa tài liệu \\ \hline
+\textbf{Actor(s)} & Tutor, HCMUT\_LIBRARY \\ \hline
+\textbf{Description} & 
+Tutor xóa tài liệu đã đăng tải (trước hoặc sau khi duyệt) nhằm quản lý lại nội dung trong thư viện số. 
+Yêu cầu xóa cần được quản trị viên (HCMUT\_LIBRARY) duyệt trước khi tài liệu bị gỡ bỏ khỏi hệ thống. \\ \hline
+
+\textbf{Trigger} & Tutor chọn chức năng “Xóa tài liệu”. \\ \hline
+
+\textbf{Pre–Condition(s)} & 
+- Tutor đã đăng nhập thành công vào hệ thống. \newline
+- Tài liệu cần xóa thuộc quyền sở hữu của Tutor. \newline
+- Hệ thống hoạt động ổn định và có kết nối mạng. \\ \hline
+
+\textbf{Post–Condition(s)} & 
+- Tài liệu được chuyển sang trạng thái “Chờ duyệt xóa”. \newline
+- Sau khi HCMUT\_LIBRARY duyệt, tài liệu bị gỡ bỏ khỏi hệ thống. \\ \hline
+
+\textbf{Normal Flow} & 
+1. Tutor chọn chức năng “Quản lý tài liệu”. \newline
+2. Hệ thống hiển thị danh sách tài liệu mà Tutor đã đăng tải. \newline
+3. Tutor chọn một hoặc nhiều tài liệu cần xóa. \newline
+4. Tutor chọn nút “Xóa tài liệu”. \newline
+5. Hệ thống hiển thị hộp thoại xác nhận. \newline
+6. Tutor chọn “Đồng ý”. \newline
+7. Hệ thống ghi nhận yêu cầu xóa và chuyển tài liệu sang trạng thái “Chờ duyệt xóa”. \newline
+8. Hệ thống hiển thị thông báo: “Yêu cầu xóa đã được gửi. Tài liệu sẽ bị gỡ bỏ sau khi quản trị viên phê duyệt”. \newline
+9. HCMUT\_LIBRARY kiểm duyệt yêu cầu xóa. \newline
+10. Nếu được duyệt, hệ thống gỡ bỏ tài liệu khỏi thư viện số. \\ \hline
+
+\textbf{Alternative Flow} & 
+6a. Tutor chọn “Hủy” tại hộp thoại xác nhận. \newline
+6a1. Hệ thống hủy thao tác xóa. \newline
+6a2. Hệ thống quay lại màn hình danh sách tài liệu, không có thay đổi nào được thực hiện. \\ \hline
+
+\textbf{Exception Flow} & 
+- Lỗi khi ghi nhận yêu cầu xóa → Hệ thống hiển thị thông báo “Không thể gửi yêu cầu xóa. Vui lòng thử lại sau”. \newline
+- Mất kết nối mạng trong quá trình thao tác → Hệ thống hiển thị thông báo lỗi kết nối. \newline
+- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”. \newline
+- HCMUT\_LIBRARY từ chối yêu cầu xóa → Hệ thống gửi thông báo cho Tutor “Yêu cầu xóa bị từ chối. Vui lòng kiểm tra lại hoặc liên hệ quản trị viên.” \\ \hline
+
+\end{longtable}
+
+
+% ================== USE CASE 18 ==================
+\subsubsection{Xử lý yêu cầu đặt lịch hẹn}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-18 \\ \hline
+\textbf{Use Case Name} & Xử lý yêu cầu đặt lịch hẹn \\ \hline
+\textbf{Actor(s)} &Tutor \\ \hline
+\textbf{Description} & 
+Tutor xem và xử lý các yêu cầu đặt lịch hẹn từ sinh viên (phê duyệt hoặc từ chối) để xác nhận lịch hẹn với. \\ \hline
+
+\textbf{Trigger} & 
+Tutor bấm vào nút " Quản lí yêu cầu đặt lịch hẹn". \\ \hline
+
+\textbf{Pre–Condition(s)} & 
+- Tutor đã đăng nhập vào hệ thống. \newline
+- Sinh viên đã gửi yêu cầu đặt lịch hẹn cho Tutor. \newline
+- Hệ thống hoạt động bình thường và có kết nối mạng. \\ \hline
+
+\textbf{Post–Condition(s)} & 
+- Yêu cầu lịch hẹn được Tutor xử lý (duyệt hoặc từ chối). \newline
+- Hệ thống gửi thông báo kết quả cho sinh viên. \newline
+- Nếu duyệt: lịch hẹn được ghi nhận chính thức vào hệ thống. \newline
+- Nếu từ chối: yêu cầu bị hủy và không ghi vào lịch. \\ \hline
+
+\textbf{Normal Flow} & 
+\begin{enumerate}
+    \item Tutor truy cập mục “Quản lý yêu cầu lịch hẹn”.
+    \item Hệ thống hiển thị danh sách các yêu cầu lịch hẹn đang chờ xử lý.
+    \item Tutor chọn một yêu cầu cụ thể để xem chi tiết (thông tin sinh viên, thời gian, nội dung).
+    \item Tutor chọn “Phê duyệt” hoặc “Từ chối” yêu cầu.
+    \item Hệ thống ghi nhận quyết định của Tutor.
+    \item Hệ thống gửi thông báo kết quả xử lý cho sinh viên và cập nhật vào lịch Tutor.
+\end{enumerate} \\ \hline
+
+\textbf{Alternative Flow} & 
+\begin{enumerate}
+    \item[2a.] Không có yêu cầu nào đang chờ xử lý.
+    \begin{enumerate}
+        \item[2a1.] Hệ thống hiển thị thông báo: “Không có yêu cầu lịch hẹn nào”.
+        \item[2a2.] Tutor chọn “Quay lại” để trở về trang quản lý.
+        \item[2a3.] Use case kết thúc sớm.
+    \end{enumerate}
+
+    \item[4a.] Tutor chọn “Từ chối” yêu cầu.
+    \begin{enumerate}
+        \item[4a1.] Hệ thống yêu cầu Tutor nhập lý do từ chối (tùy chọn).
+        \item[4a2.] Tutor nhập lý do (hoặc bỏ trống) và xác nhận.
+        \item[4a3.] Hệ thống ghi nhận quyết định từ chối và gửi thông báo cho sinh viên.
+    \end{enumerate}
+
+    \item[4b.] Tutor đổi ý và chọn “Hủy thao tác” trước khi xác nhận.
+    \begin{enumerate}
+        \item[4b1.] Hệ thống không lưu bất kỳ thay đổi nào.
+        \item[4b2.] Giao diện quay lại danh sách yêu cầu.
+        \item[4b3.] Use case kết thúc sớm.
+    \end{enumerate}
+\end{enumerate} \\ \hline
+
+\textbf{Exception Flow} & 
+\begin{enumerate}
+    \item[5a.] Khi ghi nhận quyết định (bước 5), hệ thống gặp lỗi cơ sở dữ liệu hoặc mất kết nối.
+    \begin{enumerate}
+        \item[5a1.] Hệ thống hiển thị thông báo: “Xử lý thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”.
+        \item[5a2.] Hệ thống ghi log lỗi, không thay đổi trạng thái yêu cầu.
+        \item[5a3.] Use case kết thúc không thành công.
+    \end{enumerate}
+    \end{enumerate}
+    - Mất kết nối mạng trong quá trình thêm lịch → Hệ thống hiển thị thông báo lỗi “Không thể kết nối. Vui lòng thử lại sau”. \newline
+- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”.
+ \\ \hline
+
+\end{longtable}

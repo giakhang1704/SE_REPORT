@@ -1,0 +1,449 @@
+% FORMAT AND PACKAGES
+% {
+\documentclass[a4paper]{article}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\usepackage{subcaption} % thay cho subfig
+
+\usepackage{tcolorbox}
+\tcbuselibrary{listingsutf8}
+
+
+% Configure the listings package for C code
+\lstset{
+    language=C,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    stringstyle=\color{red},
+    commentstyle=\color{green!50!black},
+    numberstyle=\tiny\color{gray},
+    numbers=left,
+    stepnumber=1,
+    numbersep=5pt,
+    showspaces=false,
+    showstringspaces=false,
+    frame=single,
+    breaklines=true,
+    breakatwhitespace=true,
+    tabsize=4
+}
+\usepackage{a4wide,amssymb,epsfig,latexsym,multicol,array,hhline,fancyhdr}
+\usepackage{vntex}
+\usepackage{amsmath}
+\usepackage{lastpage}
+\usepackage[lined,boxed,commentsnumbered]{algorithm2e}
+\usepackage{enumerate}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{graphicx}							% Standard graphics package
+\usepackage{array}
+\usepackage{tabularx, caption}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{rotating}
+\usepackage{graphics}
+\usepackage{geometry}
+\usepackage{setspace}
+\usepackage{epsfig}
+\usepackage{tikz}
+\usepackage{xfrac}
+\usepackage{bm}
+\usepackage{biblatex}
+\usepackage[colorlinks]{hyperref}
+% \usepackage[acronym,toc]{glossaries}
+% \usepackage[symbols,nogroupskip,nonumberlist]{glossaries-extra}
+\usepackage[
+ sort=none,% no sorting or indexing required
+ abbreviations,% create list of abbreviations
+ symbols,% create list of symbols
+ stylemods,style=list, % set the default glossary style
+ nogroupskip, nonumberlist, nomain
+]{glossaries-extra}
+\usepackage{float}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage{array}
+\usepackage{booktabs}
+
+% FORMATTING
+% {
+\DeclareMathOperator{\arccot}{arccot}
+\captionsetup[table]{name=Bảng}
+\captionsetup[figure]{name=Hình}
+\newenvironment{Description}{\list{}{%
+    \let\makelabel\descriptionlabel    % this comes from the original description environment
+    \setlength{\rightmargin}{\leftmargin}% this comes from the original quote environment
+    \setlength{\labelwidth}{0pt}%          this is new
+    }}{\endlist}
+
+\addbibresource{citations.bib}
+    
+\hypersetup{urlcolor=blue,linkcolor=black,citecolor=black,colorlinks=true} 
+\usetikzlibrary{arrows,snakes,backgrounds}
+\definecolor{mathblue}{RGB}{0,114,188}
+% \makeatletter  \def\m@th{\mathsurround\z@\color{mathblue}} \makeatother
+% \everymath{\color{mathblue}}
+% \setmathfont[Color=000000]{Arial}
+%\usepackage{pstcol} 								% PSTricks with the standard color package
+\newtheorem{theorem}{{\bf Theorem}}
+\newtheorem{property}{{\bf Property}}
+\newtheorem{proposition}{{\bf Proposition}}
+\newtheorem{corollary}[proposition]{{\bf Corollary}}
+\newtheorem{lemma}[proposition]{{\bf Lemma}}
+
+\AtBeginDocument{\renewcommand{\listfigurename}{List of Figures}}
+\AtBeginDocument{\renewcommand{\listtablename}{List of Tables}}
+\AtBeginDocument{\renewcommand*\contentsname{Mục lục}}
+\AtBeginDocument{\renewcommand*\refname{References}}
+%\usepackage{fancyhdr}
+
+\setlength{\headheight}{40pt}
+\pagestyle{fancy}
+\fancyhead{} % clear all header fields
+\fancyhead[L]{
+ \begin{tabular}{rl}
+    \begin{picture}(25,15)(0,0)
+    \put(0,-8){\includegraphics[width=10mm, height=10mm]{Image/hcmut.png}}
+    %\put(0,-8){\epsfig{width=10mm,figure=hcmut.eps}}
+   \end{picture}&
+	%\includegraphics[width=8mm, height=8mm]{hcmut.png} & %
+	\begin{tabular}{l}
+		\textbf{\bf \ttfamily Trường Đại học Bách Khoa - ĐHQG-HCM}\\
+		\textbf{\bf \ttfamily Khoa Khoa học và Kỹ thuật Máy tính}
+	\end{tabular} 	
+ \end{tabular}
+}
+\fancyhead[R]{
+	\begin{tabular}{l}
+		\tiny \bf \\
+		\tiny \bf 
+	\end{tabular}  }
+\fancyfoot{} % clear all footer fields
+\fancyfoot[L]{\bf \ttfamily Báo cáo Bài tập lớn Công nghệ Phần mềm (CO3001)}
+\fancyfoot[R]{\bf \ttfamily Trang {\thepage}/\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\footrulewidth}{0.3pt}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\makeatletter
+\newcounter {subsubsubsection}[subsubsection]
+\renewcommand\thesubsubsubsection{\thesubsubsection .\@alph\c@subsubsubsection}
+\newcommand\subsubsubsection{\@startsection{subsubsubsection}{4}{\z@}%
+                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+                                     {1.5ex \@plus .2ex}%
+                                     {\normalfont\normalsize\bfseries}}
+\newcommand*\l@subsubsubsection{\@dottedtocline{3}{10.0em}{4.1em}}
+\newcommand*{\subsubsubsectionmark}[1]{}
+% \def\m@th{\mathsurround\z@\color{mathblue}}
+\makeatother
+% }
+% }
+
+% ACRONYMS & SYMBOLS
+% {
+% \makeglossaries
+\setabbreviationstyle{long-short}
+\newabbreviation{ode}{ODE}{(First-Order) Ordinary Differential Equation}
+\newabbreviation{ivp}{IVP}{Initial-Value Problem}
+\newabbreviation{lte}{LTE}{Local Truncation Error}
+\newabbreviation{ds}{DS}{Dynamical System}
+\newabbreviation{fig}{Fig.}{Figure}
+\newabbreviation{tab}{Tab.}{Table}
+\newabbreviation{sys}{Sys.}{System of Equations}
+\newabbreviation{eq}{Eq.}{Equation}
+\newabbreviation{eg}{e.g.}{For Example}
+\newabbreviation{ie}{i.e.}{That Is}
+% \glsnoexpandfields
+\glsxtrnewsymbol[description = {Set of natural numbers}]{natural}{\ensuremath{\mathbb{N}}}
+\glsxtrnewsymbol[description = {Set of real numbers}]{real}{\ensuremath{\mathbb{R}}}
+\glsxtrnewsymbol[description = {Set of positive real numbers}]{real_positive}{\ensuremath{\mathbb{R}^+}}
+
+% }
+
+
+% DOCUMENT
+\begin{document}
+
+% TITLE PAGE
+\begin{titlepage}
+\begin{center}
+\Large ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH \\
+\Large TRƯỜNG ĐẠI HỌC BÁCH KHOA \\
+\Large KHOA KHOA HỌC VÀ KỸ THUẬT MÁY TÍNH
+\end{center}
+
+
+\begin{figure}[h!]
+\begin{center}
+\includegraphics[width=4.5cm]{Image/hcmut.png}
+\end{center}
+\end{figure}
+
+\vspace{0.1cm}
+
+
+\begin{center}
+\begin{tabular}{c}
+\multicolumn{1}{l}{\textbf{{\Large Bài tập lớn Công nghệ Phần mềm (CO3001) - HK251}}}\\
+~~\\
+\hline
+\\
+\\
+\textbf{\textit{{\Large TUTOR SUPPORT SYSTEM AT}}} \\
+\\
+\textbf{\textit{{\Large HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY}}} \\
+\\
+\\
+\hline
+\end{tabular}
+\end{center}
+
+\vspace{0.1cm}
+
+\begin{table}[H]
+\centering
+{\large
+\textbf{GVHD: Mai Đức Trung} \\[2pt] % GVHD trên cùng, không có khoảng sau dấu :
+   % Tên nhóm to và đậm hơn, nằm dưới GVHD
+\begin{tabular}{ll}
+\textbf{Tên nhóm: Nhóm 6}&\\   
+\textbf{Thành viên:} & \\[2pt]
+Nguyễn Đăng Khoa    & 2311614 \\
+Hồ Minh Nhiên       & 2312517 \\
+Vũ Huy Gia Khang    & 2311486 \\
+Nguyễn Văn Hiếu     & 2310967 \\
+Lê Thúy Hiền        & 2310990 \\
+Hoàng Thị Hằng      & 2310901 \\
+Đỗ Quang Long       & 2311896 \\
+\end{tabular}
+}
+\end{table}
+\vspace{0.4 cm}
+\begin{center}
+{\large THÀNH PHỐ HỒ CHÍ MINH, NĂM 2025}
+\end{center}
+\end{titlepage}
+
+\section*{Danh sách thành viên}
+% --- Bảng danh sách thành viên (không dùng caption) ---
+\begingroup
+\renewcommand{\arraystretch}{2}   % giãn dòng trong ô
+\setlength{\tabcolsep}{8pt}       % đệm hai bên cột
+
+\centering
+\begin{longtable}{|c|p{4cm}|c|c|}
+\hline
+\textbf{STT} & \textbf{Họ và tên} & \textbf{MSSV} & \textbf{Tỉ lệ hoàn thành} \\
+\hline
+\endfirsthead
+
+\hline
+\textbf{STT} & \textbf{Họ và tên} & \textbf{MSSV} & \textbf{Tỉ lệ hoàn thành} \\
+\hline
+\endhead
+
+\hline \multicolumn{4}{r}{\textit{(còn tiếp trang sau)}} \\ \hline
+\endfoot
+
+\hline
+\endlastfoot
+
+1 & Nguyễn Đăng Khoa  & 2311614 & 100\% \\ \hline
+2 & Hồ Minh Nhiên     & 2312517 & 100\% \\ \hline
+3 & Vũ Huy Gia Khang  & 2311486 & 100\% \\ \hline
+4 & Nguyễn Văn Hiếu   & 2310967 & 100\% \\ \hline
+5 & Lê Thúy Hiền      & 2310990 & 100\% \\ \hline
+6 & Hoàng Thị Hằng    & 2310901 & 100\% \\ \hline
+7 & Đỗ Quang Long     & 2311896 & 100\% \\ \hline
+
+\end{longtable}
+\endgroup
+% --- Hết bảng ---
+
+\newpage
+\tableofcontents
+\newpage
+
+
+
+\setlength{\parskip}{0.2em}  % khoảng cách nhỏ giữa các đoạn
+\setstretch{1.5}
+
+
+% % %-----------------------TASK 1-----------------------%
+\section{Task 1}
+\subsection{Phân tích ngữ cảnh}
+\input{Content/prjContext}
+\newpage
+\input{Content/Stakeholders}
+\input{Content/goal&scope}
+\newpage
+\subsection{Yêu cầu chức năng}
+\input{Content/func_req}
+
+\input{Content/nonfunc}
+
+\newpage
+\subsection{Use-case diagram}
+\subsubsection{Các actor của hệ thống}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|l|p{8cm}|}
+\hline
+\textbf{STT} & \textbf{Actor} & \textbf{Mô tả} \\ \hline
+1 & Tutor & Người hỗ trợ, tạo buổi tư vấn, xử lý lịch hẹn, đăng/xóa tài liệu và ghi nhận tiến độ học tập \\ \hline
+2 & Người dùng & Người sử dụng hệ thống (có thể xem tài liệu, hồ sơ cá nhân, đăng nhập/đăng xuất) \\ \hline
+3 & Sinh viên & Đăng ký tutor, đăng ký/hủy buổi tư vấn, phản hồi chất lượng buổi học \\ \hline
+4 & Điều phối viên & Quản lý, gửi báo cáo, điều phối chương trình tutor chung \\ \hline
+5 & HCMUT\_LIBRARY & Hệ thống thư viện trực tuyến \\ \hline
+6 & HCMUT\_SSO & Hệ thống xác thực và cấp quyền truy cập \\ \hline
+7 & HCMUT\_DATACORE & Hệ thống cung cấp và đồng bộ dữ liệu người dùng \\ \hline
+\end{tabular}
+\end{table}
+
+\subsubsection{Các nhánh use case chính}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|c|l|p{9cm}|}
+\hline
+\textbf{STT} & \textbf{Use Case Name} & \textbf{Mô tả} \\ \hline
+1 & Đăng nhập & Người dùng đăng nhập vào hệ thống \\ \hline
+2 & Đăng xuất & Người dùng thoát khỏi hệ thống \\ \hline
+3  & Xem tài liệu & Người dùng/tutor xem các tài liệu đã được tải lên \\ \hline
+4  & Xem hồ sơ cá nhân & Người dùng xem thông tin cá nhân \\ \hline
+5 & Điều phối chương trình chung cho Tutor & Điều phối viên điều phối khung chương trình chung cho Tutor \\ \hline
+6 & Gửi báo cáo cho các phòng ban & Điều phối viên gửi báo cáo đến các phòng ban \\ \hline
+7 & Đăng ký tutor & Sinh viên đăng ký tutor \\ \hline
+8 & Đặt lịch hẹn & Sinh viên gửi yêu cầu đặt lịch với tutor \\ \hline
+9 & Phản hồi chất lượng buổi học & Sinh viên phản hồi sau buổi học \\ \hline
+10 & Đăng ký buổi tư vấn & Sinh viên đặt lịch buổi tư vấn \\ \hline
+11 & Hủy đăng ký buổi gặp mặt & Tutor hủy lịch tư vấn đã tạo \\ \hline
+12  & Tạo buổi tư vấn & Tutor tạo lịch tư vấn cho sinh viên \\ \hline
+13 & Hủy buổi gặp & Tutor hủy lịch buổi tư vấn đã lên lịch \\ \hline
+14  & Ghi nhận tiến độ học tập của sinh viên & Tutor ghi nhận tình hình học tập của sinh viên \\ \hline
+15  & Thiết lập lịch rảnh & Tutor thiết lập khung giờ rảnh để sinh viên có thể đặt lịch \\ \hline
+16  & Đăng tải tài liệu & Tutor đăng tài liệu hỗ trợ sinh viên \\ \hline
+17  & Xóa tài liệu & Tutor xóa tài liệu đã tải lên \\ \hline
+18  & Xử lý yêu cầu đặt lịch hẹn & Tutor xử lý và phản hồi các yêu cầu hẹn từ sinh viên \\ \hline
+
+
+
+
+\end{tabular}
+\end{table}
+
+
+\subsubsection{Use-case chi toàn bộ hệ thống}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/UC.drawio.png}
+    \caption{Use-case cho toàn bộ hệ thống}
+    \label{fig:placeholder}
+\end{figure}
+
+Xem rõ hơn \href{https://drive.google.com/file/d/1OBO3KzPEBzUu60808emp18U4jJLK_f-d/view?usp=sharing}{tại đây}.
+\newpage
+
+\subsection{Use-case detail/scenario}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/person.png}
+    \caption{Nhóm chức năng của người dùng}
+    \label{fig:placeholder}
+\end{figure}
+\input{Content/uc_User}
+\input{Content/uc_DieuPhoiChuongTrinh}
+
+\newpage
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{Image/sinhvien.jpg}
+  \caption{Nhóm chức năng của sinh viên}
+\end{figure}
+\input{Content/uc_SV}
+
+\newpage
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\linewidth]{Image/tt.drawio.png}
+    \caption{Nhóm chức năng của Tutor}
+    \label{fig:placeholder}
+\end{figure}
+\input{Content/uc_Tutor}
+
+
+
+
+
+
+\section{Task 2}
+\subsection{Sequence Diagram và Activity Diagram}
+
+
+\subsubsection{Đăng nhập}
+\input{Content/diagram_DangNhap}
+
+\subsubsection{Quên mật khẩu}
+\input{Content/diagram_QuenMK}
+
+\subsubsection{Đặt lịch hẹn}
+\input{Content/diagram_DatLichHen}
+
+\subsubsection{Ghi nhận tiến độ}
+\input{Content/diagram_GhiNhanTienDo}
+
+\subsubsection{Đăng tải tài liệu}
+\input{Content/diagram_DangTai}
+
+\subsubsection{Phản hồi chất lượng buổi học}
+\input{Content/diagram_PhanHoiChatLuong}
+
+\subsubsection{Hủy buổi gặp mặt}
+\input{Content/diagram_HuyBuoiGap}
+
+
+\subsubsection{Tạo buổi tư vấn}
+\input{Content/diagram_TaoBuoiTuVan}
+
+\subsubsection{Điều phối khung chương trình chung}
+\input{Content/diagram_DP}
+
+\subsection{Mockup}
+
+\input{Content/mockup.tex}
+
+
+
+
+\subsection{State-chart diagram}
+\subsubsection{Yêu cầu đặt lịch hẹn}
+\input{Content/state_YC}
+\subsubsection{Thiết lập lịch rảnh}
+\input{Content/state_ThietLapLichRanh}
+\subsubsection{Đăng ký Tutor}
+\input{Content/state_DangKyTutor}
+\subsubsection{Đăng tải và xóa tài liệu}
+\input{Content/state_DangTaiXoa}
+% % %%%%%%%%%%%%%%
+
+
+\section{Task 3}
+\subsection{Deployment view}
+\input{Content/deploy.tex}
+\subsection{Development/Implementation view}
+\input{Content/devview.tex}
+\subsection{Class diagram}
+\input{Content/classdiagram.tex}
+
+\subsection{Test case}
+\input{Content/testcase.tex}
+
+\end{document}
+
+

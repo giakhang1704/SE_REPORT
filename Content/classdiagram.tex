@@ -1,0 +1,1085 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/CLASS DIAGRAM.drawio.png}
+    \caption{Class Diagram cho hệ thống}
+    \label{fig:placeholder}
+\end{figure}
+
+Xem rõ hơn \href{https://app.diagrams.net/#G1I1Oi3iTSW3VsruGY966R2kWD1AGPoxrH#%7B%22pageId%22%3A%22KZOnhYCO1evhBqCBx140%22%7D}{tại đây}.
+
+
+\subsection{Design Pattern áp dụng}
+\subsubsection{MVC mở rộng}
+
+Hệ thống được xây dựng theo mô hình MVC mở rộng 5 tầng (Multi-layer MVC):
+\begin{center}
+View $\rightarrow$ Controller (API) $\rightarrow$ Service $\rightarrow$ Repository (Interface + Implementation) 
+
+
+$\rightarrow$ Entity (Model)
+\end{center}
+
+So với MVC truyền thống (Model – View – Controller), phiên bản mở rộng bổ sung:
+\begin{itemize}
+    \item \textbf{Service Layer}: chứa toàn bộ logic nghiệp vụ (Business Logic).
+    \item \textbf{Repository Layer}: phụ trách truy xuất dữ liệu, được thiết kế theo mô hình \textit{Interface + Implementation}:
+    \begin{itemize}
+        \item Interface (IRoomRepository, ISchedulingRepository, …): định nghĩa các phương thức trừu tượng.
+        \item Implementation (RoomRepository, SchedulingRepository, …): hiện thực hóa logic truy vấn dữ liệu thật.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Lợi ích:}
+\begin{itemize}
+    \item Service chỉ phụ thuộc vào Interface → giảm coupling, dễ thay thế backend (SQL → NoSQL → file).
+    \item Dễ unit test nhờ có thể mock các Repository.
+    \item Đảm bảo áp dụng nguyên tắc Dependency Inversion (D) trong SOLID.
+    \item Các mối quan tâm (Separation of Concerns) được tách biệt hoàn toàn, hệ thống dễ mở rộng, dễ bảo trì, và tránh phụ thuộc chéo giữa các tầng.
+\end{itemize}
+
+\subsubsection{Facade}
+
+\textbf{Nhận diện Facade}\\
+Trong hệ thống, interface \texttt{LearningFacade} được sử dụng như một \textbf{Facade Pattern}.  
+Facade đóng vai trò là điểm truy cập duy nhất cho client như sinh viên, tutor hoặc nhóm hệ thống khác.  
+Thông qua Facade, chi tiết phức tạp của các service được ẩn đi và việc tương tác trở nên đơn giản hơn.
+
+Client chỉ làm việc với các phương thức:
+\begin{itemize}
+    \item \texttt{addCourse(dto)}
+    \item \texttt{enroll(dto)}
+    \item \texttt{submitRequest(dto)}
+    \item \texttt{submitFeedback(dto)}
+    \item \texttt{getCourses()}
+\end{itemize}
+
+\textbf{Các class bị giấu}\\
+Facade che giấu các lớp nghiệp vụ sau:
+\begin{itemize}
+    \item \texttt{CourseService}
+    \item \texttt{EnrollmentService}
+    \item \texttt{RequestService}
+    \item \texttt{FeedbackService}
+\end{itemize}
+
+\textbf{Lý do sử dụng Facade}\\
+\begin{enumerate}
+    \item Ẩn bớt sự phức tạp của nhiều tầng logic.
+    \item Đơn giản hóa giao tiếp giữa client và hệ thống.
+    \item Dễ bảo trì do chỉ cần thay đổi trong Facade khi logic thay đổi.
+    \item Tăng tính bảo mật vì client không truy cập trực tiếp vào tầng nghiệp vụ.
+    \item Hỗ trợ tích hợp giữa các nhóm phát triển dễ dàng hơn.
+\end{enumerate}
+
+
+\subsection{Mô tả phương thức}
+\subsubsection{View Method}
+
+\textbf{MeetingListUI}
+\begin{itemize}
+    \item displayMeetingList(meetings: List<Meeting>): void\\
+    Hiển thị danh sách các buổi gặp mặt của người dùng.
+    \item selectMeeting(meetingId: int): void\\
+    Chọn một buổi gặp mặt để xem chi tiết hoặc thao tác (hủy).
+\end{itemize}
+
+\textbf{MeetingCancelUI}
+\begin{itemize}
+    \item displayCancellableMeetings(meetings: List<Meeting>): void\\
+    Hiển thị danh sách các buổi gặp mặt có thể hủy (còn chưa diễn ra).
+    \item showCancelForm(meetingId: int): void\\
+    Hiển thị form nhập lý do hủy khi người dùng chọn nút hủy.
+    \item submitCancelForm(meetingId: int, reason: String): void\\
+    Gửi lý do hủy và thực hiện cập nhật trạng thái CANCELLED.
+\end{itemize}
+
+\textbf{AppointmentBookingUI}
+\begin{itemize}
+    \item showBookingForm(): void\\
+    Hiển thị form đặt lịch hẹn.
+    \item submitBookingForm(studentId: int, tutorId: int, date: String, startTime: String, topic: String): bool\\
+    Gửi yêu cầu đặt lịch hẹn đến SchedulingAPI. Trả về true nếu thành công.
+    \item displayAppointmentDetails(appointment: Appointment): void\\
+    Hiển thị thông tin chi tiết của một lịch hẹn.
+\end{itemize}
+
+\textbf{AppointmentManagementUI}
+\begin{itemize}
+    \item displayPendingAppointments(tutorId: int): void\\
+    Hiển thị danh sách các lịch hẹn đang chờ duyệt.
+    \item approveAppointment(appointmentId: int): bool\\
+    Duyệt một lịch hẹn, cập nhật trạng thái APPROVED và thêm vào Meeting list.
+    \item rejectAppointment(appointmentId: int): bool\\
+    Từ chối một lịch hẹn, cập nhật trạng thái REJECTED.
+    \item showAppointmentDetails(appointmentId: int): void\\
+    Hiển thị chi tiết thông tin lịch hẹn.
+\end{itemize}
+
+\textbf{ConsultationCreateUI}
+\begin{itemize}
+    \item showCreateForm(): void\\
+    Hiển thị form tạo buổi tư vấn.
+    \item submitConsultationForm(data: Map<String, Any>): bool\\
+    Gửi dữ liệu tạo buổi tư vấn đến SchedulingAPI. Trả về true nếu thành công.
+    \item selectRoom(): void\\
+    Lấy danh sách phòng trống từ RoomAPI và chọn phòng (nếu offline).
+    \item displayConsultationDetails(consultation: Consultation): void\\
+    Hiển thị thông tin chi tiết của buổi tư vấn.
+\end{itemize}
+
+\textbf{ConsultationRegistrationUI}
+\begin{itemize}
+    \item showRegistrationForm(): void\\
+    Hiển thị form đăng ký tham gia buổi tư vấn.
+    \item submitRegistrationForm(consultationId: int, studentId: int): bool\\
+    Gửi yêu cầu đăng ký buổi tư vấn. Trả về true nếu thành công.
+    \item displayRegisteredConsultationDetails(consultation: Consultation): void\\
+    Hiển thị thông tin chi tiết buổi tư vấn đã đăng ký.
+\end{itemize}
+
+\textbf{RoomUI}
+\begin{itemize}
+    \item displayAvailableRooms(date: String, startTime: String, endTime: String): void\\
+    Hiển thị danh sách phòng trống theo thời gian.
+    \item selectRoom(roomId: int): void\\
+    Chọn một phòng để sử dụng trong buổi tư vấn.
+\end{itemize}
+
+\textbf{LoginUI}
+\begin{itemize}
+    \item \textbf{displayLoginForm(): void} \\
+    Hiển thị form đăng nhập gồm username và password.
+    \item \textbf{getUsernameInput(): String} \\
+    Lấy giá trị username người dùng nhập.
+    \item \textbf{getPasswordInput(): String} \\
+    Lấy giá trị password người dùng nhập.
+    \item \textbf{showLoginSuccessMessage(): void} \\
+    Hiển thị thông báo đăng nhập thành công.
+    \item \textbf{showLoginErrorMessage(msg: String): void} \\
+    Hiển thị thông báo lỗi với nội dung \texttt{msg}.
+    \item \textbf{showAccessDeniedMessage(): void} \\
+    Hiển thị thông báo quyền truy cập bị từ chối.
+    \item \textbf{onLoginButtonClick(callback: (username, password) $\rightarrow$ void): void} \\
+    Gán callback khi người dùng nhấn nút đăng nhập.
+\end{itemize}
+
+\textbf{ForgotPasswordUI}
+\begin{itemize}
+    \item \textbf{displayForgotPasswordForm(): void} \\
+    Hiển thị form nhập BKID để yêu cầu reset password.
+    \item \textbf{getBKIDInput(): String} \\
+    Lấy BKID người dùng nhập.
+    \item \textbf{displayResetPasswordForm(token: String): void} \\
+    Hiển thị form nhập mật khẩu mới kèm token.
+    \item \textbf{getNewPasswordInput(): String} \\
+    Lấy mật khẩu mới người dùng nhập.
+    \item \textbf{showPasswordResetSuccessMessage(): void} \\
+    Hiển thị thông báo reset password thành công.
+    \item \textbf{showErrorMessage(msg: String): void} \\
+    Hiển thị thông báo lỗi với nội dung \texttt{msg}.
+    \item \textbf{onRequestResetClick(callback: (bkId) $\rightarrow$ void): void} \\
+    Gán callback khi người dùng nhấn nút yêu cầu reset.
+    \item \textbf{onResetPasswordClick(callback: (token, newPassword) $\rightarrow$ void): void} \\
+    Gán callback khi người dùng nhấn nút xác nhận reset password.
+\end{itemize}
+
+\textbf{UserProfileUI}
+\begin{itemize}
+    \item \textbf{displayProfile(user: UserEntity, activities: List<ActivityEntity>, appointments: List<AppointmentEntity>): void} \\
+    Hiển thị thông tin chi tiết user cùng lịch sử hoạt động và lịch hẹn.
+    \item \textbf{showErrorMessage(msg: String): void} \\
+    Hiển thị thông báo lỗi với nội dung \texttt{msg}.
+    \item \textbf{onOpenProfile(callback: () $\rightarrow$ void): void} \\
+    Gán callback khi người dùng mở profile.
+\end{itemize}
+
+\textbf{LogoutUI}
+\begin{itemize}
+    \item \textbf{displayLogoutConfirmation(): void} \\
+    Hiển thị hộp thoại yêu cầu xác nhận đăng xuất.
+    \item \textbf{showLogoutSuccessMessage(): void} \\
+    Hiển thị thông báo đăng xuất thành công.
+    \item \textbf{showErrorMessage(msg: String): void} \\
+    Hiển thị thông báo lỗi với nội dung \texttt{msg}.
+    \item \textbf{onConfirmLogout(callback: () $\rightarrow$ void): void} \\
+    Gán callback khi người dùng xác nhận logout.
+    \item \textbf{onCancelLogout(callback: () $\rightarrow$ void): void} \\
+    Gán callback khi người dùng hủy thao tác logout.
+\end{itemize}
+
+\textbf{MaterialUI}
+\begin{itemize}
+    \item \textbf{displayMaterialList(materials: List<MaterialEntity>): void} \\
+    Hiển thị danh sách các tài liệu.
+    \item \textbf{displayMaterialContent(materialId: String, content: String): void} \\
+    Hiển thị nội dung chi tiết của tài liệu.
+    \item \textbf{showErrorMessage(msg: String): void} \\
+    Hiển thị thông báo lỗi.
+    \item \textbf{onSelectMaterial(callback: (materialId: String) $\rightarrow$ void): void} \\
+    Gán callback khi người dùng chọn tài liệu.
+    \item \textbf{onAdvancedSearch(callback: (criteria: SearchCriteria) $\rightarrow$ void): void} \\
+    Gán callback khi người dùng thực hiện tìm kiếm nâng cao.
+\end{itemize}
+
+\textbf{TutorSlotCalendarView}
+\begin{itemize}
+    \item \textbf{renderCalendar(tutorID: String, slots: List): void} \\
+    Hiển thị lịch của gia sư (tutorID) với các slot (slots) đã cung cấp.
+    \item \textbf{showAddSlotModal(): void} \\
+    Hiển thị cửa sổ (modal) để cho phép gia sư thêm một slot thời gian mới.
+    \item \textbf{showEditSlotModal(slot: AvailableSlot): void} \\
+    Hiển thị cửa sổ (modal) để chỉnh sửa thông tin một slot đã có.
+    \item \textbf{enableDragAndDrop(): void} \\
+    Kích hoạt chức năng kéo-thả trên lịch để di chuyển hoặc thay đổi thời lượng slot.
+    \item \textbf{highlightAvailableSlots(): void} \\
+    Làm nổi bật các slot thời gian còn trống trên lịch.
+    \item \textbf{onSlotDelete(callback: (slotID: String) $\rightarrow$ void): void} \\
+    Gán callback khi gia sư thực hiện hành động xóa một slot.
+\end{itemize}
+
+\textbf{StudentTutorSelectionView}
+\begin{itemize}
+    \item \textbf{renderTutorCard(tutorID: String, name: String, expertise: String): void} \\
+    Hiển thị thông tin của một gia sư dưới dạng thẻ (card), bao gồm ID, tên, và chuyên môn.
+    \item \textbf{onTutorClick(callback: (tutorID: String) $\rightarrow$ void): void} \\
+    Gán callback khi sinh viên nhấp vào thẻ của một gia sư (để xem chi tiết hoặc lịch).
+    \item \textbf{renderSlotList(slots: List): void} \\
+    Hiển thị danh sách các slot thời gian (thường là của gia sư vừa được chọn).
+    \item \textbf{disableBookedSlots(): void} \\
+    Vô hiệu hóa (làm mờ hoặc không cho phép nhấp) các slot đã được đặt.
+    \item \textbf{onSlotSelect(callback: (slotID: String) $\rightarrow$ void): void} \\
+    Gán callback khi sinh viên chọn một slot thời gian (để đặt lịch).
+\end{itemize}
+
+
+\textbf{MaterialUploadUI}
+\begin{itemize}
+    \item \textbf{chooseFile(): void} \\
+    Hiển thị cửa sổ/dialog để người dùng chọn tệp (file) từ máy tính.
+    \item \textbf{fillForm(title: String, type: String, classId: String): void} \\
+    Cho phép người dùng điền thông tin mô tả cho tài liệu (tiêu đề, loại, ID lớp).
+    \item \textbf{submitUpload(tutorId: int): void} \\
+    Gửi thông tin và tệp đã chọn lên hệ thống (thông qua API) để tải lên.
+    \item \textbf{submitReviewRequest(materialId: int): void} \\
+    Gửi yêu cầu xem xét (review) cho một tài liệu đã tải lên.
+    \item \textbf{listMyUploads(tutorId: String): void} \\
+    Hiển thị danh sách các tài liệu mà gia sư này đã tải lên.
+    \item \textbf{showStatus(msg: String): void} \\
+    Hiển thị thông báo trạng thái (ví dụ: "Tải lên thành công", "Lỗi") cho người dùng.
+\end{itemize}
+
+
+
+\textbf{CourseListUI}  
+\begin{itemize}
+    \item renderCourseList(courses)\\
+    Hiển thị danh sách dạng card hoặc grid.
+    \item showEnrollButton(courseID)\\
+    Hiển thị nút đăng ký khi học viên chưa đăng ký.
+\end{itemize}
+
+\textbf{CourseDetailUI} 
+\begin{itemize}
+    \item renderCourseDetail(course)\\
+    Hiển thị tiêu đề, mô tả, tutor và số lượng sinh viên.  
+    \item displayTutorInfo(tutorID)\\
+    Hiển thị thông tin chi tiết về giảng viên.
+\end{itemize}
+
+\textbf{RequestFormUI}  
+\begin{itemize}
+    \item showForm(tutors, courses)\\
+    Tải danh sách tutor và khóa học lên giao diện.   
+    \item onSubmit(requestDTO)\\
+    Gửi yêu cầu khi người dùng nhấn nút \texttt{Gửi}.
+\end{itemize}
+
+
+\textbf{RequestListUI}
+\begin{itemize}
+    \item renderMyRequests(requests)\\
+    Liệt kê các yêu cầu đã gửi của sinh viên.   
+    \item onCancelRequest(requestID)\\
+    Cho phép hủy yêu cầu nếu trạng thái đang là \texttt{PENDING}.
+\end{itemize}
+
+
+
+\textbf{TutorRequestListView}
+\begin{itemize}
+    \item renderPendingRequests(requests)\\
+    Hiển thị danh sách yêu cầu cần duyệt.   
+    \item onAccept(requestID)\\
+    Chấp nhận yêu cầu và tạo buổi học mới.
+    \item  onReject(requestID)\\
+    Từ chối yêu cầu và gửi email thông báo lý do.
+\end{itemize}
+
+
+\textbf{NotificationUI}
+\begin{itemize}
+    \item load(): void\\
+    Mở màn hình thông báo và nạp dữ liệu ban đầu (danh sách thông báo gần đây, số lượng chưa đọc).   
+    \item render(): void\\
+    Cập nhật và hiển thị giao diện danh sách thông báo theo dữ liệu hiện có.
+    \item  handleManualSend(): void\\
+    Xử lý thao tác gửi thông báo thủ công.
+    \item handleAutoSend(): void\\
+   Xử lý thao tác gửi thông báo tự động.
+    \item markAsRead(userId: int, notificationId: int): void\\
+    Đánh dấu một thông báo của người dùng là “đã đọc”.
+\end{itemize}
+
+\textbf{ReportUI}
+\begin{itemize}
+    \item  handleManualSend(report: Report, requestedBy: Department): void\\
+    Gửi báo cáo thủ công đến phòng ban yêu cầu.
+    \item handleAutoSend(report: Report, requestedBy: Department, periods: String): void\\
+    Gửi báo cáo tự động theo chu kỳ đến phòng ban yêu cầu.
+    \item displayReports(reports: List<Report>): void\\
+    Hiển thị danh sách các báo cáo đã tạo.
+    \item displayReport(report: Report): void\\
+    Hiển thị chi tiết một báo cáo cụ thể.
+    \item downloadReport(reportId: int, format: ReportFormat): void\\
+    \item Tải về báo cáo ở định dạng mong muốn.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Controller Method}
+
+\textbf{SchedulingAPI}
+\begin{itemize}
+    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
+    Tiếp nhận yêu cầu tạo buổi tư vấn từ UI, gọi SchedulingService.
+    \item bookAppointment(studentId: int, consultationId: int, message: String): bool\\
+    Tiếp nhận yêu cầu đặt lịch hẹn từ UI, gọi SchedulingService.
+    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
+    Tiếp nhận yêu cầu duyệt lịch hẹn từ UI, gọi SchedulingService.
+    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
+    Tiếp nhận yêu cầu từ chối lịch hẹn từ UI, gọi SchedulingService.
+    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
+    Tiếp nhận yêu cầu hủy buổi gặp mặt từ UI, gọi SchedulingService.
+    \item getMeetings(userId: int): List<Meeting>\\
+    Trả về danh sách buổi gặp mặt của người dùng.
+\end{itemize}
+
+\textbf{RoomAPI}
+\begin{itemize}
+    \item getAvailableRooms(date: Date, startTime: Time, endTime: Time): List<Room>\\
+    Trả về danh sách phòng trống theo yêu cầu từ UI.
+    \item updateRoomStatus(roomId: int, status: String): bool\\
+    Cập nhật trạng thái phòng.
+    \item getRoomDetails(roomId: int): String\\
+    Lấy thông tin chi tiết của một phòng.
+\end{itemize}
+
+\textbf{LearningAPI}
+\begin{itemize}
+    \item addCourse(courseData: Course): Course\\
+    Thêm khóa học mới.
+    \item getAllCourses(): List<CourseDTO>\\
+    Trả về danh sách khóa học ở dạng DTO.
+    \item getCourseById(courseId: int): CourseDetail\\
+    Lấy thông tin chi tiết khóa học.
+    \item registerCourse(studentId: int, courseId: int): Enrollment\\
+    Cho phép sinh viên đăng ký khóa học.
+    \item getEnrollmentsByStudent(studentId: int): List<Enrollment>\\
+    Trả về danh sách đăng ký của sinh viên.
+    \item submitRequest(requestData: Request): Request\\
+    Xử lý gửi yêu cầu tư vấn.
+    \item getMyRequests(userId: int): List<Request>\\
+    Trả về danh sách yêu cầu của người dùng hiện tại.
+    \item getRequestsByTutor(tutorId: int): List<Request>\\
+    Trả về danh sách yêu cầu dành cho tutor.
+    \item updateRequestStatus(requestId: int, newStatus: String): bool\\
+    Cập nhật trạng thái yêu cầu.
+    \item submitFeedback(feedbackData: Feedback): bool\\
+    Nhận phản hồi sau buổi học.
+\end{itemize}
+
+
+\textbf{LoginAPI}
+\begin{itemize}
+    \item \textbf{login(username: String, password: String): void} \\
+    Gọi SSOService để xác thực, tạo session và thông báo kết quả lên view.
+\end{itemize}
+
+\textbf{ForgotPasswordAPI}
+\begin{itemize}
+    \item \textbf{requestPasswordReset(bkId: String): void} \\
+    Gửi yêu cầu reset password và thông báo kết quả.
+    \item \textbf{resetPassword(token: String, newPassword: String): void} \\
+    Thực hiện reset password dựa trên token và mật khẩu mới.
+\end{itemize}
+
+\textbf{UserProfileManageAPI}
+\begin{itemize}
+    \item \textbf{viewProfile(): void} \\
+    Lấy userId từ session, gọi ProfileService để lấy thông tin user, hoạt động, lịch hẹn, hiển thị lên ProfileView.
+\end{itemize}
+
+\textbf{LogoutAPI}
+\begin{itemize}
+    \item \textbf{logout(): void} \\
+    Vô hiệu hóa session và thông báo kết quả lên view.
+\end{itemize}
+
+\textbf{MaterialAPI}
+\begin{itemize}
+    \item \textbf{viewMaterialList(): void} \\
+    Lấy danh sách tài liệu từ MaterialService và hiển thị.
+    \item \textbf{viewMaterial(materialId: String): void} \\
+    Lấy nội dung chi tiết tài liệu và hiển thị.
+    \item \textbf{searchMaterials(criteria: SearchCriteria): void} \\
+    Thực hiện tìm kiếm tài liệu theo tiêu chí và hiển thị kết quả.
+\end{itemize}
+\textbf{SlotAPI}
+\begin{itemize}
+    \item \textbf{addSlot(tutorID: String, slotDTO: SlotDTO): ResponseEntity} \\
+    Xử lý yêu cầu HTTP (ví dụ: POST) để thêm một slot mới cho gia sư. Gọi đến \texttt{AvailableSlotService}.
+    \item \textbf{updateSlot(tutorID: String, slotID: String, slotDTO: SlotDTO): ResponseEntity} \\
+    Xử lý yêu cầu HTTP (ví dụ: PUT) để cập nhật thông tin một slot đã có.
+    \item \textbf{deleteSlot(tutorID: String, slotID: String): ResponseEntity} \\
+    Xử lý yêu cầu HTTP (ví dụ: DELETE) để xóa một slot.
+    \item \textbf{getTutorSlots(tutorID: String): ResponseEntity} \\
+    Xử lý yêu cầu HTTP (ví dụ: GET) để lấy về danh sách các slot của một gia sư.
+\end{itemize}
+
+\textbf{MaterialUploadAPI}
+\begin{itemize}
+    \item \textbf{createDraft(tutorId: int, title: String, type: String, classId: String): Material} \\
+    Xử lý yêu cầu HTTP tạo một bản nháp tài liệu, gọi \texttt{MaterialUploadService}.
+    \item \textbf{attachFile(materialId: int, fileName: String, file: File): Material} \\
+    Xử lý yêu cầu HTTP đính kèm tệp vào một bản nháp tài liệu đã có.
+    \item \textbf{submitForReview(materialId: int): void} \\
+    Xử lý yêu cầu HTTP gửi tài liệu để xem xét.
+    \item \textbf{listMyUploads(tutorId: int): List<Material>} \\
+    Xử lý yêu cầu HTTP lấy danh sách các tài liệu đã tải lên của gia sư.
+\end{itemize}
+
+\textbf{NotificationAPI}
+\begin{itemize}
+\item \textbf{notifyScheduleRequested(studentId: int, tutorId: int, status: String): void} \
+Gửi thông báo về yêu cầu đặt lịch của sinh viên (tạo mới/được duyệt/bị từ chối) đến người nhận phù hợp.
+\item \textbf{notifyMeeting(meeting: Meeting, studentId: int, tutorId: int): void} \
+Thông báo liên quan tới buổi tư vấn: tạo mới, thay đổi thời gian/phòng hoặc hủy.
+\item \textbf{notifyMaterial(material: Material, tutorId: int, studentId: int, status: String): void} \
+Thông báo trạng thái tài liệu (đã duyệt/bị từ chối/được công bố) cho gia sư hoặc sinh viên tuỳ trường hợp.
+\item \textbf{notifyCourseUpdated(course: CourseEntity, tutorId: int): void} \
+Báo cho gia sư (và/hoặc lớp học liên quan) khi nội dung/kế hoạch khoá học được cập nhật.
+\item \textbf{getMyNotifications(userId: String): List<Notification>} \
+Lấy danh sách thông báo của người dùng để hiển thị trong hộp thư in-app.
+\item \textbf{markAsRead(userId: String, notificationId: String): void} \
+Đánh dấu một thông báo là đã đọc và cập nhật lại hiển thị/badge.
+\end{itemize}
+
+
+\textbf{ReportAPI}
+\begin{itemize}
+\item \textbf{sendManual(file: File, requestedBy: Department): void} \
+Gửi báo cáo thủ công: nhận tệp đã chọn và gửi tới phòng ban được chỉ định (thường qua email).
+\item \textbf{sendAuto(file: File, requestedBy: Department, periods: String): void} \
+Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban mặc định, dùng tham số kỳ để điền bộ lọc.
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Service Method}
+
+\textbf{SchedulingService}
+\begin{itemize}
+    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
+    Tạo một buổi tư vấn mới. Logic bao gồm: kiểm tra trùng lịch của tutor, kiểm tra phòng trống nếu offline, lưu thông tin vào Repository. Trả về true nếu tạo thành công, false nếu có lỗi.
+    \item bookAppointment(studentId: int, consultationId: int, message: String): bool\\
+    Đặt lịch hẹn với tutor dựa trên một buổi tư vấn có sẵn. Kiểm tra lịch rảnh của tutor, tránh trùng lịch. Trả về true nếu đặt thành công, false nếu lịch trùng hoặc lỗi.
+    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
+    Duyệt một lịch hẹn đang ở trạng thái PENDING. Cập nhật trạng thái thành APPROVED và thêm vào danh sách Meeting của student và tutor. Trả về true nếu thành công.
+    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
+    Từ chối một lịch hẹn PENDING. Cập nhật trạng thái thành REJECTED. Trả về true nếu thao tác thành công.
+    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
+    Hủy một buổi gặp mặt (Appointment hoặc Consultation). Cập nhật trạng thái CANCELLED và lưu lý do hủy. Trả về true nếu hủy thành công.
+    \item getMeetings(userId: int): List<Meeting>\\
+    Lấy danh sách tất cả các buổi gặp mặt liên quan tới user (Student hoặc Tutor).
+    \item \# validateScheduleConflict(date: Date, startTime: Time, endTime: Time, tutorId: int): bool\\
+    Kiểm tra trùng lịch của tutor trong khoảng thời gian được yêu cầu.
+    \item \# checkRoomAvailability(roomId: int, date: Date, startTime: Time, endTime: Time): bool\\
+    Kiểm tra trạng thái phòng có trống hay không cho khoảng thời gian cụ thể. Phương thức private.
+    \item \# checkTutorSlotAvailability(tutorId: int, date: Date, start: Time, end: Time): bool\\
+    Kiểm tra xem slot của tutor có trống trong khoảng thời gian nhất định không.
+\end{itemize}
+
+\textbf{RoomService}
+\begin{itemize}
+    \item getAvailableRooms(date: Date, startTime: Time, endTime: Time): List<Room>\\
+    Trả về danh sách phòng trống theo yêu cầu từ UI.
+    \item updateRoomStatus(roomId: int, status: String): bool\\
+    Cập nhật trạng thái phòng (AVAILABLE, OCCUPIED, MAINTENANCE). Trả về true nếu cập nhật thành công.
+    \item getRoomDetails(roomId: int): String\\
+    Lấy thông tin chi tiết của một phòng (tòa nhà, tầng, số phòng, sức chứa, trạng thái).
+    \item getRoomStatistics(): Map<String, Any>\\
+    Trả về thống kê tổng quan về các phòng: số phòng trống, số phòng đang sử dụng, số phòng bảo trì, phân theo tòa nhà hoặc tầng.
+    \item \# isRoomAvailable(roomId: int, date: Date, startTime: Time, endTime: Time): bool\\
+    Kiểm tra xem phòng có trống trong khoảng thời gian cụ thể hay không. Phương thức private.
+\end{itemize}
+
+\textbf{CourseService}
+\begin{itemize}
+    \item addCourse(title: String, description: String, instructorID: int): bool\\
+    Dùng để thêm khóa học mới, có kiểm tra trùng tiêu đề và trả về \texttt{true} nếu thêm thành công.
+    \item getAllCourses(): List<CourseEntity>\\
+    Trả về danh sách tất cả các \texttt{CourseEntity} trong cơ sở dữ liệu.
+    \item getCourseById(courseID: int): CourseEntity\\
+    Dùng để tìm khóa học theo ID và trả về \texttt{null} nếu không tồn tại.
+\end{itemize}
+
+
+
+\textbf{EnrollmentService} 
+\begin{itemize}
+    \item register(studentID: int, courseID: int): bool\\
+    Cho phép sinh viên đăng ký khóa học nếu chưa đăng ký trước đó.
+    \item getEnrollmentsByStudent(studentID: int): List<Course>\\
+    Trả về danh sách các khóa học mà sinh viên đã đăng ký.
+\end{itemize}
+
+
+
+\textbf{RequestService} 
+\begin{itemize}
+    \item createRequest(studentID: int, tutorID: int, courseID: int, topic: String): int\\
+    Tạo yêu cầu mới, gửi email đến tutor và trả về \texttt{requestID}.
+    \item getRequestsByStudent(studentID: int): List<Request>\\
+    Trả về danh sách yêu cầu của sinh viên.
+    \item getRequestsByTutor(tutorID: int): List<Request>\\
+    Trả về danh sách yêu cầu đang chờ tutor duyệt.
+    \item updateStatus(requestID: int, status: String): bool\\
+    Cập nhật trạng thái yêu cầu từ \texttt{PENDING} sang \texttt{APPROVED} hoặc \texttt{REJECTED}.
+\end{itemize}
+
+
+
+\textbf{FeedbackService} 
+\begin{itemize}
+    \item submitFeedback(requestID: int, rating: int, comment: String): bool\\
+    Lưu lại đánh giá và trả về \texttt{true} nếu thành công.
+\end{itemize}
+
+\textbf{SSOService}
+\begin{itemize}
+    \item \textbf{authenticate(username: String, password: String): UserEntity} \\
+    Kiểm tra username/password, trả về UserEntity nếu thành công.
+    \item \textbf{sendResetEmail(bkId: String): void} \\
+    Gửi email reset password.
+    \item \textbf{resetPassword(token: String, newPassword: String): void} \\
+    Reset password dựa trên token.
+\end{itemize}
+
+\textbf{DatacoreService}
+\begin{itemize}
+    \item \textbf{getUserInfo(username: String): UserEntity} \\
+    Lấy thông tin user từ Datacore.
+\end{itemize}
+
+\textbf{MailService}
+\begin{itemize}
+    \item \textbf{sendEmail(to: String, content: String): void} \\
+    Gửi email đơn giản.
+    \item \textbf{sendPasswordResetEmail(to: String, resetLink: String): void} \\
+    Gửi link reset password.
+    \item \textbf{sendNotificationEmail(to: String, subject: String, content: String): void} \\
+    Gửi email thông báo.
+\end{itemize}
+
+\textbf{ProfileService}
+\begin{itemize}
+    \item \textbf{getProfile(userId: String): UserEntity} \\
+    Trả về thông tin user.
+    \item \textbf{getActivityHistory(userId: String): List<ActivityEntity>} \\
+    Trả về danh sách hoạt động của user.
+    \item \textbf{getAppointmentHistory(userId: String): List<AppointmentEntity>} \\
+    Trả về danh sách lịch hẹn của user.
+\end{itemize}
+
+\textbf{SessionManager}
+\begin{itemize}
+    \item \textbf{createSession(user: UserEntity): String} \\
+    Tạo session mới và trả về sessionId.
+    \item \textbf{getSession(sessionId: String): SessionEntity} \\
+    Lấy thông tin session.
+    \item \textbf{invalidateSession(sessionId: String): void} \\
+    Vô hiệu hóa session.
+    \item \textbf{isValid(sessionId: String): Boolean} \\
+    Kiểm tra session còn hợp lệ.
+\end{itemize}
+
+\textbf{MaterialService}
+\begin{itemize}
+    \item \textbf{getMaterials(): List<MaterialEntity>} \\
+    Lấy danh sách tài liệu.
+    \item \textbf{getMaterialContent(materialId: String): String} \\
+    Lấy nội dung chi tiết tài liệu.
+    \item \textbf{searchMaterials(criteria: SearchCriteria): List<MaterialEntity>} \\
+    Tìm kiếm tài liệu theo tiêu chí.
+\end{itemize}
+\textbf{AvailableSlotService}
+\begin{itemize}
+    \item \textbf{addAvailableSlot(tutorID: String, start: LocalDateTime, end: LocalDateTime): boolean} \\
+    Thêm một slot trống mới cho gia sư. Kiểm tra logic nghiệp vụ (ví dụ: không trùng lặp). Trả về true nếu thành công.
+    \item \textbf{updateAvailableSlot(tutorID: String, slotID: String, start: LocalDateTime, end: LocalDateTime): boolean} \\
+    Cập nhật thời gian bắt đầu/kết thúc của một slot. Trả về true nếu thành công.
+    \item \textbf{removeAvailableSlot(tutorID: String, slotID: String): boolean} \\
+    Xóa một slot khỏi danh sách (ví dụ: gia sư hủy slot). Trả về true nếu thành công.
+    \item \textbf{getAvailableSlotsByTutor(tutorID: String): List<AvailableSlot>} \\
+    Lấy tất cả các slot (cả trống và đã đặt) của một gia sư.
+    \item \textbf{getAvailableSlotsByTutorAndRange(tutorID: String, start: LocalDateTime, end: LocalDateTime): List<AvailableSlot>} \\
+    Lấy các slot của gia sư trong một khoảng thời gian cụ thể.
+    \item \textbf{findAvailable(tutorID: String, start: LocalDateTime, end: LocalDateTime): boolean} \\
+    Kiểm tra xem gia sư có rảnh (available) trong khoảng thời gian được yêu cầu hay không.
+    \item \textbf{markSlotAsBooked(tutorID: String, slotID: String): boolean} \\
+    Đánh dấu một slot là đã được đặt (trạng thái: BOOKED). Trả về true nếu thành công.
+    \item \textbf{markSlotAsAvailable(tutorID: String, slotID: String): boolean} \\
+    Đánh dấu một slot là còn trống (trạng thái: AVAILABLE). Trả về true nếu thành công.
+\end{itemize}
+\textbf{MaterialUploadService}
+\begin{itemize}
+    \item \textbf{createDraft(tutorId: String, title: String, type: String, classId: String): Material} \\
+    Logic nghiệp vụ tạo một bản nháp (draft) tài liệu trong cơ sở dữ liệu.
+    \item \textbf{attachFile(materialId: String, fileName: String, bytes: byte[]): Material} \\
+    Logic nghiệp vụ xử lý tệp (bytes) và liên kết nó với bản nháp tài liệu.
+    \item \textbf{submitForReview(materialId: String): void} \\
+    Logic nghiệp vụ cập nhật trạng thái tài liệu thành "Đang chờ xem xét" (Pending Review).
+    \item \textbf{listMyUploads(tutorId: String): List<Material>} \\
+    Truy vấn cơ sở dữ liệu (thông qua repository) để lấy danh sách tài liệu của gia sư.
+\end{itemize}
+
+
+\textbf{NotificationService}
+\begin{itemize}
+\item \textbf{sendToUser(o: Object, userId: int, type: String, title: String, content: String): void} \
+Tạo một thông báo và gửi trực tiếp cho \textit{một} người dùng xác định bởi \texttt{userId}. Tham số \texttt{type/title/content} mô tả loại, tiêu đề và nội dung thông báo; \texttt{o} là dữ liệu ngữ cảnh đi kèm (nếu cần).
+\item \textbf{sendToUsers(o: Object, userIds: List\textless int\textgreater, type: String, title: String, content: String): void} \
+Gửi cùng một thông báo đến \textit{nhiều} người dùng trong danh sách \texttt{userIds}. Dùng cho các tình huống broadcast (ví dụ gửi cho cả lớp/khoa).
+\end{itemize}
+
+
+\textbf{ReportService}
+\begin{itemize}
+\item \textbf{sendManual(report: Report, requestedBy: Department): void} \
+Gửi báo cáo theo yêu cầu thủ công: nhận đối tượng \texttt{report} (tệp/siêu dữ liệu báo cáo đã chuẩn bị) và gửi đến phòng ban được chỉ định trong \texttt{requestedBy}.
+\item \textbf{sendAuto(report: Report, requestedBy: Department, periods: String): void} \
+Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban. Chuỗi \texttt{periods} mô tả khoảng thời gian cần áp dụng cho báo cáo.
+\item \textbf{generateReport(data: Map\textless key,value\textgreater, report: Report): File} \
+Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/định nghĩa trong \texttt{report}, trả về tệp để dùng cho việc gửi hoặc tải xuống.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+\subsubsection{Repository Method (Implementation)}
+\textbf{RoomRepository}
+\begin{itemize}
+    \item listAvailableRooms(date: Date, startTime: Time, endTime: Time): List<Room>\\
+    Trả về danh sách phòng trống trong khoảng thời gian nhất định.
+    \item updateRoomStatus(roomId: int, status: String): bool\\
+    Cập nhật trạng thái phòng (AVAILABLE, OCCUPIED, MAINTENANCE). Trả về true nếu thành công.
+    \item getRoomInfo(roomId: int): String\\
+    Lấy thông tin chi tiết của phòng theo roomId.
+\end{itemize}
+
+\textbf{TutorSchedulingRepository}
+\begin{itemize}
+    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
+    Lưu buổi tư vấn mới vào cơ sở dữ liệu. Trả về true nếu tạo thành công.
+    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
+    Duyệt lịch hẹn từ trạng thái PENDING → APPROVED. Trả về true nếu thành công.
+    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
+    Từ chối lịch hẹn, cập nhật trạng thái REJECTED.
+    \item viewMeetings(userId: int): List<Meeting>\\
+    Lấy danh sách tất cả các buổi gặp mặt liên quan đến Tutor.
+    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
+    Hủy một buổi gặp mặt, lưu lý do hủy. Trả về true nếu thành công.
+\end{itemize}
+
+\textbf{StudentSchedulingRepository}
+\begin{itemize}
+    \item registerConsultation(studentId: int, consultationId: int): bool\\
+    Đăng ký sinh viên tham gia buổi tư vấn. Trả về true nếu thành công.
+    \item bookAppointment(studentId: int, tutorId: int, date: Date, startTime: Time, topic: String): bool\\
+    Đặt lịch hẹn với tutor. Trả về true nếu thành công.
+    \item viewMeetings(userId: int): List<Meeting>\\
+    Lấy danh sách tất cả các buổi gặp mặt liên quan đến Student.
+    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
+    Hủy một buổi gặp mặt, lưu lý do hủy. Trả về true nếu thành công.
+\end{itemize}
+
+
+\textbf{CourseRepository}
+\begin{itemize}
+    \item save(course: Course): Course\\
+    Dùng để lưu hoặc cập nhật khoá học.
+    \item findById(courseID: int): Course\\
+    Tìm khóa học theo ID.
+    \item findAll(): List<Course>\\
+    Trả về tất cả khóa học.
+\end{itemize}
+
+
+\textbf{EnrollmentRepository}
+\begin{itemize}
+    \item save(enrollment: Enrollment): Enrollment\\
+    Lưu đăng ký.
+    \item findByStudentID(studentID: int): List<Enrollment>\\
+    Trả về danh sách đăng ký của học viên.
+\end{itemize}
+
+\textbf{RequestRepository}
+\begin{itemize}
+    \item save(request: Request): Request\\
+    Lưu yêu cầu.
+    \item findByStudentID(studentID: int): List<Request>\\
+    Trả về danh sách yêu cầu của sinh viên.
+    \item findByTutorID(tutorID: int): List<Request>\\
+    Trả về danh sách yêu cầu cần tutor duyệt.
+    \item updateStatus(requestID: int, status: String): bool\\
+    Cập nhật trạng thái yêu cầu.
+\end{itemize}
+
+
+\textbf{FeedbackRepository}
+\begin{itemize}
+    \item save(feedback: Feedback): Feedback\\
+    Lưu phản hồi sau buổi học.
+    \item findByRequestID(requestID: int): Feedback\\
+    Tìm phản hồi theo mã yêu cầu.
+\end{itemize}
+
+\textbf{UserRepository}
+\begin{itemize}
+    \item \textbf{getUserById(userId: String): UserEntity} \\
+    Lấy user theo ID.
+    \item \textbf{saveUser(user: UserEntity): void} \\
+    Lưu user mới.
+    \item \textbf{updateUser(user: UserEntity): void} \\
+    Cập nhật user.
+\end{itemize}
+
+\textbf{ActivityRepository}
+\begin{itemize}
+    \item \textbf{getActivitiesByUserId(userId: String): List<ActivityEntity>} \\
+    Lấy danh sách hoạt động theo userId.
+    \item \textbf{saveActivity(activity: ActivityEntity): void} \\
+    Lưu hoạt động mới.
+\end{itemize}
+
+\textbf{AppointmentRepository}
+\begin{itemize}
+    \item \textbf{getAppointmentsByUserId(userId: String): List<AppointmentEntity>} \\
+    Lấy danh sách lịch hẹn theo userId.
+    \item \textbf{saveAppointment(appointment: AppointmentEntity): void} \\
+    Lưu lịch hẹn mới.
+\end{itemize}
+
+\textbf{MaterialRepository}
+\begin{itemize}
+    \item \textbf{getAllMaterials(): List<MaterialEntity>} \\
+    Lấy toàn bộ tài liệu.
+    \item \textbf{getMaterialById(materialId: String): MaterialEntity} \\
+    Lấy chi tiết tài liệu theo ID.
+    \item \textbf{searchMaterials(criteria: SearchCriteria): List<MaterialEntity>} \\
+    Tìm kiếm tài liệu theo tiêu chí.
+\end{itemize}
+
+\textbf{SessionRepository}
+\begin{itemize}
+    \item \textbf{createSession(user: UserEntity): String} \\
+    Tạo session mới.
+    \item \textbf{getSession(sessionId: String): SessionEntity} \\
+    Lấy session theo ID.
+    \item \textbf{save(sessionId: String): void} \\
+    Lưu session.
+    \item \textbf{update(sessionId: String): Boolean} \\
+    Cập nhật session, trả về true nếu thành công.
+\end{itemize}
+
+\textbf{AvailableSlotRepository}
+\begin{itemize}
+    \item \textbf{findByTutorId(id: String): List<AvailableSlot>} \\
+    Tìm và trả về danh sách các \texttt{AvailableSlot} từ cơ sở dữ liệu dựa trên \texttt{tutorId}.
+    \item \textbf{save(slot: AvailableSlot): AvailableSlot} \\
+    Lưu (thêm mới hoặc cập nhật) một đối tượng \texttt{AvailableSlot} vào cơ sở dữ liệu.
+\end{itemize}
+
+
+\textbf{NotificationRepository}
+\begin{itemize}
+\item \textbf{save(n: Notification): Notification} \
+Lưu một thông báo mới vào kho dữ liệu và trả về bản ghi đã lưu.
+\item \textbf{saveAll(list: List\textless Notification\textgreater): void} \
+Lưu hàng loạt thông báo (ví dụ gửi cho cả lớp/khoa) trong một lần thao tác.
+\item \textbf{getNotifications(userId: int): List\textless Notification\textgreater} \
+Lấy toàn bộ thông báo của một người dùng để hiển thị trong hộp thư.
+\item \textbf{markAsRead(userId: int, notificationId: int): void} \
+Đánh dấu một thông báo của người dùng là đã đọc.
+\end{itemize}
+
+
+\textbf{DataFetcherRepository}
+\begin{itemize}
+\item \textbf{fetchData(userId: int, key: List\textless String\textgreater): Map\textless key,value\textgreater} \
+Truy vấn dữ liệu thô phục vụ sinh báo cáo, dựa trên người yêu cầu và các khóa tham số (\textit{key}) cụ thể.
+\end{itemize}
+
+
+
+\textbf{Exporter}
+\begin{itemize}
+\item \textbf{exportPDF(data: Map\textless key,value\textgreater, report: Report): File} \
+Xuất dữ liệu đã render thành tệp \texttt{PDF} theo mẫu/định nghĩa của báo cáo, trả về tệp để đính kèm hoặc tải xuống.
+\item \textbf{exportCSV(data: Map\textless key,value\textgreater, report: Report): File} \
+Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp cho phân tích hoặc nhập vào bảng tính.
+\end{itemize}
+
+
+
+
+\subsubsection{Repository Interface Method}
+
+\textbf{IRoomRepository}
+\begin{itemize}
+    \item listAvailableRooms(date: Date, startTime: Time, endTime: Time): List<Room>\\
+    Trả về danh sách phòng trống trong khoảng thời gian nhất định.
+    \item updateRoomStatus(roomId: int, status: String): bool\\
+    Cập nhật trạng thái phòng (AVAILABLE, OCCUPIED, MAINTENANCE). Trả về true nếu thành công.
+    \item getRoomInfo(roomId: int): String\\
+    Lấy thông tin chi tiết của phòng theo roomId.
+\end{itemize}
+
+\textbf{ITutorSchedulingRepository}
+\begin{itemize}
+    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
+    Lưu buổi tư vấn mới vào cơ sở dữ liệu. Trả về true nếu tạo thành công.
+    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
+    Duyệt lịch hẹn từ trạng thái PENDING → APPROVED. Trả về true nếu thành công.
+    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
+    Từ chối lịch hẹn, cập nhật trạng thái REJECTED.
+\end{itemize}
+
+\textbf{IStudentSchedulingRepository}
+\begin{itemize}
+    \item registerConsultation(studentId: int, consultationId: int): bool\\
+    Đăng ký sinh viên tham gia buổi tư vấn. Trả về true nếu thành công.
+    \item bookAppointment(studentId: int, tutorId: int, date: Date, startTime: Time, topic: String): bool\\
+    Đặt lịch hẹn với tutor. Trả về true nếu thành công.
+\end{itemize}
+
+\textbf{ISchedulingRepository}
+\begin{itemize}
+    \item viewMeetings(userId: int): List<Meeting>\\
+    Lấy danh sách tất cả các buổi gặp mặt của người dùng (Tutor hoặc Student).
+    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
+    Hủy buổi gặp mặt, lưu lý do hủy. Trả về true nếu thành công.
+\end{itemize}
+
+
+\textbf{ISSOServices}
+\begin{itemize}
+    \item \textbf{authenticate(username: String, password: String): UserEntity} \\
+    Xác thực username/password, trả về UserEntity nếu thành công.
+    \item \textbf{sendResetEmail(bkId: String): void} \\
+    Gửi email reset password.
+    \item \textbf{resetPassword(token: String, newPassword: String): void} \\
+    Reset password dựa trên token.
+\end{itemize}
+
+\textbf{IMailService}
+\begin{itemize}
+    \item \textbf{sendEmail(to: String, content: String): void} \\
+    Gửi email.
+    \item \textbf{sendPasswordResetEmail(to: String, resetLink: String): void} \\
+    Gửi link reset password.
+    \item \textbf{sendNotificationEmail(to: String, subject: String, content: String): void} \\
+    Gửi email thông báo.
+\end{itemize}
+
+\textbf{IDatacoreService}
+\begin{itemize}
+    \item \textbf{getUserInfo(username: String): UserEntity} \\
+    Lấy thông tin user từ Datacore.
+\end{itemize}
+
+\textbf{IProfileService}
+\begin{itemize}
+    \item \textbf{getProfile(userId: String): UserEntity} \\
+    Trả về thông tin user.
+    \item \textbf{getActivityHistory(userId: String): List<ActivityEntity>} \\
+    Trả về danh sách hoạt động của user.
+    \item \textbf{getAppointmentHistory(userId: String): List<AppointmentEntity>} \\
+    Trả về danh sách lịch hẹn của user.
+\end{itemize}
+
+\textbf{ISessionManager}
+\begin{itemize}
+    \item \textbf{createSession(user: UserEntity): String} \\
+    Tạo session mới.
+    \item \textbf{getSession(sessionId: String): SessionEntity} \\
+    Lấy session theo ID.
+    \item \textbf{invalidateSession(sessionId: String): void} \\
+    Vô hiệu hóa session.
+    \item \textbf{isValid(sessionId: String): Boolean} \\
+    Kiểm tra session còn hợp lệ.
+\end{itemize}
+
+\textbf{IMaterialService}
+\begin{itemize}
+    \item \textbf{getMaterials(): List<MaterialEntity>} \\
+    Lấy danh sách tài liệu.
+    \item \textbf{getMaterialContent(materialId: String): String} \\
+    Lấy nội dung chi tiết tài liệu.
+    \item \textbf{searchMaterials(criteria: SearchCriteria): List<MaterialEntity>} \\
+    Tìm kiếm tài liệu theo tiêu chí.
+\end{itemize}
+\textbf{IAvailableSlotRepository}
+\begin{itemize}
+    \item \textbf{findByTutorId(id: String): List<AvailableSlot>} \\
+    Định nghĩa phương thức tìm kiếm các slot dựa trên \texttt{tutorId}.
+    \item \textbf{save(slot: AvailableSlot): AvailableSlot} \\
+    Định nghĩa phương thức lưu (thêm mới hoặc cập nhật) một \texttt{AvailableSlot}.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Entity Method}
+
+\textbf{Meeting (abstract)}
+\begin{itemize}
+    \item cancel(userId, reason): bool\\
+    Hủy buổi gặp mặt, lưu lý do.
+    \item updateStatus(): void\\
+    Cập nhật trạng thái theo thời gian (SCHEDULED → ONGOING → COMPLETED).
+    \item Getter/Setter cho: meetingId, tutorId, date, startTime, endTime, topic, cancelled, cancellationReason.
+\end{itemize}
+
+\textbf{Appointment (extends Meeting)}
+\begin{itemize}
+    \item approve(tutorId): bool\\
+    Duyệt lịch hẹn PENDING → APPROVED.
+    \item reject(tutorId): bool\\
+    Từ chối lịch hẹn.
+    \item cancel(userId, reason): bool\\
+    Override phương thức từ Meeting.
+    \item Getter/Setter cho: studentId, status (PENDING/APPROVED/REJECTED).
+\end{itemize}
+
+\textbf{Consultation (extends Meeting)}
+\begin{itemize}
+    \item register(studentId): bool\\
+    Thêm student vào participants.
+    \item cancel(userId, reason): bool\\
+    Override phương thức từ Meeting.
+    \item Getter/Setter cho: title, mode, room, onlineLink, maxParticipants, participants, status (SCHEDULED/ONGOING/COMPLETED/CANCELLED).
+\end{itemize}
+
+\textbf{Room}
+\begin{itemize}
+    \item isAvailable(date, startTime, endTime): bool\\
+    Kiểm tra phòng có trống.
+    \item setStatus(newStatus): void\\
+    Cập nhật trạng thái phòng.
+    \item toString(): String\\
+    Hiển thị thông tin phòng.
+    \item Getter/Setter cho: roomId, building, floor, roomNumber, capacity, status.
+\end{itemize}
+
+\textbf{User}
+\begin{itemize}
+    \item \textbf{login(): bool} \\
+    Thực hiện đăng nhập.
+    \item \textbf{logout(): bool} \\
+    Thực hiện đăng xuất.
+    \item \textbf{viewProfile(): void} \\
+    Xem thông tin cá nhân.
+    \item \textbf{viewMaterials(): void} \\
+    Xem danh sách tài liệu.
+    \item \textbf{forgotPassword(): void} \\
+    Yêu cầu đặt lại mật khẩu.
+\end{itemize}
+
+\textbf{Student}
+\begin{itemize}
+    \item \textbf{requestTutor(tutorId: int): bool} \\
+    Yêu cầu tư vấn từ tutor.
+    \item \textbf{bookAppointment(tutorId: int, datetime): bool} \\
+    Đặt lịch hẹn với tutor.
+    \item \textbf{giveFeedback(sessionId: int, rating: int, comment: String): bool} \\
+    Gửi phản hồi về buổi tư vấn.
+    \item \textbf{registerCounselingSession(tutorId: int, datetime): bool} \\
+    Đăng ký buổi tư vấn với tutor.
+\end{itemize}
+
+\textbf{Tutor}
+\begin{itemize}
+    \item \textbf{acceptRequest(requestId: int): bool} \\
+    Chấp nhận yêu cầu tư vấn.
+    \item \textbf{createCounselingSession(studentId: int, datetime): bool} \\
+    Tạo buổi tư vấn cho student.
+    \item \textbf{cancelAppointment(appointmentId: int, reason: String): bool} \\
+    Hủy một buổi hẹn.
+    \item \textbf{recordStudentProgress(studentId: int, summary: String): bool} \\
+    Ghi lại tiến độ học tập của student.
+    \item \textbf{setAvailability(startTime: datetime, endTime: datetime): bool} \\
+    Cập nhật khung thời gian có sẵn.
+    \item \textbf{uploadMaterials(materialId: int, content: String): bool} \\
+    Tải lên tài liệu học tập.
+    \item \textbf{deleteMaterials(materialId: int): bool} \\
+    Xóa tài liệu học tập.
+    \item \textbf{processAppointmentRequest(requestId: int): bool} \\
+    Xử lý yêu cầu đặt lịch hẹn.
+\end{itemize}
+\textbf{AvailableSlot}
+\begin{itemize}
+    \item \textbf{getStatus(): SlotStatus} \\
+    Trả về trạng thái hiện tại của slot (ví dụ: AVAILABLE, BOOKED).
+    \item \textbf{setStatus(status: SlotStatus): void} \\
+    Cập nhật trạng thái của slot.
+    \item \textbf{isOverlapping(other: AvailableSlot): boolean} \\
+    Kiểm tra xem slot này có bị trùng lặp (chồng chéo) thời gian với một slot \texttt{other} hay không.
+    \item \textbf{isAvailable(): boolean} \\
+    Kiểm tra nhanh xem trạng thái của slot có phải là \texttt{AVAILABLE} hay không.
+\end{itemize}
+
+\textbf{Notification}
+\begin{itemize}
+\item \textbf{id: int} \
+ID thông báo.
+\item \textbf{userId: int} \
+ID người nhận thông báo.
+\item \textbf{type: String} \
+Loại thông báo, dùng để phân nhóm xử lý.
+\item \textbf{content: String} \
+Nội dung tóm tắt hiển thị cho người dùng.
+\item \textbf{createdAt: datetime} \
+Thời điểm hệ thống tạo thông báo.
+\item \textbf{readAt: datetime} \
+Thời điểm người dùng đánh dấu đã đọc.
+\end{itemize}
+
+\bigskip
+
+\textbf{Report (Entity)}
+\begin{itemize}
+\item \textbf{reportId: int} \
+ID báo cáo.
+\item \textbf{name: string} \
+Tên của mẫu báo cáo.
+\item \textbf{description: string} \
+Mô tả ngắn về nội dung của báo cáo.
+\item \textbf{format: ReportFormat} \
+Định dạng xuất (\texttt{PDF}, \texttt{CSV}).
+\item \textbf{title: string} \
+Tiêu đề hiển thị.
+\item \textbf{sendTo: Department} \
+Phòng ban nhận báo cáo.
+\item \textbf{createAt: datetime} \
+Thời điểm tạo báo cáo.
+\end{itemize}

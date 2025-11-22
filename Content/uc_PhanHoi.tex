@@ -1,0 +1,33 @@
+\subsubsection{Phản hồi chất lượng}
+\begin{longtable}{|p{3.5cm}|p{9cm}|}
+\hline
+\textbf{Use Case Name} & Phản hồi chất lượng \\ \hline
+\textbf{Actor(s)} & Sinh viên (Student) \\ \hline
+\textbf{Description} & Sinh viên muốn gửi phản hồi về chất lượng buổi học hoặc chất lượng hỗ trợ của Tutor. \\ \hline
+\textbf{Trigger} & Sau khi kết thúc buổi học, sinh viên chọn mục “Phản hồi chất lượng”. \\ \hline
+\textbf{Pre–Condition(s)} &
+Sinh viên đã đăng nhập vào hệ thống. \newline
+Sinh viên đã tham gia ít nhất một buổi học với Tutor. \\ \hline
+\textbf{Post–Condition(s)} &
+Phản hồi được lưu trữ thành công trong hệ thống. \newline
+Hệ thống gửi thông báo đến Tutor và ghi nhận phản hồi cho báo cáo tổng hợp. \\ \hline
+\textbf{Normal Flow} &
+1. Sinh viên truy cập mục “Phản hồi chất lượng”. \newline
+2. Hệ thống hiển thị form phản hồi (mức độ hài lòng, nội dung chi tiết). \newline
+3. Sinh viên nhập nội dung phản hồi và chọn mức độ đánh giá. \newline
+4. Sinh viên nhấn “Gửi”. \newline
+5. Hệ thống lưu phản hồi vào cơ sở dữ liệu. \newline
+6. Hệ thống gửi thông báo xác nhận cho sinh viên. \\ \hline
+\textbf{Alternative Flow} &
+3a. Sinh viên không nhập nội dung phản hồi. \newline
+3a1. Hệ thống hiển thị thông báo: “Vui lòng nhập nội dung phản hồi trước khi gửi”. \newline
+3a2. Giao diện quay lại bước 3. \newline\newline
+4a. Sinh viên chọn “Hủy” thay vì gửi phản hồi. \newline
+4a1. Hệ thống hủy thao tác và không lưu thông tin. \newline
+4a2. Use case kết thúc sớm. \\ \hline
+\textbf{Exception Flow} &
+5a. Sau khi sinh viên nhấn “Gửi” (bước 4), hệ thống cố gắng lưu dữ liệu nhưng gặp lỗi cơ sở dữ liệu (DB error). \newline
+5a1. Hệ thống hiển thị thông báo: “Gửi phản hồi thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”. \newline
+5a2. Hệ thống ghi log lỗi và giữ trạng thái chưa gửi phản hồi. \newline
+5a3. Use case kết thúc không thành công. \\ \hline
+\end{longtable}

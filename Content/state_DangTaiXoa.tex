@@ -1,0 +1,73 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/state_file.drawio (2).png}
+    \caption{State Diagram cho quản lý tài liệu (Đăng và Xóa)}
+\end{figure}
+
+\begin{table}[h!]
+\centering
+\caption{\textbf{Bảng mô tả trạng thái trong UC Quản lý tài liệu (Đăng và Xóa)}}
+\begin{tabular}{|p{4cm}|p{10.5cm}|}
+\hline
+\textbf{Trạng thái} & \textbf{Mô tả} \\ \hline
+
+Idle &
+Trạng thái ban đầu hoặc sau khi giảng viên mở danh sách tài liệu đã đăng. Hệ thống chờ người dùng chọn tệp để đăng hoặc thao tác tiếp theo. \\ \hline
+
+Đang đăng &
+Hệ thống đang tải lên tệp mà giảng viên chọn. Trong trạng thái này, hệ thống hiển thị tiến trình tải và thực hiện hành động tải tệp thực tế. \\ \hline
+
+Đã đăng &
+Tệp đã được tải lên thành công và lưu vào thư viện tài liệu. Hệ thống hiển thị thông báo “Tải lên hoàn tất” và chờ hành động tiếp theo từ giảng viên (như xóa hoặc kết thúc). \\ \hline
+
+Đang xóa &
+Giảng viên chọn hành động xóa tài liệu đã đăng. Hệ thống hiển thị tiến trình xóa, thực hiện thao tác xóa và xác nhận kết quả trước khi thoát khỏi trạng thái này. \\ \hline
+
+Đã xóa &
+Tài liệu đã được xóa thành công. Hệ thống dọn dẹp tài nguyên, ghi nhận log hành động và kết thúc use case. \\ \hline
+
+Lỗi &
+Có lỗi xảy ra trong quá trình tải lên hoặc xóa (ví dụ: lỗi tệp, lỗi quyền truy cập, hoặc sự cố mạng). Hệ thống hiển thị thông báo lỗi, cho phép người dùng thử lại hoặc thoát. \\ \hline
+
+\end{tabular}
+\end{table}
+
+\begin{table}[h!]
+\centering
+\caption{\textbf{Bảng mô tả Sự kiện/Chuyển trạng thái trong UC Quản lý tài liệu (Đăng và Xóa)}}
+\begin{tabular}{|p{4cm}|p{10.5cm}|}
+\hline
+\textbf{Sự kiện / Kích thích} & \textbf{Mô tả} \\ \hline
+
+Tutor chọn file + Submit &
+Giảng viên chọn tệp cần đăng và gửi yêu cầu. Hệ thống chuyển từ trạng thái Idle sang Đang đăng. \\ \hline
+
+Thành công / saveToLibrary() &
+Khi quá trình tải lên hoàn tất thành công, hệ thống lưu tài liệu vào thư viện và chuyển sang trạng thái Đã đăng. \\ \hline
+
+Thất bại (File, Quyền, Mạng) &
+Nếu có lỗi trong quá trình tải lên, hệ thống chuyển sang trạng thái Lỗi. Người dùng có thể thử lại thao tác. \\ \hline
+
+Tutor mở danh sách file đã đăng &
+Từ trạng thái Idle, giảng viên có thể mở danh sách tài liệu đã đăng để xem hoặc xóa. \\ \hline
+
+Tutor chọn Xóa các file đã đăng &
+Giảng viên chủ động chọn hành động “Xóa tài liệu”. Hệ thống chuyển sang trạng thái Đang xóa và thực hiện thao tác xóa. \\ \hline
+
+Thành công / logToLibrary() &
+Sau khi xóa thành công, hệ thống ghi log và chuyển sang trạng thái Đã xóa. \\ \hline
+
+Thất bại (Quyền, Đang dùng) &
+Nếu không thể xóa do lỗi quyền hoặc tài liệu đang được sử dụng, hệ thống chuyển sang trạng thái Lỗi. \\ \hline
+
+Thử lại &
+Từ trạng thái Lỗi, giảng viên chọn “Thử lại” → hệ thống quay lại Đang đăng để thực hiện lại quy trình tải lên. \\ \hline
+
+Thoát &
+Từ trạng thái Lỗi hoặc sau khi hoàn thành thao tác, giảng viên chọn “Thoát” → hệ thống kết thúc. \\ \hline
+
+Kết thúc / Không xóa &
+Giảng viên không chọn xóa hoặc kết thúc sau khi tài liệu đã được tải lên → hệ thống kết thúc. \\ \hline
+
+\end{tabular}
+\end{table}

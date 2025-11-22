@@ -1,0 +1,56 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/phanhoi-Trang-1.drawio.png}
+    \caption{Sequence Diagram cho Phản hồi chất lượng buổi học}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\linewidth]{Image/phanhoi-Trang-2.drawio.png}
+    \caption{Activity Diagram cho Phản hồi chất lượng buổi học}
+\end{figure}
+\textbf{Mô tả:}
+
+
+\textbf{Luồng sự kiện chính: Gửi phản hồi thành công}
+
+\begin{enumerate}
+    \item Sinh viên truy cập vào hệ thống và chọn mục ``Phản hồi chất lượng''.
+    \item Hệ thống (UI) hiển thị form phản hồi bao gồm: mức độ hài lòng và ô nhập nội dung.
+    \item Sinh viên nhập nội dung phản hồi, chọn mức độ đánh giá, sau đó nhấn ``Gửi''.
+    \item Hệ thống nhận dữ liệu, thực hiện kiểm tra tính hợp lệ (đủ nội dung, không chứa ký tự lỗi, định dạng hợp lệ).
+    \item Nếu dữ liệu hợp lệ, Hệ thống lưu phản hồi vào \textbf{CSDL Phản hồi}.
+    \item Khi lưu thành công, Hệ thống gửi phản hồi xác nhận về cho UI.
+    \item UI hiển thị thông báo: ``Gửi phản hồi thành công.''
+    \item Use case kết thúc.
+\end{enumerate}
+\vspace{1em}
+\textbf{Luồng phụ và luồng lỗi }
+
+\begin{enumerate}
+    \item \textbf{Sinh viên nhấn ``Hủy''}
+    \begin{itemize}
+        \item Khi form phản hồi đang hiển thị, nếu sinh viên chọn ``Hủy'', Hệ thống đóng form và không lưu bất kỳ thông tin nào.
+        \item Use case kết thúc sớm.
+    \end{itemize}
+    
+    \item \textbf{Dữ liệu không hợp lệ}
+    \begin{itemize}
+        \item Nếu sinh viên không nhập nội dung phản hồi hoặc nội dung không đạt yêu cầu, Hệ thống hiển thị thông báo lỗi:
+        \begin{quote}
+            ``Nội dung phản hồi không hợp lệ, vui lòng nhập lại.''
+        \end{quote}
+        \item Sau đó, giao diện quay lại form phản hồi ban đầu (reset form rỗng).
+        \item Sinh viên có thể chọn nhập lại nội dung và gửi lại hoặc nhấn hủy.
+    \end{itemize}
+    
+    \item \textbf{Lỗi khi lưu dữ liệu}
+    \begin{itemize}
+        \item Trong quá trình lưu phản hồi, nếu CSDL xảy ra lỗi (ví dụ: mất kết nối, lỗi truy vấn), Hệ thống bắt ngoại lệ và gọi bộ ghi log (\texttt{Log lỗi}) để ghi chi tiết sự cố.
+        \item Sau đó, Hệ thống gửi phản hồi lỗi về cho UI.
+        \item UI hiển thị thông báo:
+        \begin{quote}
+            ``Gửi phản hồi thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật.''
+        \end{quote}
+        \item Use case kết thúc không thành công.
+    \end{itemize}
+\end{enumerate}

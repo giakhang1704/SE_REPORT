@@ -1,0 +1,68 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\textwidth]{Image/new_ac.drawio.png}
+    \caption{Sequence Diagram cho Use Case “Tạo buổi tư vấn”}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.05\textwidth]{Image/ac.drawio.png}
+    \caption{Activity Diagram cho Use Case “Tạo buổi tư vấn”}
+\end{figure}
+
+% ========== Mô tả ==========
+\textbf{Mô tả}
+
+\textbf{Luồng sự kiện chính: Tạo buổi tư vấn thành công}
+\begin{enumerate}
+
+  \item \textbf{Tutor} truy cập vào chức năng ``Tạo buổi tư vấn'' trên giao diện hệ thống.
+  \item \textbf{UI} hiển thị Form \texttt{Tạo buổi tư vấn} cho Tutor nhập thông tin chi tiết.
+  \item \textbf{Tutor} nhập các thông tin cần thiết, bao gồm: chủ đề, thời gian bắt đầu và kết thúc, hình thức (trực tiếp / trực tuyến), mô tả nội dung và địa điểm (nếu có).
+  \item Khi hoàn tất, \textbf{Tutor} nhấn nút \texttt{Xác nhận}. \textbf{UI} gửi yêu cầu tạo buổi kèm dữ liệu tới \textbf{System}.
+  \item \textbf{System} thực hiện các kiểm tra hợp lệ trên dữ liệu nhận được: kiểm tra trường bắt buộc, định dạng thời gian, và độ dài nội dung.
+  \item Nếu hợp lệ, \textbf{System} truy vấn \textbf{Database} để kiểm tra: thời gian có nằm trong lịch rảnh của Tutor và có trùng với buổi tư vấn nào khác hay không.
+  \item Nếu không có xung đột, \textbf{System} lưu thông tin buổi tư vấn mới vào \textbf{Database}.
+  \item \textbf{System} trả về thông báo thành công cho \textbf{UI}.
+  \item \textbf{UI} hiển thị thông báo: \textit{“Tạo buổi tư vấn thành công”} và cập nhật danh sách buổi tư vấn trên giao diện.
+
+\end{enumerate}
+
+
+
+\textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}
+
+
+
+\begin{enumerate}
+
+\item \textbf{Thông tin không hợp lệ:}\\
+Nếu dữ liệu \textbf{Tutor} nhập bị thiếu hoặc sai định dạng (ví dụ: để trống thời gian, nhập sai định dạng giờ), 
+\textbf{System} sẽ từ chối xử lý và trả về thông báo lỗi cho \textbf{UI}.\\
+\textbf{UI} hiển thị: \textit{“Thông tin không hợp lệ, vui lòng kiểm tra lại.”}\\
+Form giữ nguyên để Tutor chỉnh sửa và gửi lại.
+
+\item \textbf{Thời gian không nằm trong lịch rảnh:}\\
+Khi kiểm tra \textbf{Database}, nếu thời gian nhập không thuộc các khung giờ rảnh đã đăng ký, 
+\textbf{System} trả về lỗi cho \textbf{UI}.\\
+\textbf{UI} hiển thị: \textit{“Thời gian bạn chọn không nằm trong lịch rảnh.”}\\
+Tutor chọn lại thời gian hợp lệ.
+
+\item \textbf{Xung đột thời gian (đã có buổi khác):}\\
+Nếu \textbf{System} phát hiện có buổi tư vấn khác trùng hoặc chồng lấn khung giờ, 
+hệ thống phản hồi lỗi tới \textbf{UI}.\\
+\textbf{UI} hiển thị: \textit{“Thời gian đã được sử dụng. Vui lòng chọn khung giờ khác.”}\\
+Tutor có thể chỉnh sửa và gửi lại.
+
+\item \textbf{Hủy thao tác:}\\
+Nếu \textbf{Tutor} nhấn nút \texttt{Hủy} trong khi nhập form, 
+\textbf{UI} đóng form và không lưu bất kỳ thông tin nào.\\
+Use Case kết thúc tại đây.
+
+\item \textbf{Lỗi hệ thống / lỗi khi lưu dữ liệu:}\\
+Trong quá trình lưu dữ liệu, nếu xảy ra lỗi kết nối hoặc lỗi truy vấn, 
+\textbf{System} trả về thông báo lỗi chung.\\
+\textbf{UI} hiển thị: \textit{“Hệ thống đang gặp sự cố, vui lòng thử lại sau.”}\\
+Use Case kết thúc không thành công.
+
+\end{enumerate}
