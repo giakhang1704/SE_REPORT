@@ -346,69 +346,65 @@ Yêu cầu xóa cần được quản trị viên (HCMUT\_LIBRARY) duyệt trư�
 \hline
 \textbf{Use Case ID} & UC-18 \\ \hline
 \textbf{Use Case Name} & Xử lý yêu cầu đặt lịch hẹn \\ \hline
-\textbf{Actor(s)} &Tutor \\ \hline
+\textbf{Actor(s)} & Tutor \\ \hline
 \textbf{Description} & 
-Tutor xem và xử lý các yêu cầu đặt lịch hẹn từ sinh viên (phê duyệt hoặc từ chối) để xác nhận lịch hẹn với. \\ \hline
+Tutor xem danh sách các yêu cầu đặt lịch từ sinh viên, sau đó phê duyệt hoặc từ chối từng yêu cầu. Khi sinh viên gửi yêu cầu, hệ thống đã tạm giữ (giữ chỗ) slot rảnh tương ứng trong lịch của Tutor để tránh sinh viên khác đặt trùng. Nếu Tutor từ chối, Tutor có thể chọn có mở lại slot đó (trả về lịch rảnh) hay giữ slot vẫn bị khóa. \\ \hline
 
 \textbf{Trigger} & 
-Tutor bấm vào nút " Quản lí yêu cầu đặt lịch hẹn". \\ \hline
+Tutor bấm vào nút ``Quản lý yêu cầu đặt lịch hẹn''. \\ \hline
 
 \textbf{Pre–Condition(s)} & 
 - Tutor đã đăng nhập vào hệ thống. \newline
 - Sinh viên đã gửi yêu cầu đặt lịch hẹn cho Tutor. \newline
+- Đối với mỗi yêu cầu đang chờ xử lý, slot rảnh tương ứng trong lịch của Tutor được hệ thống tạm giữ. \newline
 - Hệ thống hoạt động bình thường và có kết nối mạng. \\ \hline
 
 \textbf{Post–Condition(s)} & 
 - Yêu cầu lịch hẹn được Tutor xử lý (duyệt hoặc từ chối). \newline
 - Hệ thống gửi thông báo kết quả cho sinh viên. \newline
-- Nếu duyệt: lịch hẹn được ghi nhận chính thức vào hệ thống. \newline
-- Nếu từ chối: yêu cầu bị hủy và không ghi vào lịch. \\ \hline
+- Nếu duyệt: lịch hẹn được ghi nhận chính thức vào hệ thống, slot tương ứng được đánh dấu là bận trong lịch của Tutor. \newline
+- Nếu từ chối: yêu cầu bị hủy và không ghi vào hệ thống, slot tương ứng có thể được mở lại hoặc bị khóa tùy vào thiết lập của Tutor. \\ \hline
 
 \textbf{Normal Flow} & 
 \begin{enumerate}
-    \item Tutor truy cập mục “Quản lý yêu cầu lịch hẹn”.
+    \item Tutor truy cập mục ``Quản lý yêu cầu lịch hẹn''.
     \item Hệ thống hiển thị danh sách các yêu cầu lịch hẹn đang chờ xử lý.
     \item Tutor chọn một yêu cầu cụ thể để xem chi tiết (thông tin sinh viên, thời gian, nội dung).
-    \item Tutor chọn “Phê duyệt” hoặc “Từ chối” yêu cầu.
+    \item Tutor chọn ``Phê duyệt'' hoặc ``Từ chối'' yêu cầu.
     \item Hệ thống ghi nhận quyết định của Tutor.
-    \item Hệ thống gửi thông báo kết quả xử lý cho sinh viên và cập nhật vào lịch Tutor.
+    \item Hệ thống cập nhật trạng thái slot của Tutor và gửi thông báo kết quả xử lý cho sinh viên.
 \end{enumerate} \\ \hline
 
 \textbf{Alternative Flow} & 
 \begin{enumerate}
     \item[2a.] Không có yêu cầu nào đang chờ xử lý.
-    \begin{enumerate}
-        \item[2a1.] Hệ thống hiển thị thông báo: “Không có yêu cầu lịch hẹn nào”.
-        \item[2a2.] Tutor chọn “Quay lại” để trở về trang quản lý.
+        \item[2a1.] Hệ thống hiển thị thông báo: ``Không có yêu cầu lịch hẹn nào''.
+        \item[2a2.] Tutor chọn ``Quay lại'' để trở về trang quản lý.
         \item[2a3.] Use case kết thúc sớm.
+
+    \item[4a.] Tutor chọn ``Từ chối'' yêu cầu.
+    \begin{enumerate}
+        \item[4a1.] Hệ thống hiển thị hộp thoại yêu cầu Tutor nhập lý do từ chối (tùy chọn) và chọn cách xử lý slot.
+        \item[4a2.] Tutor nhập lý do (hoặc bỏ trống) và chọn một trong hai tùy chọn xử lý slot:
+            \item[4a2.1.] ``Mở lại slot'': Slot được đánh dấu lại là rảnh trong lịch của Tutor, sinh viên khác có thể đặt.
+            \item[4a2.2.] ``Không mở lại slot'': Slot vẫn được giữ ở trạng thái bận, không hiển thị như một slot rảnh cho sinh viên khác.
+        \item[4a3.] Tutor xác nhận thao tác từ chối.
+        \item[4a4.] Hệ thống ghi nhận quyết định từ chối, xử lý trạng thái slot theo lựa chọn ở bước 4a2 và gửi thông báo cho sinh viên.
     \end{enumerate}
 
-    \item[4a.] Tutor chọn “Từ chối” yêu cầu.
-    \begin{enumerate}
-        \item[4a1.] Hệ thống yêu cầu Tutor nhập lý do từ chối (tùy chọn).
-        \item[4a2.] Tutor nhập lý do (hoặc bỏ trống) và xác nhận.
-        \item[4a3.] Hệ thống ghi nhận quyết định từ chối và gửi thông báo cho sinh viên.
-    \end{enumerate}
-
-    \item[4b.] Tutor đổi ý và chọn “Hủy thao tác” trước khi xác nhận.
-    \begin{enumerate}
+    \item[4b.] Tutor đổi ý và chọn ``Hủy thao tác'' trước khi xác nhận.
         \item[4b1.] Hệ thống không lưu bất kỳ thay đổi nào.
-        \item[4b2.] Giao diện quay lại danh sách yêu cầu.
+        \item[4b2.] Giao diện quay lại danh sách yêu cầu (hoặc màn hình chi tiết yêu cầu tùy thiết kế).
         \item[4b3.] Use case kết thúc sớm.
-    \end{enumerate}
 \end{enumerate} \\ \hline
 
 \textbf{Exception Flow} & 
 \begin{enumerate}
-    \item[5a.] Khi ghi nhận quyết định (bước 5), hệ thống gặp lỗi cơ sở dữ liệu hoặc mất kết nối.
-    \begin{enumerate}
-        \item[5a1.] Hệ thống hiển thị thông báo: “Xử lý thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”.
-        \item[5a2.] Hệ thống ghi log lỗi, không thay đổi trạng thái yêu cầu.
+    \item[5a.] Khi ghi nhận quyết định, hệ thống gặp lỗi cơ sở dữ liệu hoặc mất kết nối.
+        \item[5a1.] Hệ thống hiển thị thông báo: ``Xử lý thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật''.
+        \item[5a2.] Hệ thống ghi log lỗi, không thay đổi trạng thái yêu cầu và trạng thái slot.
         \item[5a3.] Use case kết thúc không thành công.
-    \end{enumerate}
-    \end{enumerate}
-    - Mất kết nối mạng trong quá trình thêm lịch → Hệ thống hiển thị thông báo lỗi “Không thể kết nối. Vui lòng thử lại sau”. \newline
-- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”.
- \\ \hline
+\end{enumerate} \\ \hline
 
 \end{longtable}
+
