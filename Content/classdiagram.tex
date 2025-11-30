@@ -141,9 +141,10 @@ Facade che giấu các lớp nghiệp vụ sau:
 \begin{itemize}
     \item displayAvailableRooms(date: String, startTime: String, endTime: String): void\\
     Hiển thị danh sách phòng trống theo thời gian.
-    \item selectRoom(roomId: int): void\\
-    Chọn một phòng để sử dụng trong buổi tư vấn.
+    \item showRoomDetails(roomId): void\\
+    Hiển thị chi tiết thông tin phòng cho người dùng.
 \end{itemize}
+
 
 \textbf{LoginUI}
 \begin{itemize}
@@ -396,12 +397,14 @@ Facade che giấu các lớp nghiệp vụ sau:
 
 \textbf{RoomAPI}
 \begin{itemize}
-    \item getAvailableRooms(date: Date, startTime: Time, endTime: Time): List<Room>\\
+    \item getAvailableRooms(date: Date, startTime: Time, endTime: Time): ResponseEntity<List<Room>>\\
     Trả về danh sách phòng trống theo yêu cầu từ UI.
-    \item updateRoomStatus(roomId: int, status: String): bool\\
+    \item  reserveRoom(Long roomId,  ReserveRequest request): ResponseEntity<RoomBooking>\\
     Cập nhật trạng thái phòng.
-    \item getRoomDetails(roomId: int): String\\
+    \item getRoomDetails(roomId: int): ResponseEntity<Room>\\
     Lấy thông tin chi tiết của một phòng.
+    \item releaseRoom(roomId, meetingId): ResponseEntity<Void>\\
+    Hủy đặt phòng theo mã cuộc họp.
 \end{itemize}
 
 \textbf{LearningAPI}
@@ -569,20 +572,30 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
 
     \item createOnlineLink(appointment: Appointment): String \\
     Tạo đường link học online cho Appointment (ví dụ: tạo link Google Meet). Được gọi khi tutor approve lịch. Trả về chuỗi URL.
+    
+    \item viewAppointmentDetails(appointmentId: Long): Appointment\\
+    Lấy thông tin chi tiết của một cuộc hẹn (Appointment). Nếu ID không tồn tại hoặc Meeting không phải là Appointment thì trả về null.
 
 \textbf{RoomService}
 \begin{itemize}
+
     \item getAvailableRooms(date: Date, startTime: Time, endTime: Time): List<Room>\\
-    Trả về danh sách phòng trống theo yêu cầu từ UI.
-    \item updateRoomStatus(roomId: int, status: String): bool\\
-    Cập nhật trạng thái phòng (AVAILABLE, OCCUPIED, MAINTENANCE). Trả về true nếu cập nhật thành công.
-    \item getRoomDetails(roomId: int): String\\
-    Lấy thông tin chi tiết của một phòng (tòa nhà, tầng, số phòng, sức chứa, trạng thái).
-    \item getRoomStatistics(): Map<String, Any>\\
-    Trả về thống kê tổng quan về các phòng: số phòng trống, số phòng đang sử dụng, số phòng bảo trì, phân theo tòa nhà hoặc tầng.
-    \item \# isRoomAvailable(roomId: int, date: Date, startTime: Time, endTime: Time): bool\\
-    Kiểm tra xem phòng có trống trong khoảng thời gian cụ thể hay không. Phương thức private.
+    Trả về danh sách phòng trống theo yêu cầu.
+
+    \item isRoomAvailable(roomId: int, date: Date, startTime: Time, endTime: Time): boolean\\
+    Kiểm tra phòng có trống không.
+
+    \item reserveRoom(roomId: int, date: Date, startTime: Time, endTime: Time, meetingId: int): boolean\\
+    Đặt phòng cho một cuộc họp. Trả về true nếu đặt thành công.
+
+    \item releaseRoom(roomId: int, meetingId: int): boolean\\
+    Hủy đặt phòng theo mã cuộc họp.
+
+    \item getRoomDetails(roomId: int): Room\\
+    Lấy thông tin chi tiết của phòng.
+
 \end{itemize}
+
 
 \textbf{CourseService}
 \begin{itemize}
@@ -748,6 +761,18 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
     Cập nhật trạng thái phòng (AVAILABLE, OCCUPIED, MAINTENANCE). Trả về true nếu thành công.
     \item getRoomInfo(roomId: int): String\\
     Lấy thông tin chi tiết của phòng theo roomId.
+\end{itemize}
+
+\textbf{RoomBookingRepository}
+\begin{itemize}
+    \item findBookings(date: Date): List<RoomBooking>\\
+    Trả về tất cả các lịch đặt phòng theo ngày.
+
+    \item save(booking: RoomBooking): void\\
+    Lưu một lịch đặt phòng mới.
+
+    \item findConflicts(roomId: int, date: Date, startTime: Time, endTime: Time): boolean\\
+    Kiểm tra phòng có xung đột lịch hay không.
 \end{itemize}
 
 \textbf{MeetingRepository}
@@ -928,30 +953,53 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     Lấy thông tin chi tiết của phòng theo roomId.
 \end{itemize}
 
-\textbf{ITutorSchedulingRepository}
+\textbf{IRoomBookingRepository}
 \begin{itemize}
-    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
-    Lưu buổi tư vấn mới vào cơ sở dữ liệu. Trả về true nếu tạo thành công.
-    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
-    Duyệt lịch hẹn từ trạng thái PENDING → APPROVED. Trả về true nếu thành công.
-    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
-    Từ chối lịch hẹn, cập nhật trạng thái REJECTED.
+    \item findBookings(date: Date): List<RoomBooking>\\
+    Trả về tất cả các lịch đặt phòng theo ngày.
+
+    \item save(booking: RoomBooking): void\\
+    Lưu một lịch đặt phòng mới.
+
+    \item findConflicts(roomId: int, date: Date, startTime: Time, endTime: Time): boolean\\
+    Kiểm tra phòng có xung đột lịch hay không.
+    \item updateStatus(roomId: int, status: String): void\\
 \end{itemize}
 
-\textbf{IStudentSchedulingRepository}
+\textbf{IMeetingRepository}
 \begin{itemize}
-    \item registerConsultation(studentId: int, consultationId: int): bool\\
-    Đăng ký sinh viên tham gia buổi tư vấn. Trả về true nếu thành công.
-    \item bookAppointment(studentId: int, tutorId: int, date: Date, startTime: Time, topic: String): bool\\
-    Đặt lịch hẹn với tutor. Trả về true nếu thành công.
-\end{itemize}
+    \item findById(meetingId: Long): Meeting\\
+    Tìm và trả về Meeting theo \texttt{meetingId}. Trả về \texttt{null} nếu không tồn tại.
+    
+    \item save(meeting: Meeting): void\\
+    Lưu một Meeting mới vào danh sách nội bộ.
 
-\textbf{ISchedulingRepository}
-\begin{itemize}
-    \item viewMeetings(userId: int): List<Meeting>\\
-    Lấy danh sách tất cả các buổi gặp mặt của người dùng (Tutor hoặc Student).
-    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
-    Hủy buổi gặp mặt, lưu lý do hủy. Trả về true nếu thành công.
+    \item update(meeting: Meeting): void\\
+    Cập nhật Meeting theo \texttt{meetingId}. Ném ngoại lệ nếu không tìm thấy.
+
+    \item findPendingAppointmentsByTutor(tutorId: Long): List<Appointment>\\
+    Trả về danh sách các Appointment ở trạng thái \texttt{PENDING} của tutor.
+
+    \item findApprovedAppointmentsByTutor(tutorId: Long): List<Appointment>\\
+    Trả về danh sách Appointment ở trạng thái \texttt{APPROVED} của tutor.
+
+    \item findAllAppointmentsByStudent(studentId: Long): List<Appointment>\\
+    Lấy toàn bộ Appointment của một student (mọi trạng thái).
+
+    \item findApprovedAppointmentsByStudent(studentId: Long): List<Appointment>\\
+    Trả về Appointment đã \texttt{APPROVED} của student.
+
+    \item findApprovedMeetingByStudent(studentId: Long): List<Meeting>\\
+    Trả về Meeting đã \texttt{APPROVED} của student.
+
+    \item findApprovedMeetingByTutor(tutorId: Long): List<Meeting>\\
+    Trả về Meeting đã \texttt{APPROVED} của tutor.
+
+    \item findOfficialMeetingsByStudent(studentId: Long): List<Meeting>\\
+    Trả về Meeting \texttt{APPROVED} và chưa bị hủy (\texttt{!isCancelled()}) của student.
+
+    \item findOfficialMeetingsByTutor(tutorId: Long): List<Meeting>\\
+    Trả về Meeting \texttt{APPROVED} và chưa bị hủy của tutor.
 \end{itemize}
 
 
@@ -1019,6 +1067,63 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     \item \textbf{save(slot: AvailableSlot): AvailableSlot} \\
     Định nghĩa phương thức lưu (thêm mới hoặc cập nhật) một \texttt{AvailableSlot}.
 \end{itemize}
+\textbf{IStudentSchedulingService}
+\begin{itemize}
+
+    \item bookAppointment(studentId: Long, tutorId: Long, date: LocalDateTime, startTime: LocalDateTime, endTime: LocalDateTime, topic: String): bool \\
+    Tạo một lịch hẹn mới giữa sinh viên và tutor. Logic bao gồm: kiểm tra tutor có trống hay không trong khoảng thời gian yêu cầu, kiểm tra slot rảnh từ FreeSlotService, lưu Appointment vào Repository, và cắt slot rảnh tương ứng. Trả về true nếu đặt thành công, false nếu không còn slot hoặc xảy ra lỗi.
+
+    \item viewOfficialMeetings(studentId: Long): List<Meeting> \\
+    Lấy danh sách các Meeting chính thức của sinh viên, bao gồm Appointment đã duyệt (APPROVED) và các loại Meeting khác. Dữ liệu lấy từ MeetingRepository.
+
+    \item viewAppointmentHistory(studentId: Long): List<Appointment> \\
+    Trả về lịch sử tất cả các Appointment của sinh viên, bao gồm PENDING, APPROVED, REJECTED, CANCELLED. Phục vụ mục xem lịch sử đặt lịch.
+
+    \item cancelMeeting(meetingId: Long, reason: String): bool \\
+    Sinh viên yêu cầu hủy một Meeting. Kiểm tra Meeting tồn tại, chưa bị hủy, thuộc về sinh viên. Cập nhật trạng thái thành CANCELLED, lưu lý do hủy, và nếu Appointment đã được duyệt thì trả lại slot vào FreeSlotService. Trả về true nếu hủy thành công.
+
+    \item viewTutorAvailableSlots(tutorId: Long): List<FreeSlotResponse> \\
+    Lấy danh sách các slot rảnh của tutor (dạng date + list of time ranges). Phục vụ UI để hiển thị lịch rảnh.
+
+    \item findCancellableMeetings(studentId: Long): List<Meeting> \\
+    Trả về danh sách Meeting mà sinh viên có quyền hủy: là các Meeting APPROVED với startTime nằm trong tương lai.
+
+    \item viewMeetingDetails(meetingId: Long): Meeting \\
+    Lấy chi tiết đầy đủ của một Meeting (bao gồm thông tin tutor, thời gian, online link, trạng thái...). Trả về null nếu MeetingId không tồn tại.
+
+\end{itemize}
+\textbf{ITutorSchedulingService}
+\begin{itemize}
+
+    \item viewPendingAppointments(tutorId: Long): List<Appointment> \\
+    Lấy danh sách Appointment đang ở trạng thái PENDING của tutor. Dùng cho UI để hiển thị các yêu cầu chờ duyệt.
+
+    \item approveAppointment(appointmentId: Long, tutorId: Long): bool \\
+    Tutor duyệt Appointment. Logic: kiểm tra quyền sở hữu, kiểm tra Appointment chưa được duyệt hoặc từ chối, cập nhật trạng thái thành APPROVED, tạo onlineLink, và lưu lại vào Repository. Trả về true nếu duyệt thành công.
+
+    \item rejectAppointment(appointmentId: Long, tutorId: Long, reason: String): bool \\
+    Tutor từ chối Appointment. Kiểm tra quyền hợp lệ, cập nhật trạng thái thành REJECTED, lưu lý do từ chối. Trả về true nếu thao tác thành công.
+
+    \item viewOfficialMeetings(tutorId: Long): List<Meeting> \\
+    Trả về Meetings chính thức của tutor, bao gồm các Appointment đã duyệt và các Meeting khác có trong Repository.
+
+    \item cancelMeeting(tutorId: Long, meetingId: Long, reason: String): bool \\
+    Tutor hủy buổi Meeting. Kiểm tra Meeting thuộc tutor, chưa bị hủy, cập nhật trạng thái CANCELLED, lưu lý do. Trả về true nếu hủy thành công.
+
+    \item tutorReturnCancelledSlot(tutorId: Long, meetingId: Long): bool \\
+    Sau khi hủy Meeting, tutor có tùy chọn trả slot vào lịch rảnh. Kiểm tra Meeting đúng tutor, đúng trạng thái CANCELLED, rồi gọi FreeSlotService để trả lại slot. Trả về true nếu slot được trả, false nếu tutor chọn không trả.
+
+    \item findCancellableMeetings(tutorId: Long): List<Meeting> \\
+    Trả về các Meeting mà tutor có quyền hủy (APPROVED và xảy ra trong tương lai).
+
+    \item viewMeetingDetails(meetingId: Long): Meeting \\
+    Lấy thông tin chi tiết của một Meeting theo ID. Trả về null nếu không tồn tại.
+
+    \item createOnlineLink(appointment: Appointment): String \\
+    Tạo đường link học online cho Appointment (ví dụ: tạo link Google Meet). Được gọi khi tutor approve lịch. Trả về chuỗi URL.
+    
+    \item viewAppointmentDetails(appointmentId: Long): Appointment\\
+    Lấy thông tin chi tiết của một cuộc hẹn (Appointment). Nếu ID không tồn tại hoặc Meeting không phải là Appointment thì trả về null.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1055,13 +1160,31 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
 
 \textbf{Room}
 \begin{itemize}
-    \item isAvailable(date, startTime, endTime): bool\\
-    Kiểm tra phòng có trống.
-    \item setStatus(newStatus): void\\
+    \item getId(): int\\
+    Trả về mã phòng.
+
+    \item getStatus(): String\\
+    Trả về trạng thái phòng.
+
+    \item setStatus(status: String): void\\
     Cập nhật trạng thái phòng.
-    \item toString(): String\\
-    Hiển thị thông tin phòng.
-    \item Getter/Setter cho: roomId, building, floor, roomNumber, capacity, status.
+\end{itemize}
+\textbf{RoomBooking}
+\begin{itemize}
+    \item getRoomId(): int\\
+    Trả về mã phòng.
+
+    \item getDate(): Date\\
+    Trả về ngày.
+
+    \item getStartTime(): Time\\
+    Trả về giờ bắt đầu.
+
+    \item getEndTime(): Time\\
+    Trả về giờ kết thúc.
+
+    \item getMeetingId(): int\\
+    Trả về mã cuộc họp.
 \end{itemize}
 
 \textbf{User}
