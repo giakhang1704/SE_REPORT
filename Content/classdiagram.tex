@@ -347,20 +347,51 @@ Facade che giấu các lớp nghiệp vụ sau:
 %%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Controller Method}
 
-\textbf{SchedulingAPI}
+\textbf{TutorSchedulingAPI}
 \begin{itemize}
-    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
-    Tiếp nhận yêu cầu tạo buổi tư vấn từ UI, gọi SchedulingService.
-    \item bookAppointment(studentId: int, consultationId: int, message: String): bool\\
-    Tiếp nhận yêu cầu đặt lịch hẹn từ UI, gọi SchedulingService.
-    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
-    Tiếp nhận yêu cầu duyệt lịch hẹn từ UI, gọi SchedulingService.
-    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
-    Tiếp nhận yêu cầu từ chối lịch hẹn từ UI, gọi SchedulingService.
-    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
-    Tiếp nhận yêu cầu hủy buổi gặp mặt từ UI, gọi SchedulingService.
-    \item getMeetings(userId: int): List<Meeting>\\
-    Trả về danh sách buổi gặp mặt của người dùng.
+    \item pending(tutorId: Long): List<Appointment>\\
+    Trả về danh sách các Appointment đang ở trạng thái PENDING của tutor.
+
+    \item approve(id: Long, req: ApproveRequest): String\\
+    Tutor phê duyệt một Appointment theo ID. Trả về thông báo thành công hoặc lỗi.
+
+    \item reject(id: Long, req: RejectRequest): String\\
+    Tutor từ chối Appointment kèm lý do. Lý do phải không rỗng.
+
+    \item official(tutorId: Long): List<Meeting>\\
+    Trả về danh sách các Meeting đã được xác nhận (APPROVED) và còn hiệu lực của tutor.
+
+    \item cancel(id: Long, req: CancelRequest): String\\
+    Tutor hủy một Meeting kèm lý do hủy.
+
+    \item returnSlot(tutorId: Long, meetingId: Long): String\\
+    Tutor chọn trả hoặc không trả lại slot đã bị hủy vào lịch rảnh.
+
+    \item detail(id: Long): Meeting\\
+    Xem chi tiết một Meeting theo ID.
+\end{itemize}
+\textbf{StudentSchedulingAPI}
+\begin{itemize}
+    \item book(req: AppointmentRequest): String\\
+    Sinh viên đặt lịch hẹn mới với tutor. Trả về thông báo thành công hoặc thất bại.
+
+    \item getHistory(studentId: Long): List<Appointment>\\
+    Trả về toàn bộ lịch sử Appointment của sinh viên.
+
+    \item getCancelableMeetings(studentId: Long): List<Meeting>\\
+    Trả về các Meeting sinh viên được phép hủy.
+
+    \item cancel(id: Long, req: CancelRequest): String\\
+    Sinh viên hủy một Meeting kèm lý do.
+
+    \item getOfficial(studentId: Long): List<Meeting>\\
+    Trả về danh sách Meeting đã được xác nhận và còn hiệu lực của sinh viên.
+
+    \item viewSlots(tutorId: Long): List<FreeSlotResponse>\\
+    Xem danh sách các slot rảnh của tutor để đặt lịch.
+
+    \item detail(id: Long): Meeting\\
+    Xem chi tiết một Meeting theo ID.
 \end{itemize}
 
 \textbf{RoomAPI}
@@ -484,28 +515,60 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Service Method}
-
-\textbf{SchedulingService}
+\textbf{StudentSchedulingService}
 \begin{itemize}
-    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
-    Tạo một buổi tư vấn mới. Logic bao gồm: kiểm tra trùng lịch của tutor, kiểm tra phòng trống nếu offline, lưu thông tin vào Repository. Trả về true nếu tạo thành công, false nếu có lỗi.
-    \item bookAppointment(studentId: int, consultationId: int, message: String): bool\\
-    Đặt lịch hẹn với tutor dựa trên một buổi tư vấn có sẵn. Kiểm tra lịch rảnh của tutor, tránh trùng lịch. Trả về true nếu đặt thành công, false nếu lịch trùng hoặc lỗi.
-    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
-    Duyệt một lịch hẹn đang ở trạng thái PENDING. Cập nhật trạng thái thành APPROVED và thêm vào danh sách Meeting của student và tutor. Trả về true nếu thành công.
-    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
-    Từ chối một lịch hẹn PENDING. Cập nhật trạng thái thành REJECTED. Trả về true nếu thao tác thành công.
-    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
-    Hủy một buổi gặp mặt (Appointment hoặc Consultation). Cập nhật trạng thái CANCELLED và lưu lý do hủy. Trả về true nếu hủy thành công.
-    \item getMeetings(userId: int): List<Meeting>\\
-    Lấy danh sách tất cả các buổi gặp mặt liên quan tới user (Student hoặc Tutor).
-    \item \# validateScheduleConflict(date: Date, startTime: Time, endTime: Time, tutorId: int): bool\\
-    Kiểm tra trùng lịch của tutor trong khoảng thời gian được yêu cầu.
-    \item \# checkRoomAvailability(roomId: int, date: Date, startTime: Time, endTime: Time): bool\\
-    Kiểm tra trạng thái phòng có trống hay không cho khoảng thời gian cụ thể. Phương thức private.
-    \item \# checkTutorSlotAvailability(tutorId: int, date: Date, start: Time, end: Time): bool\\
-    Kiểm tra xem slot của tutor có trống trong khoảng thời gian nhất định không.
+
+    \item bookAppointment(studentId: Long, tutorId: Long, date: LocalDateTime, startTime: LocalDateTime, endTime: LocalDateTime, topic: String): bool \\
+    Tạo một lịch hẹn mới giữa sinh viên và tutor. Logic bao gồm: kiểm tra tutor có trống hay không trong khoảng thời gian yêu cầu, kiểm tra slot rảnh từ FreeSlotService, lưu Appointment vào Repository, và cắt slot rảnh tương ứng. Trả về true nếu đặt thành công, false nếu không còn slot hoặc xảy ra lỗi.
+
+    \item viewOfficialMeetings(studentId: Long): List<Meeting> \\
+    Lấy danh sách các Meeting chính thức của sinh viên, bao gồm Appointment đã duyệt (APPROVED) và các loại Meeting khác. Dữ liệu lấy từ MeetingRepository.
+
+    \item viewAppointmentHistory(studentId: Long): List<Appointment> \\
+    Trả về lịch sử tất cả các Appointment của sinh viên, bao gồm PENDING, APPROVED, REJECTED, CANCELLED. Phục vụ mục xem lịch sử đặt lịch.
+
+    \item cancelMeeting(meetingId: Long, reason: String): bool \\
+    Sinh viên yêu cầu hủy một Meeting. Kiểm tra Meeting tồn tại, chưa bị hủy, thuộc về sinh viên. Cập nhật trạng thái thành CANCELLED, lưu lý do hủy, và nếu Appointment đã được duyệt thì trả lại slot vào FreeSlotService. Trả về true nếu hủy thành công.
+
+    \item viewTutorAvailableSlots(tutorId: Long): List<FreeSlotResponse> \\
+    Lấy danh sách các slot rảnh của tutor (dạng date + list of time ranges). Phục vụ UI để hiển thị lịch rảnh.
+
+    \item findCancellableMeetings(studentId: Long): List<Meeting> \\
+    Trả về danh sách Meeting mà sinh viên có quyền hủy: là các Meeting APPROVED với startTime nằm trong tương lai.
+
+    \item viewMeetingDetails(meetingId: Long): Meeting \\
+    Lấy chi tiết đầy đủ của một Meeting (bao gồm thông tin tutor, thời gian, online link, trạng thái...). Trả về null nếu MeetingId không tồn tại.
+
 \end{itemize}
+\textbf{TutorSchedulingService}
+\begin{itemize}
+
+    \item viewPendingAppointments(tutorId: Long): List<Appointment> \\
+    Lấy danh sách Appointment đang ở trạng thái PENDING của tutor. Dùng cho UI để hiển thị các yêu cầu chờ duyệt.
+
+    \item approveAppointment(appointmentId: Long, tutorId: Long): bool \\
+    Tutor duyệt Appointment. Logic: kiểm tra quyền sở hữu, kiểm tra Appointment chưa được duyệt hoặc từ chối, cập nhật trạng thái thành APPROVED, tạo onlineLink, và lưu lại vào Repository. Trả về true nếu duyệt thành công.
+
+    \item rejectAppointment(appointmentId: Long, tutorId: Long, reason: String): bool \\
+    Tutor từ chối Appointment. Kiểm tra quyền hợp lệ, cập nhật trạng thái thành REJECTED, lưu lý do từ chối. Trả về true nếu thao tác thành công.
+
+    \item viewOfficialMeetings(tutorId: Long): List<Meeting> \\
+    Trả về Meetings chính thức của tutor, bao gồm các Appointment đã duyệt và các Meeting khác có trong Repository.
+
+    \item cancelMeeting(tutorId: Long, meetingId: Long, reason: String): bool \\
+    Tutor hủy buổi Meeting. Kiểm tra Meeting thuộc tutor, chưa bị hủy, cập nhật trạng thái CANCELLED, lưu lý do. Trả về true nếu hủy thành công.
+
+    \item tutorReturnCancelledSlot(tutorId: Long, meetingId: Long): bool \\
+    Sau khi hủy Meeting, tutor có tùy chọn trả slot vào lịch rảnh. Kiểm tra Meeting đúng tutor, đúng trạng thái CANCELLED, rồi gọi FreeSlotService để trả lại slot. Trả về true nếu slot được trả, false nếu tutor chọn không trả.
+
+    \item findCancellableMeetings(tutorId: Long): List<Meeting> \\
+    Trả về các Meeting mà tutor có quyền hủy (APPROVED và xảy ra trong tương lai).
+
+    \item viewMeetingDetails(meetingId: Long): Meeting \\
+    Lấy thông tin chi tiết của một Meeting theo ID. Trả về null nếu không tồn tại.
+
+    \item createOnlineLink(appointment: Appointment): String \\
+    Tạo đường link học online cho Appointment (ví dụ: tạo link Google Meet). Được gọi khi tutor approve lịch. Trả về chuỗi URL.
 
 \textbf{RoomService}
 \begin{itemize}
@@ -687,30 +750,40 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
     Lấy thông tin chi tiết của phòng theo roomId.
 \end{itemize}
 
-\textbf{TutorSchedulingRepository}
+\textbf{MeetingRepository}
 \begin{itemize}
-    \item createConsultation(tutorId: int, date: Date, startTime: Time, endTime: Time, title: String, mode: String, maxParticipants: int, roomId: int, onlineLink: String): bool\\
-    Lưu buổi tư vấn mới vào cơ sở dữ liệu. Trả về true nếu tạo thành công.
-    \item approveAppointment(appointmentId: int, tutorId: int): bool\\
-    Duyệt lịch hẹn từ trạng thái PENDING → APPROVED. Trả về true nếu thành công.
-    \item rejectAppointment(appointmentId: int, tutorId: int): bool\\
-    Từ chối lịch hẹn, cập nhật trạng thái REJECTED.
-    \item viewMeetings(userId: int): List<Meeting>\\
-    Lấy danh sách tất cả các buổi gặp mặt liên quan đến Tutor.
-    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
-    Hủy một buổi gặp mặt, lưu lý do hủy. Trả về true nếu thành công.
-\end{itemize}
+    \item findById(meetingId: Long): Meeting\\
+    Tìm và trả về Meeting theo \texttt{meetingId}. Trả về \texttt{null} nếu không tồn tại.
+    
+    \item save(meeting: Meeting): void\\
+    Lưu một Meeting mới vào danh sách nội bộ.
 
-\textbf{StudentSchedulingRepository}
-\begin{itemize}
-    \item registerConsultation(studentId: int, consultationId: int): bool\\
-    Đăng ký sinh viên tham gia buổi tư vấn. Trả về true nếu thành công.
-    \item bookAppointment(studentId: int, tutorId: int, date: Date, startTime: Time, topic: String): bool\\
-    Đặt lịch hẹn với tutor. Trả về true nếu thành công.
-    \item viewMeetings(userId: int): List<Meeting>\\
-    Lấy danh sách tất cả các buổi gặp mặt liên quan đến Student.
-    \item cancelMeeting(meetingId: int, userId: int, reason: String): bool\\
-    Hủy một buổi gặp mặt, lưu lý do hủy. Trả về true nếu thành công.
+    \item update(meeting: Meeting): void\\
+    Cập nhật Meeting theo \texttt{meetingId}. Ném ngoại lệ nếu không tìm thấy.
+
+    \item findPendingAppointmentsByTutor(tutorId: Long): List<Appointment>\\
+    Trả về danh sách các Appointment ở trạng thái \texttt{PENDING} của tutor.
+
+    \item findApprovedAppointmentsByTutor(tutorId: Long): List<Appointment>\\
+    Trả về danh sách Appointment ở trạng thái \texttt{APPROVED} của tutor.
+
+    \item findAllAppointmentsByStudent(studentId: Long): List<Appointment>\\
+    Lấy toàn bộ Appointment của một student (mọi trạng thái).
+
+    \item findApprovedAppointmentsByStudent(studentId: Long): List<Appointment>\\
+    Trả về Appointment đã \texttt{APPROVED} của student.
+
+    \item findApprovedMeetingByStudent(studentId: Long): List<Meeting>\\
+    Trả về Meeting đã \texttt{APPROVED} của student.
+
+    \item findApprovedMeetingByTutor(tutorId: Long): List<Meeting>\\
+    Trả về Meeting đã \texttt{APPROVED} của tutor.
+
+    \item findOfficialMeetingsByStudent(studentId: Long): List<Meeting>\\
+    Trả về Meeting \texttt{APPROVED} và chưa bị hủy (\texttt{!isCancelled()}) của student.
+
+    \item findOfficialMeetingsByTutor(tutorId: Long): List<Meeting>\\
+    Trả về Meeting \texttt{APPROVED} và chưa bị hủy của tutor.
 \end{itemize}
 
 
