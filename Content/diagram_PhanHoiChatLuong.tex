@@ -14,7 +14,9 @@
 \textbf{Luồng sự kiện chính: Gửi phản hồi thành công}
 
 \begin{enumerate}
-    \item Sinh viên truy cập vào hệ thống và chọn mục ``Phản hồi chất lượng''.
+    \item Sinh viên truy cập vào hệ thống và chọn mục ``Phản hồi chất lượng''
+    \item Hệ thống hiển thị danh sách các buổi học đã tham gia.
+    \item Sinh viên chọn buổi học cần phản hồi.
     \item Hệ thống (UI) hiển thị form phản hồi bao gồm: mức độ hài lòng và ô nhập nội dung.
     \item Sinh viên nhập nội dung phản hồi, chọn mức độ đánh giá, sau đó nhấn ``Gửi''.
     \item Hệ thống nhận dữ liệu, thực hiện kiểm tra tính hợp lệ (đủ nội dung, không chứa ký tự lỗi, định dạng hợp lệ).
@@ -27,15 +29,15 @@
 \textbf{Luồng phụ và luồng lỗi }
 
 \begin{enumerate}
-    \item \textbf{Sinh viên nhấn ``Hủy''}
+    \item \textbf{Sinh viên nhấn ``Quay lại''}
     \begin{itemize}
-        \item Khi form phản hồi đang hiển thị, nếu sinh viên chọn ``Hủy'', Hệ thống đóng form và không lưu bất kỳ thông tin nào.
+        \item Khi form phản hồi đang hiển thị, nếu sinh viên chọn ``Quay lại'', Hệ thống đóng form và không lưu bất kỳ thông tin nào.
         \item Use case kết thúc sớm.
     \end{itemize}
     
     \item \textbf{Dữ liệu không hợp lệ}
     \begin{itemize}
-        \item Nếu sinh viên không nhập nội dung phản hồi hoặc nội dung không đạt yêu cầu, Hệ thống hiển thị thông báo lỗi:
+        \item Nếu sinh viên không nhập đủ nội dung phản hồi, Hệ thống hiển thị thông báo lỗi:
         \begin{quote}
             ``Nội dung phản hồi không hợp lệ, vui lòng nhập lại.''
         \end{quote}
