@@ -1,0 +1,46 @@
+Trong giai đoạn hiện thực hoá hệ thống, nhóm lựa chọn kết hợp hai công nghệ chính: 
+\textbf{Java Spring Boot} cho phía backend và \textbf{ReactJS} cho phía frontend. 
+Kiến trúc tổng thể của hệ thống được triển khai theo mô hình MVC kết hợp với 
+layered architecture, giúp tách biệt giao diện, lớp điều khiển, nghiệp vụ và truy cập dữ liệu. 
+Việc sử dụng các công nghệ hiện đại này giúp hệ thống phát triển theo hướng mở rộng, dễ bảo trì 
+và phù hợp với yêu cầu xây dựng RESTful API của dự án.
+
+\subsubsection{Spring Boot (Backend)}
+
+Spring Boot được nhóm lựa chọn vì khả năng hỗ trợ tạo ứng dụng web nhanh chóng, 
+cấu hình tối giản và tích hợp tốt với các thư viện trong hệ sinh thái Spring. 
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Hỗ trợ mạnh mẽ cho mô hình phát triển kiến trúc theo tầng: controller--service--repository.
+    \item Tự động cấu hình, giảm đáng kể thời gian setup môi trường.
+    \item Tích hợp Spring Security và khả năng kết nối REST API tốt.
+    \item Dễ mở rộng và dễ kiểm thử nhờ cấu trúc module rõ ràng.
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Chi phí khởi động ban đầu cao hơn so với một số framework nhẹ (như NodeJS).
+    \item Khó khăn cho người mới bắt đầu.
+    \item Khi dự án lớn dần, cấu trúc Spring có thể phức tạp nếu không quản lý tốt.
+\end{itemize}
+
+\subsubsection{ReactJS (Frontend)}
+
+ReactJS được nhóm sử dụng để xây dựng giao diện người dùng. 
+Việc chia nhỏ giao diện thành các component giúp hệ thống dễ phát triển, 
+tái sử dụng mã nguồn và đồng thời tối ưu trải nghiệm người dùng. 
+Kết hợp React với REST API từ Spring Boot cho phép hệ thống hoạt động linh hoạt 
+và tách biệt frontend--backend rõ ràng.
+
+\textbf{Ưu điểm:}
+\begin{itemize}
+    \item Mô hình component giúp tái sử dụng và bảo trì giao diện dễ dàng.
+    \item Nhiều thư viện hỗ trợ (Axios, React Router, v.v.)
+\end{itemize}
+
+\textbf{Nhược điểm:}
+\begin{itemize}
+    \item Khá phụ thuộc vào các thư viện bên ngoài; dễ gây lỗi giao diện nếu thiếu thống nhất trong việc thiết kế từng thành phần.
+    \item Khó khăn cho người mới bắt đầu.
+\end{itemize}

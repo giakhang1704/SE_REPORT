@@ -13,29 +13,36 @@ Xem rõ hơn \href{https://app.diagrams.net/#G1I1Oi3iTSW3VsruGY966R2kWD1AGPoxrH#
 
 Hệ thống được xây dựng theo mô hình MVC mở rộng 5 tầng (Multi-layer MVC):
 \begin{center}
-View $\rightarrow$ Controller (API) $\rightarrow$ Service $\rightarrow$ Repository (Interface + Implementation) 
+View $\rightarrow$ Controller (API) $\rightarrow$ Service ((Interface + Implementation)) $\rightarrow$ Repository (Interface + Implementation)
 
 
 $\rightarrow$ Entity (Model)
 \end{center}
 
-So với MVC truyền thống (Model – View – Controller), phiên bản mở rộng bổ sung:
+So với MVC truyền thống (Model – View – Controller), phiên bản mở rộng bổ sung thêm hai tầng abstraction:
 \begin{itemize}
-    \item \textbf{Service Layer}: chứa toàn bộ logic nghiệp vụ (Business Logic).
-    \item \textbf{Repository Layer}: phụ trách truy xuất dữ liệu, được thiết kế theo mô hình \textit{Interface + Implementation}:
-    \begin{itemize}
-        \item Interface (IRoomRepository, ISchedulingRepository, …): định nghĩa các phương thức trừu tượng.
-        \item Implementation (RoomRepository, SchedulingRepository, …): hiện thực hóa logic truy vấn dữ liệu thật.
-    \end{itemize}
+    \item \textbf{Service Layer} (Interface + Implementation)
+    \item \textbf{Repository Layer} (Interface + Implementation) 
+
 \end{itemize}
 
-\textbf{Lợi ích:}
+Hệ thống được xây dựng theo mẫu thiết kế MVC mở rộng (Multi-layer MVC), trong đó mỗi nhóm lớp được tổ chức theo đúng vai trò của từng tầng trong kiến trúc. So với MVC truyền thống, hệ thống bổ sung thêm tầng Service và Repository để tách biệt rõ UI, điều phối, nghiệp vụ và truy xuất dữ liệu.
+
+
 \begin{itemize}
-    \item Service chỉ phụ thuộc vào Interface → giảm coupling, dễ thay thế backend (SQL → NoSQL → file).
-    \item Dễ unit test nhờ có thể mock các Repository.
-    \item Đảm bảo áp dụng nguyên tắc Dependency Inversion (D) trong SOLID.
-    \item Các mối quan tâm (Separation of Concerns) được tách biệt hoàn toàn, hệ thống dễ mở rộng, dễ bảo trì, và tránh phụ thuộc chéo giữa các tầng.
+    \item Ở tầng View, các lớp như AppointmentManagementUI, AppointmentBookingUI, StudentMeetingListUI, … chỉ chịu trách nhiệm hiển thị thông tin và nhận thao tác từ người dùng (chọn buổi hẹn, gửi yêu cầu hủy, xem chi tiết…). Tầng này không chứa bất kỳ logic nghiệp vụ nào, đảm bảo nguyên tắc Separation of Concerns.
+
+    \item Tầng Controller như TutorSchedulingAPI, ... tiếp nhận request từ View/FE, thực hiện kiểm tra đầu vào cơ bản và chuyển tiếp yêu cầu xuống Service tương ứng. Controller hoàn toàn không xử lý nghiệp vụ mà chỉ đóng vai trò điều phối luồng dữ liệu giữa View và Service.
+
+    \item Tầng Service là nơi chứa toàn bộ nghiệp vụ cốt lõi. Gồm interface như ITutorSchedulingService,.. và lớp triển khai như TutorSchedulingService,... Tại đây hệ thống xử lý các hành động chẳng hạn duyệt lịch hẹn (approveAppointment), từ chối lịch hẹn (rejectAppointment), hủy buổi gặp (cancelMeeting), xem chi tiết (viewMeetingDetails, viewAppointmentDetails)… Việc Service tách thành interface + implementation giúp controller không phụ thuộc vào cách nghiệp vụ được cài đặt, dễ mở rộng và dễ thay thế.
+
+    \item Tầng Repository gồm interface như  IMeetingRepository,... và lớp triển khai như MeetingRepository,...  chịu trách nhiệm cung cấp dữ liệu cho Service. Repository lưu trữ danh sách Meeting/Appointment/Consultation dưới dạng bộ nhớ tạm (vì phiên bản này không dùng DB). Tầng này mô phỏng việc truy xuất dữ liệu như một kho dữ liệu thực sự, giúp Service không cần biết dữ liệu được lấy từ đâu.
+
+    \item Cuối cùng, tầng Entity (Model) gồm các lớp dữ liệu như Meeting, Appointment, Consultation,...  Đây là các cấu trúc đối tượng thuần, dùng để biểu diễn thông tin buổi hẹn và được luân chuyển giữa các tầng.
 \end{itemize}
+
+Việc áp dụng MVC mở rộng trong dự án giúp hệ thống phân tách rõ ràng vai trò từng lớp, giảm sự phụ thuộc giữa các tầng, thuận lợi cho bảo trì, mở rộng chức năng và kiểm thử. Kiến trúc này đồng thời phản ánh đúng cách phát triển ứng dụng hiện đại theo chuẩn Spring Boot.
+
 
 \subsubsection{Facade}
 

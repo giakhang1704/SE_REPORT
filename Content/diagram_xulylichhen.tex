@@ -1,0 +1,67 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\textwidth]{Image/seq_xulylichhen.png}
+    \caption{Sequence Diagram cho Use Case “Xử lý lịch hẹn”}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\textwidth]{Image/active_xulylichhen.png}
+    \caption{Activity Diagram cho Use Case “Xử lý lịch hẹn”}
+\end{figure}
+
+
+% ========== Mô tả ==========  
+
+\textbf{Mô tả:}
+Tutor xem và xử lý các yêu cầu đặt lịch hẹn từ sinh viên, bao gồm phê duyệt hoặc từ chối yêu cầu, đồng thời hệ thống cập nhật trạng thái slot tương ứng và gửi thông báo cho sinh viên.
+
+\textbf{Luồng sự kiện chính: Xử lý yêu cầu đặt lịch hẹn thành công}
+
+\begin{enumerate}
+\item Tutor truy cập vào mục Quản lý yêu cầu lịch hẹn''. \item Hệ thống hiển thị danh sách các yêu cầu lịch hẹn đang chờ xử lý. \item Tutor chọn một yêu cầu cụ thể để xem chi tiết thông tin (thông tin sinh viên, thời gian, nội dung). \item Tutor chọn Phê duyệt'' yêu cầu.
+\item Hệ thống ghi nhận quyết định phê duyệt của Tutor.
+\item Hệ thống cập nhật trạng thái slot tương ứng của Tutor thành bận, không cho sinh viên khác đăng ký.
+\item Hệ thống gửi thông báo kết quả xử lý đến sinh viên.
+\item UI hiển thị thông báo xác nhận: ``Yêu cầu đã được phê duyệt''.
+\item Use case kết thúc.
+\end{enumerate}
+
+\vspace{1em}
+\textbf{Luồng phụ và luồng lỗi}
+
+\begin{enumerate}
+\item \textbf{Không có yêu cầu nào đang chờ xử lý}
+\begin{itemize}
+\item Nếu danh sách yêu cầu trống, Hệ thống hiển thị thông báo: Không có yêu cầu lịch hẹn nào''. \item Tutor chọn Quay lại'' để trở về trang quản lý.
+\item Use case kết thúc sớm.
+\end{itemize}
+\item \textbf{Tutor từ chối yêu cầu}
+\begin{itemize}
+    \item Tutor chọn ``Từ chối'' yêu cầu. Hệ thống hiển thị hộp thoại để nhập lý do từ chối (tùy chọn) và chọn cách xử lý slot:
+    \begin{itemize}
+        \item ``Mở lại slot'': Slot trở về trạng thái rảnh, sinh viên khác có thể đặt.
+        \item ``Không mở lại slot'': Slot vẫn bận, không hiển thị cho sinh viên khác.
+    \end{itemize}
+    \item Tutor xác nhận thao tác từ chối.
+    \item Hệ thống ghi nhận quyết định từ chối, cập nhật trạng thái slot theo lựa chọn và gửi thông báo cho sinh viên.
+    \item Use case kết thúc.
+\end{itemize}
+
+\item \textbf{Tutor hủy thao tác từ chối}
+\begin{itemize}
+    \item Nếu Tutor chọn ``Hủy thao tác'' trước khi xác nhận, hệ thống không lưu bất kỳ thay đổi nào.
+    \item Giao diện quay lại danh sách yêu cầu hoặc màn hình chi tiết yêu cầu.
+    \item Use case kết thúc sớm.
+\end{itemize}
+
+\item \textbf{Lỗi khi ghi nhận quyết định}
+\begin{itemize}
+    \item Nếu hệ thống gặp lỗi cơ sở dữ liệu hoặc mất kết nối khi ghi nhận quyết định, Hệ thống hiển thị thông báo lỗi:
+    \begin{quote}
+        ``Xử lý thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật.''
+    \end{quote}
+    \item Hệ thống ghi log lỗi, không thay đổi trạng thái yêu cầu và trạng thái slot.
+    \item Use case kết thúc không thành công.
+\end{itemize}
+\end{enumerate}
