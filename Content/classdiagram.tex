@@ -1,3 +1,4 @@
+
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Image/CLASS DIAGRAM.drawio.png}
@@ -14,7 +15,6 @@ Xem rõ hơn \href{https://app.diagrams.net/#G1I1Oi3iTSW3VsruGY966R2kWD1AGPoxrH#
 Hệ thống được xây dựng theo mô hình MVC mở rộng 5 tầng (Multi-layer MVC):
 \begin{center}
 View $\rightarrow$ Controller (API) $\rightarrow$ Service ((Interface + Implementation)) $\rightarrow$ Repository (Interface + Implementation)
-
 
 $\rightarrow$ Entity (Model)
 \end{center}
@@ -368,6 +368,7 @@ Facade che giấu các lớp nghiệp vụ sau:
     \item \textbf{showErrorMessage(msg: String): void} \\
     Hiển thị thông báo lỗi khi không tải được dữ liệu hồ sơ.
 \end{itemize}
+
 \textbf{ReportUI}
 \begin{itemize}
     \item  handleManualSend(report: Report, requestedBy: Department): void\\
@@ -381,6 +382,7 @@ Facade che giấu các lớp nghiệp vụ sau:
     \item downloadReport(reportId: int, format: ReportFormat): void\\
     \item Tải về báo cáo ở định dạng mong muốn.
 \end{itemize}
+
 \textbf{TutorViewFreeSlotsUI}
 \begin{itemize}
     \item \textbf{fetchDailySlots(date: String): void} \\
@@ -434,6 +436,7 @@ Facade che giấu các lớp nghiệp vụ sau:
     \item detail(id: Long): Meeting\\
     Xem chi tiết một Meeting theo ID.
 \end{itemize}
+
 \textbf{StudentSchedulingAPI}
 \begin{itemize}
     \item book(req: AppointmentRequest): String\\
@@ -457,6 +460,7 @@ Facade che giấu các lớp nghiệp vụ sau:
     \item detail(id: Long): Meeting\\
     Xem chi tiết một Meeting theo ID.
 \end{itemize}
+
 \textbf{FreeSlotAPI}
 \begin{itemize}
     \item \textbf{getDaily(date: LocalDate): ResponseEntity<FreeSlotResponse>} \\
@@ -571,26 +575,26 @@ Facade che giấu các lớp nghiệp vụ sau:
 
 \textbf{NotificationAPI}
 \begin{itemize}
-\item \textbf{notifyScheduleRequested(studentId: int, tutorId: int, status: String): void} \
+\item \textbf{notifyScheduleRequested(studentId: int, tutorId: int, status: String): void} \\
 Gửi thông báo về yêu cầu đặt lịch của sinh viên (tạo mới/được duyệt/bị từ chối) đến người nhận phù hợp.
-\item \textbf{notifyMeeting(meeting: Meeting, studentId: int, tutorId: int): void} \
+\item \textbf{notifyMeeting(meeting: Meeting, studentId: int, tutorId: int): void} \\
 Thông báo liên quan tới buổi tư vấn: tạo mới, thay đổi thời gian/phòng hoặc hủy.
-\item \textbf{notifyMaterial(material: Material, tutorId: int, studentId: int, status: String): void} \
+\item \textbf{notifyMaterial(material: Material, tutorId: int, studentId: int, status: String): void} \\
 Thông báo trạng thái tài liệu (đã duyệt/bị từ chối/được công bố) cho gia sư hoặc sinh viên tuỳ trường hợp.
-\item \textbf{notifyCourseUpdated(course: CourseEntity, tutorId: int): void} \
+\item \textbf{notifyCourseUpdated(course: CourseEntity, tutorId: int): void} \\
 Báo cho gia sư (và/hoặc lớp học liên quan) khi nội dung/kế hoạch khoá học được cập nhật.
-\item \textbf{getMyNotifications(userId: String): List<Notification>} \
+\item \textbf{getMyNotifications(userId: String): List<Notification>} \\
 Lấy danh sách thông báo của người dùng để hiển thị trong hộp thư in-app.
-\item \textbf{markAsRead(userId: String, notificationId: String): void} \
+\item \textbf{markAsRead(userId: String, notificationId: String): void} \\
 Đánh dấu một thông báo là đã đọc và cập nhật lại hiển thị/badge.
 \end{itemize}
 
 
 \textbf{ReportAPI}
 \begin{itemize}
-\item \textbf{sendManual(file: File, requestedBy: Department): void} \
+\item \textbf{sendManual(file: File, requestedBy: Department): void} \\
 Gửi báo cáo thủ công: nhận tệp đã chọn và gửi tới phòng ban được chỉ định (thường qua email).
-\item \textbf{sendAuto(file: File, requestedBy: Department, periods: String): void} \
+\item \textbf{sendAuto(file: File, requestedBy: Department, periods: String): void} \\
 Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban mặc định, dùng tham số kỳ để điền bộ lọc.
 \end{itemize}
 
@@ -845,20 +849,20 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
 
 \textbf{NotificationService}
 \begin{itemize}
-\item \textbf{sendToUser(o: Object, userId: int, type: String, title: String, content: String): void} \
+\item \textbf{sendToUser(o: Object, userId: int, type: String, title: String, content: String): void} \\
 Tạo một thông báo và gửi trực tiếp cho \textit{một} người dùng xác định bởi \texttt{userId}. Tham số \texttt{type/title/content} mô tả loại, tiêu đề và nội dung thông báo; \texttt{o} là dữ liệu ngữ cảnh đi kèm (nếu cần).
-\item \textbf{sendToUsers(o: Object, userIds: List\textless int\textgreater, type: String, title: String, content: String): void} \
+\item \textbf{sendToUsers(o: Object, userIds: List\textless int\textgreater, type: String, title: String, content: String): void} \\
 Gửi cùng một thông báo đến \textit{nhiều} người dùng trong danh sách \texttt{userIds}. Dùng cho các tình huống broadcast (ví dụ gửi cho cả lớp/khoa).
 \end{itemize}
 
 
 \textbf{ReportService}
 \begin{itemize}
-\item \textbf{sendManual(report: Report, requestedBy: Department): void} \
+\item \textbf{sendManual(report: Report, requestedBy: Department): void} \\
 Gửi báo cáo theo yêu cầu thủ công: nhận đối tượng \texttt{report} (tệp/siêu dữ liệu báo cáo đã chuẩn bị) và gửi đến phòng ban được chỉ định trong \texttt{requestedBy}.
-\item \textbf{sendAuto(report: Report, requestedBy: Department, periods: String): void} \
+\item \textbf{sendAuto(report: Report, requestedBy: Department, periods: String): void} \\
 Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban. Chuỗi \texttt{periods} mô tả khoảng thời gian cần áp dụng cho báo cáo.
-\item \textbf{generateReport(data: Map\textless key,value\textgreater, report: Report): File} \
+\item \textbf{generateReport(data: Map\textless key,value\textgreater, report: Report): File} \\
 Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/định nghĩa trong \texttt{report}, trả về tệp để dùng cho việc gửi hoặc tải xuống.
 \end{itemize}
 
@@ -1051,20 +1055,20 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
 
 \textbf{NotificationRepository}
 \begin{itemize}
-\item \textbf{save(n: Notification): Notification} \
+\item \textbf{save(n: Notification): Notification} \\
 Lưu một thông báo mới vào kho dữ liệu và trả về bản ghi đã lưu.
-\item \textbf{saveAll(list: List\textless Notification\textgreater): void} \
+\item \textbf{saveAll(list: List\textless Notification\textgreater): void} \\
 Lưu hàng loạt thông báo (ví dụ gửi cho cả lớp/khoa) trong một lần thao tác.
-\item \textbf{getNotifications(userId: int): List\textless Notification\textgreater} \
+\item \textbf{getNotifications(userId: int): List\textless Notification\textgreater} \\
 Lấy toàn bộ thông báo của một người dùng để hiển thị trong hộp thư.
-\item \textbf{markAsRead(userId: int, notificationId: int): void} \
+\item \textbf{markAsRead(userId: int, notificationId: int): void} \\
 Đánh dấu một thông báo của người dùng là đã đọc.
 \end{itemize}
 
 
 \textbf{DataFetcherRepository}
 \begin{itemize}
-\item \textbf{fetchData(userId: int, key: List\textless String\textgreater): Map\textless key,value\textgreater} \
+\item \textbf{fetchData(userId: int, key: List\textless String\textgreater): Map\textless key,value\textgreater} \\
 Truy vấn dữ liệu thô phục vụ sinh báo cáo, dựa trên người yêu cầu và các khóa tham số (\textit{key}) cụ thể.
 \end{itemize}
 
@@ -1072,9 +1076,9 @@ Truy vấn dữ liệu thô phục vụ sinh báo cáo, dựa trên người yê
 
 \textbf{Exporter}
 \begin{itemize}
-\item \textbf{exportPDF(data: Map\textless key,value\textgreater, report: Report): File} \
+\item \textbf{exportPDF(data: Map\textless key,value\textgreater, report: Report): File} \\
 Xuất dữ liệu đã render thành tệp \texttt{PDF} theo mẫu/định nghĩa của báo cáo, trả về tệp để đính kèm hoặc tải xuống.
-\item \textbf{exportCSV(data: Map\textless key,value\textgreater, report: Report): File} \
+\item \textbf{exportCSV(data: Map\textless key,value\textgreater, report: Report): File} \\
 Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp cho phân tích hoặc nhập vào bảng tính.
 \end{itemize}
 
@@ -1440,17 +1444,17 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
 
 \textbf{Notification}
 \begin{itemize}
-\item \textbf{id: int} \
+\item \textbf{id: int} \\
 ID thông báo.
-\item \textbf{userId: int} \
+\item \textbf{userId: int} \\
 ID người nhận thông báo.
-\item \textbf{type: String} \
+\item \textbf{type: String} \\
 Loại thông báo, dùng để phân nhóm xử lý.
-\item \textbf{content: String} \
+\item \textbf{content: String} \\
 Nội dung tóm tắt hiển thị cho người dùng.
-\item \textbf{createdAt: datetime} \
+\item \textbf{createdAt: datetime} \\
 Thời điểm hệ thống tạo thông báo.
-\item \textbf{readAt: datetime} \
+\item \textbf{readAt: datetime} \\
 Thời điểm người dùng đánh dấu đã đọc.
 \end{itemize}
 
@@ -1458,18 +1462,18 @@ Thời điểm người dùng đánh dấu đã đọc.
 
 \textbf{Report (Entity)}
 \begin{itemize}
-\item \textbf{reportId: int} \
+\item \textbf{reportId: int} \\
 ID báo cáo.
-\item \textbf{name: string} \
+\item \textbf{name: string} \\
 Tên của mẫu báo cáo.
-\item \textbf{description: string} \
+\item \textbf{description: string} \\
 Mô tả ngắn về nội dung của báo cáo.
-\item \textbf{format: ReportFormat} \
+\item \textbf{format: ReportFormat} \\
 Định dạng xuất (\texttt{PDF}, \texttt{CSV}).
-\item \textbf{title: string} \
+\item \textbf{title: string} \\
 Tiêu đề hiển thị.
-\item \textbf{sendTo: Department} \
+\item \textbf{sendTo: Department} \\
 Phòng ban nhận báo cáo.
-\item \textbf{createAt: datetime} \
+\item \textbf{createAt: datetime} \\
 Thời điểm tạo báo cáo.
 \end{itemize}
