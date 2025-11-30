@@ -158,40 +158,38 @@ Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
 \textbf{Use Case ID} & UC-16 \\ \hline
 \textbf{Use Case Name} & Thiết lập lịch rảnh \\ \hline
 \textbf{Actor(s)} & Tutor \\ \hline
-\textbf{Description} & Tutor cập nhật lịch rảnh của mình lên hệ thống để phục vụ việc xếp lịch học. \\ \hline
-
-\textbf{Trigger} & Tutor nhấn vào nút “Thêm lịch rảnh”. \\ \hline
+\textbf{Description} & Tutor xem và cập nhật lại danh sách các khung giờ rảnh trong một ngày cụ thể để học viên có thể đăng ký. \\ \hline
+\textbf{Trigger} & Tutor bấm vào nút lịch rảnh trên giao diện hồ sơ cá nhân. \\ \hline
 
 \textbf{Pre–Condition(s)} &
-Thiết bị đảm bảo kết nối internet và hệ thống duy trì hoạt động. \newline
-Tài khoản đăng nhập đã được phân quyền tutor. \newline
-Tutor đã đăng nhập vào hệ thống web. \\ \hline
+1. Tutor đã đăng nhập vào hệ thống thành công. \newline
+2. Tài khoản có quyền hạn của Tutor. \newline
+3. Hệ thống đang hoạt động bình thường. \\ \hline
 
 \textbf{Post–Condition(s)} &
-Lịch rảnh của Tutor được thêm mới vào hệ thống và hiển thị trong danh sách lịch rảnh. \\ \hline
+1. Các khung giờ rảnh cũ của ngày đó bị xóa bỏ. \newline
+2. Các khung giờ rảnh mới được lưu vào hệ thống. \newline
+3. Giao diện lịch (Calendar) hiển thị cập nhật cho ngày vừa lưu. \\ \hline
 
 \textbf{Normal Flow} &
-1. Tutor bấm vào nút “Thêm lịch rảnh” ở trang chủ. \newline
-2. Hệ thống hiển thị biểu mẫu thêm lịch rảnh. \newline
-3. Tutor nhập thông tin ngày giờ và khoảng thời gian rảnh. \newline
-4. Tutor bấm vào nút “Xác nhận”. \newline
-5. Hệ thống hiển thị thông báo “Thêm lịch rảnh thành công”. \\ \hline
+1. Tutor chọn mục “Lịch rảnh” (hoặc Hồ sơ cá nhân). \newline
+2. Hệ thống hiển thị lịch theo tháng. \newline
+3. Tutor chọn một ngày cụ thể. \newline
+4. Hệ thống hiển thị danh sách các khung giờ rảnh hiện tại. \newline
+5. Tutor nhấn “Thiết lập lịch rảnh”. \newline
+6. Hệ thống chuyển sang giao diện thiết lập lịch rảnh. \newline
+7. Tutor thêm/xóa/sửa các khung giờ. \newline
+8. Tutor nhấn “Lưu”. \newline
+9. Hệ thống hiển thị thông báo “Lưu thành công”. \\ \hline
 
 \textbf{Alternative Flow} &
-3b. Tutor bấm nút “Hủy”: \newline
-3b1. Hệ thống quay lại màn hình trang chủ. \newline
-3b2. Không lưu lại bất kỳ thông tin nào đã nhập. 
-3a. Tutor không điền đủ thông tin về thời gian. \newline
-3a1. Hệ thống hiển thị thông báo lỗi: “Không điền đủ thông tin”. \newline
-3a2. Hệ thống yêu cầu Tutor nhập đủ các trường bắt buộc trước khi tiếp tục. \newline
-4a. Lịch rảnh mới thêm trùng với lịch rảnh cũ. \newline
-4a1. Hệ thống hiển thị cảnh báo: “Lịch rảnh này đã tồn tại”. \newline
-4a2. Hệ thống yêu cầu Tutor chỉnh sửa lại thông tin thời gian. \newline
-\\ \hline
-\textbf{Exception Flow} &
+3a. Chọn ngày quá khứ $\rightarrow$ hệ thống chặn chỉnh sửa. \newline
+7a. Nhấn “Hủy” $\rightarrow$ quay lại không lưu. \newline
+8a. Nhập sai (start $\ge$ end, để trống) $\rightarrow$ báo lỗi. \\ \hline
 
-- Mất kết nối mạng trong quá trình thêm lịch → Hệ thống hiển thị thông báo lỗi “Không thể kết nối. Vui lòng thử lại sau”. \newline
-- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”. \\ \hline
+\textbf{Exception Flow} &
+E1. Mất mạng lúc Lưu $\rightarrow$ báo lỗi kết nối. \newline
+E2. Lỗi hệ thống $\rightarrow$ báo lỗi và ghi log. \\ \hline
 
 \end{longtable}
 
