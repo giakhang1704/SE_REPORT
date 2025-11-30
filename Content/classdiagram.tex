@@ -378,6 +378,9 @@ Facade che giấu các lớp nghiệp vụ sau:
     \item approve(id: Long, req: ApproveRequest): String\\
     Tutor phê duyệt một Appointment theo ID. Trả về thông báo thành công hoặc lỗi.
 
+    \item getAppointmentDetail(id: Long): Appointment\\
+    Xem chi tiết một Appointment theo ID.
+
     \item reject(id: Long, req: RejectRequest): String\\
     Tutor từ chối Appointment kèm lý do. Lý do phải không rỗng.
 
