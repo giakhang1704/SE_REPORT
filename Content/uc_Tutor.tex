@@ -1,8 +1,8 @@
-% ================== USE CASE 12 ==================
+% ================== USE CASE 13 ==================
 \subsubsection{Tạo buổi tư vấn}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-12 \\ \hline
+\textbf{Use Case ID} & UC-13 \\ \hline
 \textbf{Use Case Name} & Tạo buổi tư vấn \\ \hline
 \textbf{Actor(s)} & Tutor \\ \hline
 \textbf{Description} & 
@@ -65,81 +65,45 @@ Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
 
 \end{longtable}
 
-% ================== USE CASE 13 ==================
+% ================== USE CASE 14 ==================
 \subsubsection{Hủy buổi gặp}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-13 \\ \hline
-\textbf{Use Case Name} & Hủy buổi gặp \\ \hline
-\textbf{Actor(s)} & Tutor \\ \hline
-\textbf{Description} & 
-Tutor muốn hủy một buổi gặp đã được lên lịch với sinh viên (lịch hẹn hoặc buổi tư vấn). \\ \hline
-\textbf{Trigger} & 
-Tutor nhấn vào nút “Hủy lịch” để thực hiện hủy một buổi hẹn đã có. \\ \hline
-\textbf{Pre–Condition(s)} & 
-Tutor đã đăng nhập vào hệ thống.  
-Tutor đã thiết lập khoảng thời gian rảnh.  
-Sinh viên đã đăng ký chương trình với Tutor và có thể đặt lịch. \\ \hline
-\textbf{Post–Condition(s)} & 
-Buổi gặp được hủy thành công.  
-Hệ thống gửi thông báo tự động cho Tutor và sinh viên.  
-Hệ thống cập nhật lại lịch rảnh của Tutor. \\ \hline
+\textbf{Use Case ID} & UC-14 \\ \hline
+\textbf{Use Case Name} & Hủy buổi hẹn cho Tutor \\ \hline
+\textbf{Description} & Cho phép Tutor hủy buổi tư vấn hoặc lịch hẹn đã tạo khi có thay đổi trong lịch trình hoặc không thể tham gia. \\ \hline
+\textbf{Trigger} & Tutor chọn chức năng “Hủy buổi hẹn”. \\ \hline
+\textbf{Primary Actor} & Tutor \\ \hline
+\textbf{Secondary Actor} & Sinh viên \\ \hline
+\textbf{Pre-condition} & - Tutor đã đăng nhập. \newline - Tutor đã tạo hoặc đăng ký buổi hẹn. \newline - Buổi hẹn chưa bắt đầu. \\ \hline
+\textbf{Post-condition} & - Hủy thành công, hệ thống cập nhật slot. \newline - Sinh viên nhận thông báo hủy. \\ \hline
+\textbf{Normal flow} & 
+1. Tutor chọn “Buổi gặp mặt của tôi”. \newline
+2. Hệ thống hiển thị danh sách buổi hẹn đã tạo. \newline
+3. Tutor chọn buổi muốn hủy. \newline
+4. Hệ thống yêu cầu nhập lý do hủy. \newline
+5. Tutor nhập lý do. \newline
+6. Hệ thống yêu cầu xác nhận hủy. \newline
+7. Tutor xác nhận. \newline
+8. Hệ thống hỏi có muốn thêm lại khung thời gian đã hủy vào lịch rảnh không. Tutor chọn có hoặc không. \newline
+9. Tutor chọn có hoặc không. \newline
+10. Hệ thống gửi thông báo “Hủy thành công”. \\ \hline
+\textbf{Alternative flow} & 
+2a. Không có buổi hẹn. Hệ thống hiển thị “Không có buổi hẹn nào” và quay về màn hình chính. \newline
+6a. Tutor hủy thao tác hủy. Hệ thống quay lại danh sách buổi hẹn. \newline
+9a. Tutor chọn “có”. Hệ thống thêm lại slot vào lịch rảnh và gửi thông báo hủy.  \\ \hline
+9b. Tutor chọn “không”. Hệ thống chỉ hủy buổi hẹn và gửi thông báo hủy. \\ \hline
 
-\textbf{Normal Flow} & 
-
-    1. Tutor bấm vào nút “Hủy lịch”.\newline
-    2. Hệ thống hiển thị danh sách buổi gặp đã lên lịch.\newline
-    3. Tutor chọn một buổi gặp cụ thể.\newline
-    4. Hệ thống hiển thị form nhập lý do hủy.\newline
-    5. Tutor nhập lý do\newline
-    6. Tutor bấm “Xác nhận”. \newline
-     7. Hệ thống kiểm tra Tutor đã nhập lý do.\newline
-     8. Hệ thống cập nhật lịch rảnh và lịch hẹn của Tutor.\newline
-    9. Hệ thống gửi thông báo thành công.\newline
- \\ \hline
-
-\textbf{Alternative Flow} & 
-\begin{enumerate}
-    \item[2a.] Hệ thống kiểm tra và phát hiện không có buổi gặp nào đã được lên lịch.
-    \begin{enumerate}
-        \item[2a1.] Hệ thống hiển thị thông báo: “Hiện tại không có buổi gặp nào để hủy”.
-        \item[2a2.] Use case kết thúc sớm.
-    \end{enumerate}
-
-    \item[6a.] Tutor hủy thao tác.
-    \begin{enumerate}
-        \item[6a1.] Trong quá trình nhập lý do, Tutor chọn “Hủy thao tác”.
-        \item[6a2.] Hệ thống giữ nguyên lịch hẹn cũ.
-        \item[6a3.] Use case kết thúc sớm.
-    \end{enumerate}
-
-    \item[7a.] Tutor bỏ trống lý do hủy.
-    \begin{enumerate}
-        \item[7a1.] Hệ thống hiển thị thông báo: “Vui lòng nhập lý do hủy”.
-        \item[7a2.] Giao diện hệ thống trở lại bước 4.
-    \end{enumerate}
-
-\end{enumerate} \\ \hline
-
-\textbf{Exception Flow} & 
-
-- Mất kết nối mạng trong quá trình thao tác → Hệ thống hiển thị thông báo lỗi kết nối. \newline
-- Lỗi hệ thống (server không phản hồi) → Hệ thống thông báo “Có lỗi xảy ra, vui lòng thử lại sau”. 
-\begin{enumerate}
-    \item[8a.] Hệ thống cố gắng cập nhật nhưng gặp lỗi cơ sở dữ liệu.
-    \begin{enumerate}
-        \item[8a1.] Hệ thống hiển thị thông báo: “Cập nhật thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”.
-        \item[8a2.] Hệ thống ghi log lỗi và giữ nguyên lịch hẹn cũ.
-        \item[8a3.] Use case kết thúc không thành công.
-    \end{enumerate}
-\end{enumerate} \\ \hline
+\textbf{Exception flow} & 
+- Lỗi hệ thống hoặc mất kết nối. Hệ thống hiển thị “Không thể hủy, vui lòng thử lại sau”. \\ \hline
 \end{longtable}
 
-% ================== USE CASE 14 ==================
+
+% ================== USE CASE 15 ==================
 \subsubsection{Ghi nhận tiến độ học tập của sinh viên}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-14 \\ \hline
+\textbf{Use Case ID} & UC-15 \\ \hline
 \textbf{Use Case Name} & Ghi nhận tiến độ học tập của sinh viên \\ \hline
 \textbf{Actor(s)} & Tutor \\ \hline
 \textbf{Description} & Tutor muốn ghi nhận và cập nhật tiến độ học tập của sinh viên dựa trên các buổi tư vấn hoặc hỗ trợ, để theo dõi hiệu quả học tập và tổng hợp báo cáo gửi cho phòng/ban. \\ \hline
@@ -187,11 +151,11 @@ Hệ thống cập nhật lại lịch rảnh của Tutor. \\ \hline
 \end{enumerate} \\ \hline
 \end{longtable}
 
-% ================== USE CASE 15 ==================
+% ================== USE CASE 16 ==================
 \subsubsection{Thiết lập lịch rảnh}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-15 \\ \hline
+\textbf{Use Case ID} & UC-16 \\ \hline
 \textbf{Use Case Name} & Thiết lập lịch rảnh \\ \hline
 \textbf{Actor(s)} & Tutor \\ \hline
 \textbf{Description} & Tutor cập nhật lịch rảnh của mình lên hệ thống để phục vụ việc xếp lịch học. \\ \hline
@@ -231,11 +195,11 @@ Lịch rảnh của Tutor được thêm mới vào hệ thống và hiển th�
 
 \end{longtable}
 
-% ================== USE CASE 16 ==================
+% ================== USE CASE 17 ==================
 \subsubsection{ Đăng tải tài liệu}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-16 \\ \hline
+\textbf{Use Case ID} & UC-17 \\ \hline
 \textbf{Use Case Name} &  Đăng tải tài liệu \\ \hline
 \textbf{Actor(s)} & Tutor,  HCMUT\_LIBRARY  \\ \hline
 \textbf{Description} & 
@@ -292,11 +256,11 @@ Tài liệu phải chờ quản trị viên (HCMUT\_LIBRARY) duyệt trước kh
 \end{longtable}
 
 
-% ================== USE CASE 17 ==================
+% ================== USE CASE 18 ==================
 \subsubsection{Xóa tài liệu}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-17 \\ \hline
+\textbf{Use Case ID} & UC-18 \\ \hline
 \textbf{Use Case Name} & Xóa tài liệu \\ \hline
 \textbf{Actor(s)} & Tutor, HCMUT\_LIBRARY \\ \hline
 \textbf{Description} & 
@@ -340,11 +304,11 @@ Yêu cầu xóa cần được quản trị viên (HCMUT\_LIBRARY) duyệt trư�
 \end{longtable}
 
 
-% ================== USE CASE 18 ==================
+% ================== USE CASE 19 ==================
 \subsubsection{Xử lý yêu cầu đặt lịch hẹn}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-18 \\ \hline
+\textbf{Use Case ID} & UC-19 \\ \hline
 \textbf{Use Case Name} & Xử lý yêu cầu đặt lịch hẹn \\ \hline
 \textbf{Actor(s)} & Tutor \\ \hline
 \textbf{Description} & 
@@ -408,3 +372,25 @@ Tutor bấm vào nút ``Xử lý yêu cầu đặt lịch hẹn''. \\ \hline
 
 \end{longtable}
 
+% ================== USE CASE 20 ==================
+\subsubsection{Xem danh sách buổi gặp mặt của Tutor}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-20 \\ \hline
+\textbf{Use Case Name} & Xem danh sách buổi gặp mặt của Tutor \\ \hline
+\textbf{Description} & Cho phép Tutor xem danh sách các buổi gặp mặt (sessions) mà mình đã nhận từ yêu cầu đặt lịch hẹn, bao gồm thông tin sinh viên, thời gian, trạng thái buổi và chủ đề tư vấn. \\ \hline
+\textbf{Trigger} & Tutor chọn chức năng “Xem danh sách buổi gặp” trong hệ thống. \\ \hline
+\textbf{Primary Actor} & Tutor \\ \hline
+\textbf{Secondary Actor} & Sinh viên \\ \hline
+\textbf{Pre-condition} & - Tutor đã đăng nhập thành công. \newline - Hệ thống có ít nhất một buổi gặp liên quan đến Tutor. \\ \hline
+\textbf{Post-condition} & - Danh sách buổi gặp được hiển thị đầy đủ. \newline - Tutor có thể thực hiện hành động liên quan (xem chi tiết, hủy nếu cần). \\ \hline
+\textbf{Normal flow} & 
+1. Tutor truy cập chức năng “Xem danh sách buổi gặp”. \newline
+2. Hệ thống hiển thị danh sách các buổi gặp (thời gian, sinh viên, trạng thái, chủ đề). \newline
+3. Tutor chọn một buổi để xem chi tiết. \\ \hline
+\textbf{Alternative flow} & 
+2a. Không có buổi gặp nào. Hệ thống thông báo “Danh sách trống” và quay về màn hình chính. \newline
+3a. Tutor hủy thao tác xem chi tiết. Hệ thống quay lại danh sách buổi gặp. \\ \hline
+\textbf{Exception flow} & 
+- Lỗi hệ thống hoặc mất kết nối. Hệ thống thông báo lỗi và yêu cầu Tutor thử lại sau. \\ \hline
+\end{longtable}
