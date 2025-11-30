@@ -269,7 +269,29 @@ Facade che giấu các lớp nghiệp vụ sau:
     Hiển thị thông báo trạng thái (ví dụ: "Tải lên thành công", "Lỗi") cho người dùng.
 \end{itemize}
 
+\textbf{ListMeetingUI}
+\begin{itemize}
+    \item fetchOfficialMeetings(studentId: int): void\\
+    Lấy danh sách các buổi học của sinh viên từ.
+    \item formatMeetingTime(start: String, end: String): String\\
+    Xử lý chuỗi thời gian thô thành định dạng hiển thị dễ đọc (Giờ - Ngày)
+\end{itemize}
 
+\textbf{FeedbackUI}
+\begin{itemize}
+    \item fetchMeetingInfo(id: int): void\\
+    Lấy thông tin chi tiết (chủ đề, thời gian) của buổi hẹn hiện tại dựa trên ID.
+    \item fetchFeedbackHistory(meetingId: int): void\\
+    Tải lịch sử các phản hồi trước đó của sinh viên cho buổi hẹn này.
+    \item handleRatingChange(rating: int): void\\
+    Cập nhật số sao đánh giá của sinh viên
+    \item handleCommentChange(text: String): void\\
+    Cập nhật nội dung nhận xét khi sinh viên nhập liệu vào ô văn bản.
+    \item handleSubmitFeedback(): void\\
+    Kiểm tra dữ liệu (bắt buộc rating) và gửi đánh giá lên server qua API POST.
+    \item navigateBack(): void\\
+    Điều hướng quay trở lại trang danh sách buổi hẹn trước đó.
+\end{itemize}
 
 \textbf{CourseListUI}  
 \begin{itemize}
@@ -427,10 +449,16 @@ Facade che giấu các lớp nghiệp vụ sau:
     Trả về danh sách yêu cầu dành cho tutor.
     \item updateRequestStatus(requestId: int, newStatus: String): bool\\
     Cập nhật trạng thái yêu cầu.
-    \item submitFeedback(feedbackData: Feedback): bool\\
-    Nhận phản hồi sau buổi học.
+  
 \end{itemize}
 
+\textbf{FeedbackAPI}
+\begin{itemize}
+    \item submitFeedback(meetingId: Long, rating: int, comment: String): Feedback\\
+    Nhận phản hồi đánh giá buổi học từ sinh viên
+    \item getFeedbacks(meetingId: Long): List<Feedback> \\
+    Trả về danh sách đánh giá của một buổi học theo Id
+\end{itemize}
 
 \textbf{LoginAPI}
 \begin{itemize}
@@ -635,8 +663,10 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
 
 \textbf{FeedbackService} 
 \begin{itemize}
-    \item submitFeedback(requestID: int, rating: int, comment: String): bool\\
-    Lưu lại đánh giá và trả về \texttt{true} nếu thành công.
+    \item addFeedback(meetingId: Long, rating: int, comment: String): Feedback\\
+    Kiểm tra và lưu phản hồi đánh buổi học của sinh viên
+    \item getFeedbackByMeeting(meetingId: Long): List<Feedback>\\
+    Lấy ra danh sách phản hồi đánh giá một buổi học theo ID buổi học
 \end{itemize}
 
 \textbf{SSOService}
@@ -848,8 +878,8 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
 \begin{itemize}
     \item save(feedback: Feedback): Feedback\\
     Lưu phản hồi sau buổi học.
-    \item findByRequestID(requestID: int): Feedback\\
-    Tìm phản hồi theo mã yêu cầu.
+    \item findByMeetingId(meetingId: Long): List<Feedback>\\
+    Tìm danh sách phản hồi theo mã buổi học yêu cầu.
 \end{itemize}
 
 \textbf{UserRepository}
@@ -1125,6 +1155,15 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     \item viewAppointmentDetails(appointmentId: Long): Appointment\\
     Lấy thông tin chi tiết của một cuộc hẹn (Appointment). Nếu ID không tồn tại hoặc Meeting không phải là Appointment thì trả về null.
 
+\end{itemize}
+
+\textbf{IFeedbackService} 
+\begin{itemize}
+    \item addFeedback(meetingId: Long, rating: int, comment: String): Feedback\\
+    Lưu phản hồi đánh buổi học 
+    \item getFeedbackByMeeting(meetingId: Long): List<Feedback>\\
+    Lấy ra danh sách phản hồi đánh giá một buổi học theo ID.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Entity Method}
@@ -1232,6 +1271,21 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     \item \textbf{processAppointmentRequest(requestId: int): bool} \\
     Xử lý yêu cầu đặt lịch hẹn.
 \end{itemize}
+
+\textbf{Feedback}
+\begin{itemize}
+    \item getFeedbackId(): Long\\
+    Trả về mã đánh giá
+    \item getMeetingId(): Long\\ 
+    Trả về mã buổi học
+    \item getRating(): int\\
+    Trả về đánh giá (từ 1 đến 5)
+    \item getComment(): String\\
+    Trả về nhận xét đánh giá
+    \item getSubmitAt(): LocalDateTime\\
+    Trả về thời điểm đánh giá
+\end{itemize}
+
 \textbf{AvailableSlot}
 \begin{itemize}
     \item \textbf{getStatus(): SlotStatus} \\
