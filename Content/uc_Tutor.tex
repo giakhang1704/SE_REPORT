@@ -312,10 +312,10 @@ Yêu cầu xóa cần được quản trị viên (HCMUT\_LIBRARY) duyệt trư�
 \textbf{Use Case Name} & Xử lý yêu cầu đặt lịch hẹn \\ \hline
 \textbf{Actor(s)} & Tutor \\ \hline
 \textbf{Description} & 
-Tutor xem danh sách các yêu cầu đặt lịch từ sinh viên, sau đó phê duyệt hoặc từ chối từng yêu cầu. Khi sinh viên gửi yêu cầu, hệ thống đã tạm giữ (giữ chỗ) slot rảnh tương ứng trong lịch của Tutor để tránh sinh viên khác đặt trùng. Nếu Tutor từ chối, Tutor có thể chọn có mở lại slot đó (trả về lịch rảnh) hay giữ slot vẫn bị khóa. \\ \hline
+Tutor xem danh sách các yêu cầu đặt lịch từ sinh viên, sau đó phê duyệt hoặc từ chối từng yêu cầu. \\ \hline
 
 \textbf{Trigger} & 
-Tutor bấm vào nút ``Quản lý yêu cầu đặt lịch hẹn''. \\ \hline
+Tutor bấm vào nút ``Xử lý yêu cầu đặt lịch hẹn''. \\ \hline
 
 \textbf{Pre–Condition(s)} & 
 - Tutor đã đăng nhập vào hệ thống. \newline
@@ -334,9 +334,9 @@ Tutor bấm vào nút ``Quản lý yêu cầu đặt lịch hẹn''. \\ \hline
     \item Tutor truy cập mục ``Quản lý yêu cầu lịch hẹn''.
     \item Hệ thống hiển thị danh sách các yêu cầu lịch hẹn đang chờ xử lý.
     \item Tutor chọn một yêu cầu cụ thể để xem chi tiết (thông tin sinh viên, thời gian, nội dung).
-    \item Tutor chọn ``Phê duyệt'' hoặc ``Từ chối'' yêu cầu.
+    \item Tutor chọn ``Phê duyệt'' yêu cầu.
     \item Hệ thống ghi nhận quyết định của Tutor.
-    \item Hệ thống cập nhật trạng thái slot của Tutor và gửi thông báo kết quả xử lý cho sinh viên.
+    \item Hệ thống cập nhật trạng thái slot của Tutor thành bận, không cho sinh viên khác đăng ký và gửi thông báo kết quả xử lý cho sinh viên.
 \end{enumerate} \\ \hline
 
 \textbf{Alternative Flow} & 
