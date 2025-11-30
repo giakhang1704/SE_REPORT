@@ -1,0 +1,55 @@
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.1\textwidth]{Image/SQ của lịch rảnh.png}
+    \caption{Sequence Diagram cho Use Case “Thiết lập lịch rảnh”}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1.05\textwidth]{Image/ACT của Lịch rảnh.drawio.png}
+    \caption{Activity Diagram cho Use Case “Thiết lập lịch rảnh”}
+\end{figure}
+
+% ========== Mô tả ==========  
+\textbf{Mô tả}  
+
+\textbf{Luồng sự kiện chính: Thêm lịch rảnh thành công}  
+\begin{enumerate}
+  \item \textbf{Tutor} truy cập vào chức năng ``Thêm lịch rảnh'' trên giao diện hệ thống.  
+  \item \textbf{UI} hiển thị Form \texttt{Thêm lịch rảnh} cho Tutor nhập thông tin chi tiết.  
+  \item \textbf{Tutor} nhập các thông tin cần thiết: ngày, giờ bắt đầu và kết thúc, khoảng thời gian rảnh.  
+  \item Khi hoàn tất, \textbf{Tutor} nhấn nút \texttt{Xác nhận}. \textbf{UI} gửi dữ liệu tới \textbf{System}.  
+  \item \textbf{System} thực hiện kiểm tra hợp lệ: các trường bắt buộc đã nhập, định dạng thời gian đúng.  
+  \item Nếu hợp lệ, \textbf{System} truy vấn \textbf{Database} để kiểm tra: lịch rảnh mới có trùng với lịch cũ hay không.  
+  \item Nếu không có xung đột, \textbf{System} lưu thông tin lịch rảnh mới vào \textbf{Database}.  
+  \item \textbf{System} trả về thông báo thành công cho \textbf{UI}.  
+  \item \textbf{UI} hiển thị thông báo: \textit{“Thêm lịch rảnh thành công”} và cập nhật danh sách lịch rảnh trên giao diện.  
+\end{enumerate}  
+
+\textbf{Các luồng phụ và luồng lỗi (Alternative \& Error Flows)}  
+
+\begin{enumerate}
+  \item \textbf{Thông tin không hợp lệ:} \\
+  Nếu Tutor không điền đủ thông tin hoặc nhập sai định dạng, \textbf{System} từ chối xử lý và trả về lỗi cho \textbf{UI}.\\
+  \textbf{UI} hiển thị: \textit{“Không điền đủ thông tin. Vui lòng kiểm tra lại.”} \\
+  Form giữ nguyên để Tutor chỉnh sửa và gửi lại.  
+
+  \item \textbf{Lịch rảnh trùng với lịch cũ:} \\
+  Khi kiểm tra \textbf{Database}, nếu lịch rảnh mới trùng với lịch đã tồn tại, \textbf{System} trả về cảnh báo.\\
+  \textbf{UI} hiển thị: \textit{“Lịch rảnh này đã tồn tại.”} \\
+  Tutor có thể chỉnh sửa lại thời gian và gửi lại.  
+
+  \item \textbf{Tutor nhấn Hủy thao tác:} \\
+  Nếu Tutor nhấn nút \texttt{Hủy} trong khi nhập form, \textbf{UI} đóng form và không lưu bất kỳ thông tin nào.\\
+  Use Case kết thúc tại đây.  
+
+  \item \textbf{Thiếu thông tin bắt buộc:} \\
+  Nếu Tutor bỏ trống các trường bắt buộc, \textbf{System} thông báo lỗi.\\
+  \textbf{UI} hiển thị: \textit{“Không điền đủ thông tin.”} \\
+  Tutor phải nhập đầy đủ trước khi tiếp tục.  
+
+  \item \textbf{Lỗi hệ thống / mất kết nối:} \\
+  Nếu xảy ra mất kết nối mạng hoặc lỗi server khi lưu dữ liệu, \textbf{System} trả về thông báo lỗi.\\
+  \textbf{UI} hiển thị: \textit{“Không thể kết nối. Vui lòng thử lại sau.”} \\
+  Use Case kết thúc không thành công.
+\end{enumerate}
