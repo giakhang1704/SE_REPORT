@@ -1,3 +1,4 @@
+\textbf{Đối với Tutor:}
 \begin{figure}[H]
     \centering
     \includegraphics[width=1\linewidth]{Image/phanhoi-Trang-4.drawio.png}
@@ -5,8 +6,8 @@
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[width=1\linewidth]{Image/phanhoi-Trang-3.drawio.png}
-    \caption{Activity Diagram cho Hủy buổi gặp mặt}
+    \includegraphics[width=1\linewidth]{Image/AC_SE-Ac Cancel Tutor.drawio.png}
+    \caption{Activity Diagram cho Hủy buổi gặp mặt của tutor }
 \end{figure}
 
 \textbf{Mô tả:}
@@ -15,13 +16,14 @@
 \textbf{Luồng sự kiện chính: Hủy buổi gặp thành công}
 
 \begin{enumerate}
-\item Tutor truy cập vào hệ thống và chọn mục ``Hủy lịch''.
-\item Hệ thống (UI) hiển thị danh sách buổi gặp đã được lên lịch.
+\item Tutor truy cập vào buổi hẹn của tôi và chọn mục ``Hủy lịch''.
+\item Hệ thống (UI) hiển thị danh sách buổi hẹn có thể hủy.
 \item Tutor chọn một buổi gặp cụ thể cần hủy.
 \item Hệ thống hiển thị form yêu cầu nhập lý do hủy.
 \item Tutor nhập lý do và nhấn ``Xác nhận''.
 \item Hệ thống kiểm tra tính hợp lệ của dữ liệu (có nhập lý do, không chứa ký tự lỗi).
-\item Nếu dữ liệu hợp lệ, hệ thống cập nhật trạng thái buổi gặp trong cơ sở dữ liệu (hủy buổi gặp) và cập nhật lại lịch rảnh của Tutor.
+\item Hệ thống yêu cầu tutor xác nhận có muốn khôi phục lại lịch rảnh đã hủy không.
+\item Hệ thống cập nhật trạng thái buổi gặp trong cơ sở dữ liệu (hủy buổi gặp) và cập nhật lại lịch rảnh của Tutor.
 \item Khi lưu thay đổi thành công, hệ thống gửi phản hồi xác nhận cho UI.
 \item UI hiển thị thông báo: ``Hủy buổi gặp thành công.'' 
 \item Use case kết thúc.
@@ -38,12 +40,12 @@
 
     \item \textbf{Dữ liệu không hợp lệ}
     \begin{itemize}
-        \item Nếu sinh viên không nhập nội dung phản hồi hoặc nội dung không đạt yêu cầu, Hệ thống hiển thị thông báo lỗi:
+        \item Nếu Tutor không nhập nội dung phản hồi hoặc nội dung không đạt yêu cầu, Hệ thống hiển thị thông báo lỗi:
         \begin{quote}
             ``Nội dung phản hồi không hợp lệ, vui lòng nhập lại.''
         \end{quote}
         \item Sau đó, giao diện quay lại form phản hồi ban đầu (reset form rỗng).
-        \item Sinh viên có thể chọn nhập lại nội dung và gửi lại hoặc nhấn hủy.
+        \item Tutor có thể chọn nhập lại nội dung và gửi lại hoặc nhấn hủy.
     \end{itemize}
 
     \item \textbf{Lỗi khi lưu dữ liệu}
@@ -57,3 +59,4 @@
         \item Use case kết thúc không thành công.
     \end{itemize}
 \end{enumerate}
+
