@@ -60,6 +60,71 @@ E5. Lỗi đồng bộ dữ liệu từ HCMUT\_DATACORE. \newline
 
 \end{longtable}
 
+\subsubsection{Quên mật khẩu}
+\begin{longtable}{|p{3.5cm}|p{11cm}|}
+\hline
+\textbf{Use Case ID} & UC-01a \\ \hline
+
+\textbf{Use Case Name} & Quên mật khẩu \\ \hline
+
+\textbf{Actor(s)} & Người dùng (Sinh viên / Tutor / Điều phối viên) \\ \hline
+
+\textbf{Description} & 
+Cho phép người dùng khôi phục mật khẩu khi quên thông qua hệ thống HCMUT\_SSO. 
+Hệ thống kiểm tra tính hợp lệ của email, gửi liên kết đặt lại mật khẩu, 
+và cho phép người dùng đặt lại mật khẩu mới an toàn. \\ \hline
+
+\textbf{Trigger} & 
+Người dùng chọn liên kết “Quên mật khẩu” tại trang đăng nhập. \\ \hline
+
+\textbf{Pre–Condition(s)} &
+Người dùng đang ở giao diện đăng nhập của hệ thống. \newline
+Hệ thống HCMUT\_SSO và dịch vụ Email hoạt động bình thường. \\ \hline
+
+\textbf{Post–Condition(s)} &
+Người dùng đã đặt lại mật khẩu thành công. \newline
+Hệ thống ghi nhận nhật ký thay đổi mật khẩu. \\ \hline
+
+\textbf{Normal Flow} &
+1. Người dùng chọn liên kết “Quên mật khẩu” trên form đăng nhập. \newline
+2. Hệ thống chuyển hướng đến \textbf{Form quên mật khẩu}. \newline
+3. Người dùng nhập email học vụ hoặc mã số sinh viên. \newline
+4. Hệ thống gửi yêu cầu kiểm tra email đến HCMUT\_SSO. \newline
+5. HCMUT\_SSO kiểm tra định dạng và sự tồn tại của email. \newline
+6. Nếu hợp lệ, HCMUT\_SSO gửi yêu cầu đến \textbf{Email Service} để gửi email khôi phục mật khẩu. \newline
+7. \textbf{Email Service} gửi email chứa liên kết đặt lại mật khẩu cho người dùng và phản hồi thành công. \newline
+8. Hệ thống hiển thị thông báo “Email đã được gửi đến địa chỉ của bạn”. \newline
+9. Người dùng mở email và nhấn vào liên kết đặt lại mật khẩu. \newline
+10. Trình duyệt chuyển đến \textbf{Form đổi mật khẩu}. \newline
+11. Người dùng nhập mật khẩu mới và xác nhận lại. \newline
+12. \textbf{Form đổi mật khẩu} gửi yêu cầu đặt lại mật khẩu đến HCMUT\_SSO. \newline
+13. HCMUT\_SSO kiểm tra chính sách bảo mật, cập nhật mật khẩu và phản hồi “Đặt lại mật khẩu thành công”. \newline
+14. Hệ thống hiển thị thông báo thành công và chuyển hướng người dùng về form đăng nhập. \\ \hline
+
+\textbf{Alternative Flow} &
+A1. Email không hợp lệ (sai định dạng hoặc không tồn tại). \newline
+\quad A1.1 HCMUT\_SSO phản hồi lỗi. \newline
+\quad A1.2 Form quên mật khẩu hiển thị thông báo “Email không hợp lệ”. \newline\newline
+A2. Người dùng không nhận được email khôi phục. \newline
+\quad A2.1 Người dùng chọn “Gửi lại Email”. \newline
+\quad A2.2 Hệ thống gửi lại yêu cầu đến Email Service. \newline
+\quad A2.3 Hệ thống hiển thị thông báo “Đã gửi lại Email”. \\ \hline
+
+\textbf{Exception Flow} &
+E1. Lỗi kết nối đến HCMUT\_SSO hoặc Email Service. \newline
+\quad E1.1 Hệ thống hiển thị thông báo “Không thể kết nối đến máy chủ, vui lòng thử lại sau.” \newline
+\quad E1.2 Use Case kết thúc không thành công. \newline\newline
+E2. Liên kết đặt lại mật khẩu đã hết hạn. \newline
+\quad E2.1 Hệ thống hiển thị thông báo “Liên kết không còn hiệu lực, vui lòng gửi lại yêu cầu mới.” \newline
+\quad E2.2 Người dùng được chuyển về Form quên mật khẩu. \newline\newline
+E3. Mật khẩu mới không tuân thủ chính sách bảo mật (ví dụ: độ dài, ký tự đặc biệt). \newline
+\quad E3.1 HCMUT\_SSO trả về thông báo lỗi “Mật khẩu không hợp lệ.” \newline
+\quad E3.2 Hệ thống yêu cầu người dùng nhập lại theo quy định. \\ \hline
+
+\textbf{Include / Extend} &
+Extend: UC-01 Đăng nhập \\ \hline
+\end{longtable}
+
 \subsubsection{Đăng xuất}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
