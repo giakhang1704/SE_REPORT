@@ -64,7 +64,7 @@
 3b1. Hệ thống thông báo Tutor bận. \newline
 3b2. Hệ thống quay về màn hình chính. Kết thúc usecase. \\ \hline
 \textbf{Exception Flow} & 
-- Lỗi hệ thống hoặc mất kết nối → Hệ thống thông báo lỗi và yêu cầu sinh viên thử lại. \\ \hline
+- Lỗi hệ thống hoặc mất kết nối. Hệ thống thông báo lỗi và yêu cầu sinh viên thử lại. \\ \hline
 \end{longtable}
 
 %====================================================
@@ -87,7 +87,7 @@
 6. Hệ thống lưu phản hồi vào cơ sở dữ liệu. \newline
 7. Hệ thống gửi thông báo xác nhận cho sinh viên. \\ \hline
 \textbf{Alternative Flow} & 
-5a.1 Hệ thống kiểm tra thấy inh viên không nhập đủ nội dung phản hồi. \newline
+5a.1 Hệ thống kiểm tra thấy sinh viên không nhập đủ nội dung phản hồi. \newline
 5a1. Hệ thống hiển thị thông báo: “Vui lòng nhập nội dung phản hồi trước khi gửi”. \newline
 5a2. Quay lại bước 2.\newline
 4a. Sinh viên chọn “Hủy” thay vì gửi phản hồi. \newline
@@ -149,6 +149,9 @@
 9. Hệ thống gửi thông báo “Hủy thành công”. \\ \hline
 \textbf{Alternative flow} & 
 2a. Không có buổi gặp mặt đã đăng ký. Hệ thống hiển thị “Không có buổi gặp mặt nào”. \newline
+5a. Sinh viên không nhập lý do. \newline
+5a1. Hệ thống hiển thị thông báo “Vui lòng nhập lý do hủy”. \newline
+5a2. Giao diện quay lại bước 4. \newline
 6a. Sinh viên hủy thao tác hủy. Hệ thống quay lại danh sách buổi gặp mặt. \\ \hline % <--- ĐÃ SỬA: Thêm xuống dòng ở đây
 \textbf{Exception flow} & 
 - Lỗi hệ thống hoặc mất kết nối. Hệ thống hiển thị “Không thể hủy, vui lòng thử lại sau”. \\ \hline
