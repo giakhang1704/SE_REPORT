@@ -79,7 +79,7 @@ Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
 \textbf{Post-condition} & - Hủy thành công, hệ thống cập nhật slot. \newline - Sinh viên nhận thông báo hủy. \\ \hline
 \textbf{Normal flow} & 
 1. Tutor chọn “Buổi gặp mặt của tôi”. \newline
-2. Hệ thống hiển thị danh sách buổi hẹn đã tạo. \newline
+2. Hệ thống hiển thị danh sách buổi gặp mặt đã tạo. \newline
 3. Tutor chọn buổi muốn hủy. \newline
 4. Hệ thống yêu cầu nhập lý do hủy. \newline
 5. Tutor nhập lý do. \newline
@@ -89,10 +89,13 @@ Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
 9. Tutor chọn có hoặc không. \newline
 10. Hệ thống gửi thông báo “Hủy thành công”. \\ \hline
 \textbf{Alternative flow} & 
-2a. Không có buổi hẹn. Hệ thống hiển thị “Không có buổi hẹn nào” và quay về màn hình chính. \newline
-6a. Tutor hủy thao tác hủy. Hệ thống quay lại danh sách buổi hẹn. \newline
-9a. Tutor chọn “có”. Hệ thống thêm lại slot vào lịch rảnh và gửi thông báo hủy.  \\ \hline
-9b. Tutor chọn “không”. Hệ thống chỉ hủy buổi hẹn và gửi thông báo hủy. \\ \hline
+2a. Không có buổi hẹn. Hệ thống hiển thị “Không có buổi gặp mặt nào” và quay về màn hình chính. \newline
+5a. Tutor không nhập lý do. \newline
+5a1. Hệ thống hiển thị thông báo “Vui lòng nhập lý do hủy”. \newline
+5a2. Giao diện quay lại bước 4. \newline
+6a. Tutor hủy thao tác hủy. Hệ thống quay lại danh sách buổi gặp mặt. \newline
+9a. Tutor chọn “có”. Hệ thống thêm lại slot vào lịch rảnh và gửi thông báo hủy.  \newline
+9b. Tutor chọn “không”. Hệ thống chỉ hủy buổi gặp mặt và gửi thông báo hủy. \\ \hline
 
 \textbf{Exception flow} & 
 - Lỗi hệ thống hoặc mất kết nối. Hệ thống hiển thị “Không thể hủy, vui lòng thử lại sau”. \\ \hline
