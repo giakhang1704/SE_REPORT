@@ -51,6 +51,8 @@ Trong hệ thống, interface \texttt{LearningFacade} được sử dụng như 
 Facade đóng vai trò là điểm truy cập duy nhất cho client như sinh viên, tutor hoặc nhóm hệ thống khác.  
 Thông qua Facade, chi tiết phức tạp của các service được ẩn đi và việc tương tác trở nên đơn giản hơn.
 
+
+
 Client chỉ làm việc với các phương thức:
 \begin{itemize}
     \item \texttt{addCourse(dto)}
@@ -68,6 +70,13 @@ Facade che giấu các lớp nghiệp vụ sau:
     \item \texttt{RequestService}
     \item \texttt{FeedbackService}
 \end{itemize}
+
+Ngoài ra, mẫu thiết kế Facade được thể hiện thông qua lớp \texttt{TutorRegistrationFacade}.
+Lớp này đóng vai trò như một điểm truy cập duy nhất, cung cấp một giao diện đơn giản cho
+phía client (controller) khi làm việc với nhiều service phức tạp bên dưới. Thay vì để controller
+trực tiếp tương tác và phối hợp với nhiều lớp xử lý khác nhau, TutorRegistrationFacade chịu
+trách nhiệm tập trung các thao tác liên quan đến đăng ký, hủy đăng ký và chấp nhận yêu cầu
+tư vấn. 
 
 \textbf{Lý do sử dụng Facade}\\
 \begin{enumerate}
@@ -447,6 +456,15 @@ Mỗi loại nghiệp vụ xử lý slot (ghi đè – đặt – huỷ) đượ
         \item MapsToCalendarView(): void -- Quay lại màn hình xem lịch.
     \end{itemize}
 
+\textbf{TutorRegistrationUI}
+\begin{itemize}
+    \item \textbf{render(): void} \\
+    Hiển thị giao diện đăng ký tutor cho người dùng.
+    \item \textbf{onSelectTutor(tutor: any): void} \\
+    Xử lý sự kiện khi người dùng chọn một tutor từ danh sách.
+    \item \textbf{onConfirm(): void} \\
+    Xử lý sự kiện khi người dùng xác nhận đăng ký, gửi request tới controller.
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Controller Method}
@@ -650,6 +668,16 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
         \item invalidateSession(sessionId: String): void -- Hủy session.
         \item isValid(sessionId: String): Boolean -- Kiểm tra tính hợp lệ session.
     \end{itemize}
+
+\textbf{TutorRegistrationController}
+\begin{itemize}
+    \item \textbf{registerTutor(request: RegisterRequest): ResponseEntity} \\
+    Nhận request đăng ký tutor từ frontend và xử lý.
+    \item \textbf{cancelRegistration(request: CancelRequest): ResponseEntity} \\
+    Nhận request hủy đăng ký và xử lý.
+    \item \textbf{suggestTutors(subject: String): ResponseEntity} \\
+    Trả về danh sách tutor được gợi ý cho môn học cụ thể.
+\end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Service Method}
@@ -894,6 +922,20 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban.
 Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/định nghĩa trong \texttt{report}, trả về tệp để dùng cho việc gửi hoặc tải xuống.
 \end{itemize}
 
+\textbf{TutorRegistrationService}
+\begin{itemize}
+    \item \textbf{createRequest(studentId: String, subject: String, tutorId: String): TutorRegistrationEntity} \\
+    Tạo yêu cầu đăng ký tutor mới với trạng thái PENDING.
+    \item \textbf{cancelRequest(registrationId: Long, studentId: String): boolean} \\
+    Hủy yêu cầu đăng ký, kiểm tra quyền sở hữu trước khi hủy.
+    \item \textbf{suggestTutor(subject: String): List<TutorSuggestion>} \\
+    Lấy danh sách tutor phù hợp cho môn học (dựa trên rating, availability).
+    \item \textbf{findPendingOlderThan(cutoff: LocalDateTime): List<TutorRegistrationEntity>} \\
+    Tìm các yêu cầu PENDING cũ hơn một thời điểm để xử lý tự động.
+    \item \textbf{approveRegistration(reg: TutorRegistrationEntity): void} \\
+    Phê duyệt yêu cầu đăng ký (chuyển PENDING $\rightarrow$ APPROVED).
+\end{itemize}
+
 %%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -1039,14 +1081,22 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
     Lưu lịch hẹn mới.
 \end{itemize}
 
-\textbf{MaterialRepository}
+\textbf{MaterialRepository (Implementation)}
 \begin{itemize}
+    \item \textbf{save(m: MaterialEntity): MaterialEntity} \\
+    Thực thi thao tác lưu tài liệu vào DB.
+    \item \textbf{update(m: MaterialEntity): MaterialEntity} \\
+    Thực thi cập nhật dữ liệu tài liệu trong DB.
     \item \textbf{getAllMaterials(): List<MaterialEntity>} \\
-    Lấy toàn bộ tài liệu.
-    \item \textbf{getMaterialById(materialId: String): MaterialEntity} \\
-    Lấy chi tiết tài liệu theo ID.
+    Truy vấn toàn bộ bản ghi tài liệu từ DB.
+    \item \textbf{getMaterialById(materialId: int): MaterialEntity} \\
+    Thực thi câu lệnh tìm tài liệu theo ID.
+    \item \textbf{getMaterialByUploader(tutorId: int): List<MaterialEntity>} \\
+    Truy vấn danh sách tài liệu được tải lên bởi tutor.
     \item \textbf{searchMaterials(criteria: SearchCriteria): List<MaterialEntity>} \\
-    Tìm kiếm tài liệu theo tiêu chí.
+    Thực thi tìm kiếm tài liệu theo bộ tiêu chí.
+    \item \textbf{getMaterialsByStatus(status: MaterialStatus): List<MaterialEntity>} \\
+    Truy vấn tài liệu dựa vào trạng thái hiện tại.
 \end{itemize}
 
 \textbf{SessionRepository}
@@ -1083,23 +1133,31 @@ Lấy toàn bộ thông báo của một người dùng để hiển thị trong
 \end{itemize}
 
 
-\textbf{DataFetcherRepository}
+\textbf{ReportRepository}
 \begin{itemize}
 \item \textbf{fetchData(userId: int, key: List\textless String\textgreater): Map\textless key,value\textgreater} \\
 Truy vấn dữ liệu thô phục vụ sinh báo cáo, dựa trên người yêu cầu và các khóa tham số (\textit{key}) cụ thể.
-\end{itemize}
-
-
-
-\textbf{Exporter}
-\begin{itemize}
 \item \textbf{exportPDF(data: Map\textless key,value\textgreater, report: Report): File} \\
 Xuất dữ liệu đã render thành tệp \texttt{PDF} theo mẫu/định nghĩa của báo cáo, trả về tệp để đính kèm hoặc tải xuống.
 \item \textbf{exportCSV(data: Map\textless key,value\textgreater, report: Report): File} \\
 Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp cho phân tích hoặc nhập vào bảng tính.
 \end{itemize}
 
-
+\textbf{TutorRegistrationRepository}
+\begin{itemize}
+    \item \textbf{save(entity: TutorRegistrationEntity): TutorRegistrationEntity} \\
+    Lưu hoặc cập nhật entity trong database.
+    \item \textbf{findById(id: Long): Optional<TutorRegistrationEntity>} \\
+    Tìm đăng ký theo ID.
+    \item \textbf{findByStatus(status: TutorRegistrationStatus): List<TutorRegistrationEntity>} \\
+    Tìm tất cả đăng ký theo trạng thái.
+    \item \textbf{findByStudentIdAndStatus(studentId: String, status: TutorRegistrationStatus): List<TutorRegistrationEntity>} \\
+    Tìm đăng ký của một học sinh với trạng thái cụ thể.
+    \item \textbf{existsByStudentIdAndStatusIn(studentId: String, statuses: List<TutorRegistrationStatus>): boolean} \\
+    Kiểm tra học sinh có đăng ký nào ở các trạng thái cho trước không.
+    \item \textbf{findByRequestTimeBefore(cutoff: LocalDateTime): List<TutorRegistrationEntity>} \\
+    Tìm đăng ký có thời gian request trước thời điểm cutoff.
+\end{itemize}
 
 
 \subsubsection{Repository Interface Method}
@@ -1171,6 +1229,26 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
         \item saveBooked(...) -- Lưu slot đã đặt.
         \item deleteAllByTutorIdAndDate(...) -- Xóa toàn bộ slot của ngày.
     \end{itemize}
+
+\textbf{IMaterialRepository}
+\begin{itemize}
+    \item \textbf{save(m: MaterialEntity): MaterialEntity} \\
+    Lưu tài liệu mới vào cơ sở dữ liệu.
+    \item \textbf{update(m: MaterialEntity): MaterialEntity} \\
+    Cập nhật nội dung hoặc thông tin của một tài liệu đã tồn tại.
+    \item \textbf{getAllMaterials(): List<MaterialEntity>} \\
+    Trả về danh sách toàn bộ tài liệu.
+    \item \textbf{getMaterialById(materialId: int): MaterialEntity} \\
+    Lấy một tài liệu dựa trên ID.
+    \item \textbf{getMaterialByUploader(tutorId: int): List<MaterialEntity>} \\
+    Trả về danh sách tài liệu do một tutor cụ thể tải lên.
+    \item \textbf{searchMaterials(criteria: SearchCriteria): List<MaterialEntity>} \\
+    Tìm kiếm tài liệu dựa trên tiêu chí (tên, lớp, loại, từ khóa…).
+    \item \textbf{getMaterialsByStatus(status: MaterialStatus): List<MaterialEntity>} \\
+    Lấy danh sách tài liệu theo trạng thái (Draft, Pending, Published…).
+\end{itemize}
+
+
 \subsubsection{Service Interface Method}
 \textbf{IFreeSlotService / FreeSlotService}
     \begin{itemize}
@@ -1239,6 +1317,21 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     \item \textbf{searchMaterials(criteria: SearchCriteria): List<MaterialEntity>} \\
     Tìm kiếm tài liệu theo tiêu chí.
 \end{itemize}
+
+\textbf{IMaterialUploadService}
+\begin{itemize}
+    \item \textbf{createDraft(tutorId: String, title: String, type: String, classId: String): Material} \\
+    Tạo một tài liệu ở trạng thái nháp (draft) cho tutor trước khi upload nội dung.
+    \item \textbf{attachFile(materialId: String, fileName: String, bytes: byte[]): Material} \\
+    Đính kèm file (PDF, PPT, DOCX, hình ảnh…) vào tài liệu nháp.
+    \item \textbf{submitForReview(materialId: String): void} \\
+    Tutor gửi tài liệu sang trạng thái “chờ duyệt” để Admin/Tutor Leader xem và phê duyệt.
+    \item \textbf{publish(materialId: String): void} \\
+    Xuất bản tài liệu đã được duyệt để sinh viên có thể xem và tải về.
+    \item \textbf{listMyUploads(tutorId: String): List<Material>} \\
+    Trả về danh sách các tài liệu mà tutor đã tải lên (bao gồm draft, pending, published).
+\end{itemize}
+
 \textbf{IAvailableSlotRepository}
 \begin{itemize}
     \item \textbf{findByTutorId(id: String): List<AvailableSlot>} \\
@@ -1312,6 +1405,22 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     Lưu phản hồi đánh buổi học 
     \item getFeedbackByMeeting(meetingId: Long): List<Feedback>\\
     Lấy ra danh sách phản hồi đánh giá một buổi học theo ID.
+\end{itemize}
+
+\textbf{ITutorRegistrationRepository}
+\begin{itemize}
+    \item \textbf{save(entity: TutorRegistrationEntity): TutorRegistrationEntity} \\
+    Lưu hoặc cập nhật entity trong database.
+    \item \textbf{findById(id: Long): Optional<TutorRegistrationEntity>} \\
+    Tìm đăng ký theo ID.
+    \item \textbf{findByStatus(status: TutorRegistrationStatus): List<TutorRegistrationEntity>} \\
+    Tìm tất cả đăng ký theo trạng thái.
+    \item \textbf{findByStudentIdAndStatus(studentId: String, status: TutorRegistrationStatus): List<TutorRegistrationEntity>} \\
+    Tìm đăng ký của một học sinh với trạng thái cụ thể.
+    \item \textbf{existsByStudentIdAndStatusIn(studentId: String, statuses: List<TutorRegistrationStatus>): boolean} \\
+    Kiểm tra học sinh có đăng ký nào ở các trạng thái cho trước không.
+    \item \textbf{findByRequestTimeBefore(cutoff: LocalDateTime): List<TutorRegistrationEntity>} \\
+    Tìm đăng ký có thời gian request trước thời điểm cutoff.
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
