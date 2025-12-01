@@ -79,6 +79,68 @@ Facade che giấu các lớp nghiệp vụ sau:
 \end{enumerate}
 
 
+
+\subsubsection{Strategy Pattern}
+
+\textbf{Nhận diện Strategy Pattern}\\
+Trong hệ thống, \texttt{SlotOperationStrategy} được sử dụng như một \textbf{Strategy Pattern}.  
+Mỗi loại nghiệp vụ xử lý slot (ghi đè – đặt – huỷ) được đóng gói thành một chiến lược riêng, giúp \texttt{FreeSlotService} tách biệt logic và dễ mở rộng.
+
+\textbf{Cấu trúc áp dụng Strategy}
+\begin{itemize}
+    \item \textbf{Interface Strategy:} \texttt{SlotOperationStrategy}
+    \item \textbf{Concrete Strategies:}
+    \begin{itemize}
+        \item \texttt{OverwriteStrategy}
+        \item \texttt{ReserveStrategy}
+        \item \texttt{ReleaseStrategy}
+    \end{itemize}
+    \item \textbf{Context:} \texttt{FreeSlotService}
+\end{itemize}
+
+\textbf{Vai trò Client / Context}  
+\texttt{FreeSlotService} đóng vai trò là Context, lựa chọn strategy phù hợp và gọi \texttt{execute()} mà không cần biết chi tiết xử lý.
+
+\textbf{Interface: SlotOperationStrategy}\\
+\begin{itemize}
+    \item \texttt{execute(tutorId: Long, request: FreeSlotRequest): void}  
+    -- Thực hiện nghiệp vụ xử lý slot tùy theo strategy được chọn.
+\end{itemize}
+
+\textbf{Chi tiết các Concrete Strategy}
+\begin{itemize}
+    \item \textbf{OverwriteStrategy}
+    \begin{itemize}
+        \item \texttt{execute(...)} -- Ghi đè slot, xử lý va chạm và cập nhật dữ liệu.
+        \item \texttt{mergeInputRanges(...)} -- Gộp các khoảng thời gian liền kề hoặc chồng lấn.
+        \item \texttt{splitRangeByAppointments(...)} -- Cắt slot rảnh lớn thành các slot nhỏ dựa trên lịch hẹn.
+    \end{itemize}
+
+    \item \textbf{ReleaseStrategy}
+    \begin{itemize}
+        \item \texttt{execute(...)} -- Chuyển slot đã đặt thành rảnh.
+        \item \texttt{mergeTutorSlots(...)} -- Hợp các slot rảnh liền nhau.
+    \end{itemize}
+
+    \item \textbf{ReserveStrategy}
+    \begin{itemize}
+        \item \texttt{execute(...)} -- Tìm slot rảnh phù hợp và cắt phần thời gian bận ra khỏi slot gốc.
+    \end{itemize}
+\end{itemize}
+
+\textbf{Lý do sử dụng Strategy Pattern}
+\begin{enumerate}
+    \item \textbf{Tách biệt logic phức tạp:}  
+    Mỗi nghiệp vụ xử lý slot được viết trong class riêng, giúp code rõ ràng và dễ theo dõi.
+    
+    \item \textbf{Tuân thủ Open/Closed Principle:}  
+    Khi thêm nghiệp vụ mới (ví dụ “Khoá lịch tạm thời”), chỉ cần tạo strategy mới mà không chỉnh sửa lớp \texttt{FreeSlotService}.
+    
+    \item \textbf{Dễ bảo trì và mở rộng:}  
+    Client chỉ gọi \texttt{execute()} từ interface, không quan tâm chi tiết xử lý.
+\end{enumerate}
+
+
 \subsection{Mô tả phương thức}
 \subsubsection{View Method}
 
@@ -172,34 +234,21 @@ Facade che giấu các lớp nghiệp vụ sau:
 \end{itemize}
 
 \textbf{ForgotPasswordUI}
-\begin{itemize}
-    \item \textbf{displayForgotPasswordForm(): void} \\
-    Hiển thị form nhập BKID để yêu cầu reset password.
-    \item \textbf{getBKIDInput(): String} \\
-    Lấy BKID người dùng nhập.
-    \item \textbf{displayResetPasswordForm(token: String): void} \\
-    Hiển thị form nhập mật khẩu mới kèm token.
-    \item \textbf{getNewPasswordInput(): String} \\
-    Lấy mật khẩu mới người dùng nhập.
-    \item \textbf{showPasswordResetSuccessMessage(): void} \\
-    Hiển thị thông báo reset password thành công.
-    \item \textbf{showErrorMessage(msg: String): void} \\
-    Hiển thị thông báo lỗi với nội dung \texttt{msg}.
-    \item \textbf{onRequestResetClick(callback: (bkId) $\rightarrow$ void): void} \\
-    Gán callback khi người dùng nhấn nút yêu cầu reset.
-    \item \textbf{onResetPasswordClick(callback: (token, newPassword) $\rightarrow$ void): void} \\
-    Gán callback khi người dùng nhấn nút xác nhận reset password.
-\end{itemize}
+    \begin{itemize}
+        \item displayForgotPasswordForm(): void -- Form nhập ID/email để reset.
+        \item displayResetPasswordForm(token: String): void -- Form nhập mật khẩu mới.
+        \item showPasswordResetSuccessMessage(): void -- Thông báo reset thành công.
+        \item showErrorMessage(msg: String): void -- Thông báo lỗi.
+        \item onRequestResetClick(callback): void -- Xử lý sự kiện gửi yêu cầu reset.
+        \item onResetPasswordClick(callback): void -- Xử lý sự kiện lưu mật khẩu mới.
+    \end{itemize}
 
 \textbf{UserProfileUI}
-\begin{itemize}
-    \item \textbf{displayProfile(user: UserEntity, activities: List<ActivityEntity>, appointments: List<AppointmentEntity>): void} \\
-    Hiển thị thông tin chi tiết user cùng lịch sử hoạt động và lịch hẹn.
-    \item \textbf{showErrorMessage(msg: String): void} \\
-    Hiển thị thông báo lỗi với nội dung \texttt{msg}.
-    \item \textbf{onOpenProfile(callback: () $\rightarrow$ void): void} \\
-    Gán callback khi người dùng mở profile.
-\end{itemize}
+    \begin{itemize}
+        \item onOpenProfile(): void -- Mở trang cá nhân, gọi API lấy dữ liệu.
+        \item displayProfile(user: UserEntity): void -- Hiển thị thông tin chi tiết người dùng.
+        \item showErrorMessage(msg: String): void -- Hiển thị thông báo lỗi.
+    \end{itemize}
 
 \textbf{LogoutUI}
 \begin{itemize}
@@ -384,27 +433,19 @@ Facade che giấu các lớp nghiệp vụ sau:
 \end{itemize}
 
 \textbf{TutorViewFreeSlotsUI}
-\begin{itemize}
-    \item \textbf{fetchDailySlots(date: String): void} \\
-    Gọi API lấy danh sách các khung giờ rảnh chi tiết của ngày được chọn để hiển thị lên màn hình.
-    \item \textbf{handleCalendarSelect(date: String): void} \\
-    Xử lý sự kiện khi người dùng nhấn vào một ngày trên lịch, cập nhật state ngày hiện tại.
-    \item \textbf{MapsToSetupView(): void} \\
-    Chuyển giao diện sang màn hình "Thiết lập lịch rảnh" (Form nhập liệu).
-\end{itemize}
+    \begin{itemize}
+        \item fetchDailySlots(date: String): void -- Lấy danh sách khung giờ rảnh chi tiết.
+        \item handleCalendarSelect(date: String): void -- Cập nhật state khi chọn ngày trên lịch.
+        \item MapsToSetupView(): void -- Chuyển sang màn hình "Thiết lập lịch rảnh".
+    \end{itemize}
 \textbf{TutorUpdateFreeSlotUI}
-\begin{itemize}
-    \item \textbf{handleAddSlot(): void} \\
-    Thêm một dòng nhập liệu (khung giờ mặc định) mới vào danh sách trên Form.
-    \item \textbf{handleRemoveSlot(index: int): void} \\
-    Xóa dòng nhập liệu khung giờ tại vị trí index khỏi Form.
-    \item \textbf{handleChangeTime(index: int, field: String, value: String): void} \\
-    Cập nhật giá trị giờ bắt đầu hoặc giờ kết thúc cho một dòng nhập liệu cụ thể.
-    \item \textbf{handleSave(): void} \\
-    Thu thập dữ liệu từ Form, đóng gói thành payload và gọi API POST để lưu lịch.
-    \item \textbf{MapsToCalendarView(): void} \\
-    Hủy thao tác hoặc quay trở lại màn hình xem lịch sau khi lưu thành công.
-\end{itemize}
+    \begin{itemize}
+        \item handleAddSlot(): void -- Thêm dòng nhập liệu mới.
+        \item handleRemoveSlot(index: int): void -- Xóa dòng nhập liệu tại vị trí index.
+        \item handleChangeTime(index: int, field: String, value: String): void -- Cập nhật giờ bắt đầu/kết thúc.
+        \item handleSave(): void -- Thu thập dữ liệu và gọi API POST để lưu lịch.
+        \item MapsToCalendarView(): void -- Quay lại màn hình xem lịch.
+    \end{itemize}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%
@@ -462,14 +503,11 @@ Facade che giấu các lớp nghiệp vụ sau:
 \end{itemize}
 
 \textbf{FreeSlotAPI}
-\begin{itemize}
-    \item \textbf{getDaily(date: LocalDate): ResponseEntity<FreeSlotResponse>} \\
-    API Endpoint (GET) nhận ngày, trả về thông tin lịch rảnh chi tiết.
-    \item \textbf{getMonthly(month: int, year: int): ResponseEntity<List<FreeSlotResponse>>} \\
-    API Endpoint (GET) trả về danh sách tóm tắt lịch rảnh của cả tháng.
-    \item \textbf{overwriteSchedule(request: FreeSlotRequest): ResponseEntity<?>} \\
-    API Endpoint (POST) nhận yêu cầu ghi đè lịch rảnh, trả về kết quả thành công hoặc danh sách cảnh báo lỗi.
-\end{itemize}
+    \begin{itemize}
+        \item getDaily(date: LocalDate): ResponseEntity<FreeSlotResponse> -- Lấy lịch rảnh chi tiết.
+        \item getMonthly(month: int, year: int): ResponseEntity<List<FreeSlotResponse>> -- Lấy lịch tóm tắt cả tháng.
+        \item overwriteSchedule(request: FreeSlotRequest): ResponseEntity<?> -- Ghi đè lịch rảnh.
+    \end{itemize}
 
 \textbf{RoomAPI}
 \begin{itemize}
@@ -521,18 +559,15 @@ Facade che giấu các lớp nghiệp vụ sau:
 \end{itemize}
 
 \textbf{ForgotPasswordAPI}
-\begin{itemize}
-    \item \textbf{requestPasswordReset(bkId: String): void} \\
-    Gửi yêu cầu reset password và thông báo kết quả.
-    \item \textbf{resetPassword(token: String, newPassword: String): void} \\
-    Thực hiện reset password dựa trên token và mật khẩu mới.
-\end{itemize}
+    \begin{itemize}
+        \item requestPasswordReset(bkId: String): void -- Kiểm tra user, tạo token, gửi email.
+        \item resetPassword(token: String, newPassword: String): void -- Xác thực token và cập nhật mật khẩu.
+    \end{itemize}
 
 \textbf{UserProfileManageAPI}
-\begin{itemize}
-    \item \textbf{viewProfile(): void} \\
-    Lấy userId từ session, gọi ProfileService để lấy thông tin user, hoạt động, lịch hẹn, hiển thị lên ProfileView.
-\end{itemize}
+    \begin{itemize}
+        \item viewProfile(): void -- Lấy ID người dùng từ session và gọi Service.
+    \end{itemize}
 
 \textbf{LogoutAPI}
 \begin{itemize}
@@ -604,19 +639,17 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
     Lấy ID người dùng từ Session hiện tại, gọi Service lấy thông tin và trả về View.
 \end{itemize}
 
-\textbf{ProfileService / SessionManager}
-\begin{itemize}
-    \item \textbf{getUserProfile(userId: Long): UserEntity} \\
-    Truy vấn Repository để lấy thông tin người dùng theo ID.
-    \item \textbf{createSession(user: UserEntity): String} \\
-    Tạo phiên làm việc mới, lưu thông tin người dùng và trả về SessionID.
-    \item \textbf{getSession(sessionId: String): SessionEntity} \\
-    Truy xuất thông tin chi tiết phiên dựa trên SessionID.
-    \item \textbf{invalidateSession(sessionId: String): void} \\
-    Hủy bỏ phiên làm việc khỏi hệ thống.
-    \item \textbf{isValid(sessionId: String): Boolean} \\
-    Kiểm tra tính hợp lệ và thời hạn của SessionID.
-\end{itemize}
+\textbf{ProfileService}
+    \begin{itemize}
+        \item getUserProfile(userId: Long): UserEntity -- Lấy dữ liệu người dùng từ Repository.
+    \end{itemize}
+\textbf{SessionManager}
+    \begin{itemize}
+        \item createSession(user: UserEntity): String -- Tạo session mới.
+        \item getSession(sessionId: String): SessionEntity -- Lấy thông tin session.
+        \item invalidateSession(sessionId: String): void -- Hủy session.
+        \item isValid(sessionId: String): Boolean -- Kiểm tra tính hợp lệ session.
+    \end{itemize}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Service Method}
@@ -785,14 +818,9 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
 \end{itemize}
 
 \textbf{ProfileService}
-\begin{itemize}
-    \item \textbf{getProfile(userId: String): UserEntity} \\
-    Trả về thông tin user.
-    \item \textbf{getActivityHistory(userId: String): List<ActivityEntity>} \\
-    Trả về danh sách hoạt động của user.
-    \item \textbf{getAppointmentHistory(userId: String): List<AppointmentEntity>} \\
-    Trả về danh sách lịch hẹn của user.
-\end{itemize}
+    \begin{itemize}
+        \item getUserProfile(userId: Long): UserEntity -- Lấy dữ liệu người dùng từ Repository.
+    \end{itemize}
 
 \textbf{SessionManager}
 \begin{itemize}
@@ -929,17 +957,13 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
     \item findOfficialMeetingsByTutor(tutorId: Long): List<Meeting>\\
     Trả về Meeting \texttt{APPROVED} và chưa bị hủy của tutor.
 \end{itemize}
-\textbf{UserRepository / SessionRepository}
-\begin{itemize}
-    \item \textbf{findById(id: Long): UserEntity} \\
-    Truy vấn Database lấy thông tin người dùng theo khóa chính.
-    \item \textbf{createSession(user: UserEntity): String} \\
-    Lưu session mới vào kho dữ liệu và trả về SessionID.
-    \item \textbf{save(sessionId: String): void} \\
-    Lưu các thay đổi của session hiện tại.
-    \item \textbf{update(sessionId: String): Boolean} \\
-    Cập nhật trạng thái session và trả về kết quả thành công/thất bại.
-\end{itemize}
+\textbf{UserRepository}
+    \begin{itemize}
+        \item findById(id: Long): UserEntity -- Lấy thông tin người dùng theo ID.
+        \item createSession(user: UserEntity): String -- Tạo session mới.
+        \item save(sessionId: String): void -- Lưu thay đổi session.
+        \item update(sessionId: String): Boolean -- Cập nhật trạng thái session.
+    \end{itemize}
 \textbf{FreeSlotRepository}
 \begin{itemize}
     \item \textbf{findAvailableByTutorIdAndDate(tutorId: Long, date: LocalDate): List<TutorSlot>} \\
@@ -1138,37 +1162,25 @@ Xuất dữ liệu thành tệp \texttt{CSV} (bảng dữ liệu), phù hợp ch
     \item findOfficialMeetingsByTutor(tutorId: Long): List<Meeting>\\
     Trả về Meeting \texttt{APPROVED} và chưa bị hủy của tutor.
 \end{itemize}
-\textbf{IFreeSlotRepository}
-\begin{itemize}
-    \item \textbf{findAvailableByTutorIdAndDate(tutorId: Long, date: LocalDate): List<TutorSlot>} \\
-    Lọc danh sách Mock để lấy các slot rảnh của gia sư trong ngày cụ thể.
-    \item \textbf{findAvailableByTutorIdAndDateBetween(tutorId: Long, month: int, year: int): List<TutorSlot>} \\
-    Tìm kiếm slot rảnh trong khoảng thời gian của tháng và năm.
-    \item \textbf{saveAvailable(slots: List<TutorSlot>): void} \\
-    Thêm danh sách các đối tượng TutorSlot mới vào kho lưu trữ.
-    \item \textbf{findBookedByTutorIdAndDate(tutorId: Long, date: LocalDate): List<TutorSlot>} \\
-    Lọc danh sách slot đã được học viên đặt.
-    \item \textbf{saveBooked(slots: List<TutorSlot>): void} \\
-    Lưu các slot đã chuyển sang trạng thái Booked vào kho lưu trữ.
-    \item \textbf{deleteAllByTutorIdAndDate(tutorId: Long, date: LocalDate): void} \\
-    Xóa toàn bộ slot của một ngày cụ thể để chuẩn bị cho việc ghi đè dữ liệu mới.
-\end{itemize}
-\subsection{Service Interface Method}
-\textbf{IFreeSlotService}
-\begin{itemize}
-    \item \textbf{getDailySchedule(tutorId: Long, date: LocalDate): FreeSlotResponse} \\
-    Lấy danh sách Entity từ Repository, chuyển đổi sang DTO để trả về Controller.
-    \item \textbf{getMonthlySchedule(tutorId: Long, month: int, year: int): List<FreeSlotResponse>} \\
-    Lấy danh sách slot trong 1 tháng, gom nhóm theo ngày để trả về cấu trúc dữ liệu cho lịch tháng.
-    \item \textbf{overwriteDailySchedule(tutorId: Long, request: FreeSlotRequest): List<String>} \\
-    Xóa lịch cũ, tạo Entity mới, lưu lịch mới, trả về cảnh báo validate nếu có.
-    \item \textbf{reserveSlot(tutorId: Long, date: LocalDate, start: LocalTime, end: LocalTime): void} \\
-    Chuyển một slot từ trạng thái "Rảnh" sang "Đã đặt" khi có học viên đăng ký.
-    \item \textbf{releaseSlot(tutorId: Long, date: LocalDate, start: LocalTime, end: LocalTime): void} \\
-    Hủy trạng thái "Đã đặt", trả slot về lại trạng thái "Rảnh".
-    \item \textbf{getRawAvailableSlots(tutorId: Long, date: LocalDate): List<TutorSlot>} \\
-    Lấy trực tiếp danh sách Entity để phục vụ các xử lý nội bộ khác.
-\end{itemize}
+\textbf{IFreeSlotRepository / FreeSlotRepository}
+    \begin{itemize}
+        \item findAvailableByTutorIdAndDate(...) -- Lấy slot rảnh trong ngày.
+        \item findAvailableByTutorIdAndDateBetween(...) -- Lấy slot rảnh trong tháng.
+        \item saveAvailable(...) -- Lưu slot rảnh mới.
+        \item findBookedByTutorIdAndDate(...) -- Lấy slot đã đặt.
+        \item saveBooked(...) -- Lưu slot đã đặt.
+        \item deleteAllByTutorIdAndDate(...) -- Xóa toàn bộ slot của ngày.
+    \end{itemize}
+\subsubsection{Service Interface Method}
+\textbf{IFreeSlotService / FreeSlotService}
+    \begin{itemize}
+        \item getDailySchedule(tutorId: Long, date: LocalDate): FreeSlotResponse -- Lấy Entity và chuyển sang DTO.
+        \item getMonthlySchedule(tutorId: Long, month: int, year: int): List<FreeSlotResponse> -- Gom nhóm slot theo ngày.
+        \item overwriteDailySchedule(tutorId: Long, request: FreeSlotRequest): List<String> -- Xóa, tạo và lưu slot mới.
+        \item reserveSlot(...) -- Chuyển slot từ Rảnh → Đã đặt.
+        \item releaseSlot(...) -- Trả slot về trạng thái Rảnh.
+        \item getRawAvailableSlots(...) -- Lấy danh sách Entity trực tiếp.
+    \end{itemize}
 
 \textbf{ISSOServices}
 \begin{itemize}
@@ -1470,3 +1482,9 @@ Phòng ban nhận báo cáo.
 \item \textbf{createAt: datetime} \\
 Thời điểm tạo báo cáo.
 \end{itemize}
+
+\textbf{TutorSlot}
+    \begin{itemize}
+        \item isOverlapping(other: TutorSlot): boolean -- Kiểm tra trùng lặp slot.
+    \end{itemize}
+\textbf{UserEntity / SessionEntity} -- Chứa thông tin người dùng và phiên làm việc.
