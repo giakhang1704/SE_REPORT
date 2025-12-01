@@ -155,11 +155,16 @@ Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
 \subsubsection{Thiết lập lịch rảnh}
 \begin{longtable}{|p{3.5cm}|p{11cm}|}
 \hline
-\textbf{Use Case ID} & UC-16 \\ \hline
+\textbf{Use Case ID} & UC-15 \\ \hline
+
 \textbf{Use Case Name} & Thiết lập lịch rảnh \\ \hline
+
 \textbf{Actor(s)} & Tutor \\ \hline
+
 \textbf{Description} & Tutor xem và cập nhật danh sách các khung giờ rảnh trong một ngày cụ thể để học viên có thể đăng ký. \\ \hline
-\textbf{Trigger} & Tutor bấm vào nút “Lịch rảnh” trên giao diện hồ sơ cá nhân. \\ \hline
+
+\textbf{Trigger} & Tutor bấm vào nút lịch rảnh trên giao diện hồ sơ cá nhân. \\ \hline
+
 \textbf{Pre–Condition(s)} &
 \begin{enumerate}
     \item Tutor đã đăng nhập vào hệ thống thành công.
@@ -167,70 +172,48 @@ Lịch rảnh của Tutor được cập nhật tương ứng. \\ \hline
     \item Hệ thống đang hoạt động bình thường.
 \end{enumerate}
 \\ \hline
+
 \textbf{Post–Condition(s)} &
 \begin{enumerate}
-    \item Các khung giờ rảnh cũ của ngày được chọn bị xóa.
+    \item Các khung giờ rảnh cũ của ngày đó bị xóa bỏ.
     \item Các khung giờ rảnh mới được lưu vào hệ thống.
-    \item Lịch (Calendar) hiển thị cập nhật mới cho ngày vừa lưu.
+    \item Giao diện lịch (Calendar) hiển thị cập nhật cho ngày vừa lưu.
 \end{enumerate}
 \\ \hline
 
 \textbf{Normal Flow} &
 \begin{enumerate}
-    \item Tutor chọn mục “Lịch rảnh” (hoặc trong Hồ sơ cá nhân).
+    \item Tutor chọn mục “Lịch rảnh” (hoặc Hồ sơ cá nhân).
     \item Hệ thống hiển thị lịch theo tháng.
     \item Tutor chọn một ngày cụ thể.
-    \item Hệ thống hiển thị danh sách các khung giờ rảnh hiện tại (nếu có).
+    \item Hệ thống hiển thị danh sách các khung giờ rảnh hiện tại.
     \item Tutor nhấn “Thiết lập lịch rảnh”.
     \item Hệ thống chuyển sang giao diện thiết lập lịch rảnh.
-    \item Tutor thêm/xóa/chỉnh sửa các khung giờ rảnh.
+    \item Tutor thêm/xóa/sửa các khung giờ.
     \item Tutor nhấn “Lưu”.
-    \item Hệ thống kiểm tra dữ liệu hợp lệ.
-    \item Hệ thống lưu dữ liệu và hiển thị thông báo “Lưu thành công”.
+    \item Hệ thống hiển thị thông báo “Lưu thành công”.
 \end{enumerate}
 \\ \hline
 
 \textbf{Alternative Flow} &
 \begin{enumerate}
-    \item[3a.] Tutor chọn ngày trong quá khứ.
-    \begin{enumerate}
-        \item[3a1.] Hệ thống hiển thị thông báo: “Không thể chỉnh sửa ngày trong quá khứ”.
-        \item[3a2.] Giao diện quay lại bước 2.
-    \end{enumerate}
-
-    \item[7a.] Trong quá trình thiết lập lịch rảnh, Tutor chọn “Hủy”.
-    \begin{enumerate}
-        \item[7a1.] Hệ thống quay lại giao diện lịch mà không lưu thay đổi.
-        \item[7a2.] Use case kết thúc sớm.
-    \end{enumerate}
-
-    \item[8a.] Tutor nhập sai dữ liệu (giờ bắt đầu $a \geq b$ giờ kết thúc hoặc để trống).
-    \begin{enumerate}
-        \item[8a1.] Hệ thống hiển thị thông báo: “Vui lòng kiểm tra lại thời gian”.
-        \item[8a2.] Giao diện quay lại bước 7.
-    \end{enumerate}
+    \item[3a.] Chọn ngày quá khứ → hệ thống chặn chỉnh sửa.
+    \item[7a.] Nhấn “Hủy” → quay lại không lưu.
+    \item[8a.] Nhập sai (start $\geq$ end, để trống) → báo lỗi.
 \end{enumerate}
 \\ \hline
 
 \textbf{Exception Flow} &
 \begin{enumerate}
-    \item[E1.] Mất kết nối mạng khi lưu dữ liệu.
-    \begin{enumerate}
-        \item[E1.1.] Hệ thống hiển thị thông báo: “Không thể kết nối. Vui lòng thử lại sau”.
-        \item[E1.2.] Hệ thống ghi log lỗi và không cập nhật dữ liệu.
-        \item[E1.3.] Use case kết thúc không thành công.
-    \end{enumerate}
-
-    \item[E2.] Lỗi hệ thống trong quá trình xử lý.
-    \begin{enumerate}
-        \item[E2.1.] Hệ thống hiển thị thông báo: “Có lỗi xảy ra, vui lòng thử lại sau”.
-        \item[E2.2.] Hệ thống ghi log lỗi và không cập nhật dữ liệu.
-        \item[E2.3.] Use case kết thúc không thành công.
-    \end{enumerate}
+    \item[E1.] Mất mạng lúc Lưu → báo lỗi kết nối.
+    \item[E2.] Lỗi hệ thống → báo lỗi và ghi log.
 \end{enumerate}
 \\ \hline
 
 \end{longtable}
+
+
+
 
 % ================== USE CASE 17 ==================
 \subsubsection{ Đăng tải tài liệu}
