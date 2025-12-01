@@ -13,21 +13,23 @@ Phản hồi được lưu trữ thành công trong hệ thống. \newline
 Hệ thống gửi thông báo đến Tutor và ghi nhận phản hồi cho báo cáo tổng hợp. \\ \hline
 \textbf{Normal Flow} &
 1. Sinh viên truy cập mục “Phản hồi chất lượng”. \newline
-2. Hệ thống hiển thị form phản hồi (mức độ hài lòng, nội dung chi tiết). \newline
-3. Sinh viên nhập nội dung phản hồi và chọn mức độ đánh giá. \newline
-4. Sinh viên nhấn “Gửi”. \newline
-5. Hệ thống lưu phản hồi vào cơ sở dữ liệu. \newline
-6. Hệ thống gửi thông báo xác nhận cho sinh viên. \\ \hline
+2. Hệ thống hiển thị danh sách các buổi học đã tham gia. \newline
+3. Sinh viên chọn buổi học cần phản hồi. \newline
+4. Hệ thống hiển thị form phản hồi (mức độ hài lòng, nội dung chi tiết). \newline
+5. Sinh viên nhập nội dung phản hồi và chọn mức độ đánh giá. \newline
+6. Sinh viên nhấn “Gửi”. \newline
+7. Hệ thống lưu phản hồi vào cơ sở dữ liệu. \newline
+8. Hệ thống gửi thông báo xác nhận cho sinh viên. \\ \hline
 \textbf{Alternative Flow} &
-3a. Sinh viên không nhập nội dung phản hồi. \newline
-3a1. Hệ thống hiển thị thông báo: “Vui lòng nhập nội dung phản hồi trước khi gửi”. \newline
-3a2. Giao diện quay lại bước 3. \newline\newline
-4a. Sinh viên chọn “Hủy” thay vì gửi phản hồi. \newline
-4a1. Hệ thống hủy thao tác và không lưu thông tin. \newline
-4a2. Use case kết thúc sớm. \\ \hline
+6a. Sinh viên không nhập nội dung phản hồi. \newline
+6a1. Hệ thống hiển thị thông báo: “Vui lòng nhập nội dung phản hồi trước khi gửi”. \newline
+6a2. Giao diện quay lại bước 4. \newline\newline
+6b. Sinh viên chọn “Quay lại” thay vì gửi phản hồi. \newline
+6b1. Hệ thống hủy thao tác và không lưu thông tin. \newline
+6b2. Use case kết thúc sớm. \\ \hline
 \textbf{Exception Flow} &
-5a. Sau khi sinh viên nhấn “Gửi” (bước 4), hệ thống cố gắng lưu dữ liệu nhưng gặp lỗi cơ sở dữ liệu (DB error). \newline
-5a1. Hệ thống hiển thị thông báo: “Gửi phản hồi thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”. \newline
-5a2. Hệ thống ghi log lỗi và giữ trạng thái chưa gửi phản hồi. \newline
-5a3. Use case kết thúc không thành công. \\ \hline
+7a. Sau khi sinh viên nhấn “Gửi” (bước 6), hệ thống cố gắng lưu dữ liệu nhưng gặp lỗi cơ sở dữ liệu (DB error). \newline
+7a1. Hệ thống hiển thị thông báo: “Gửi phản hồi thất bại, vui lòng thử lại sau hoặc liên hệ bộ phận kỹ thuật”. \newline
+7a2. Hệ thống ghi log lỗi và giữ trạng thái chưa gửi phản hồi. \newline
+7a3. Use case kết thúc không thành công. \\ \hline
 \end{longtable}
