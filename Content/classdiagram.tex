@@ -358,50 +358,6 @@ Mỗi loại nghiệp vụ xử lý slot (ghi đè – đặt – huỷ) đượ
     Điều hướng quay trở lại trang danh sách buổi hẹn trước đó.
 \end{itemize}
 
-\textbf{CourseListUI}  
-\begin{itemize}
-    \item renderCourseList(courses)\\
-    Hiển thị danh sách dạng card hoặc grid.
-    \item showEnrollButton(courseID)\\
-    Hiển thị nút đăng ký khi học viên chưa đăng ký.
-\end{itemize}
-
-\textbf{CourseDetailUI} 
-\begin{itemize}
-    \item renderCourseDetail(course)\\
-    Hiển thị tiêu đề, mô tả, tutor và số lượng sinh viên.  
-    \item displayTutorInfo(tutorID)\\
-    Hiển thị thông tin chi tiết về giảng viên.
-\end{itemize}
-
-\textbf{RequestFormUI}  
-\begin{itemize}
-    \item showForm(tutors, courses)\\
-    Tải danh sách tutor và khóa học lên giao diện.   
-    \item onSubmit(requestDTO)\\
-    Gửi yêu cầu khi người dùng nhấn nút \texttt{Gửi}.
-\end{itemize}
-
-
-\textbf{RequestListUI}
-\begin{itemize}
-    \item renderMyRequests(requests)\\
-    Liệt kê các yêu cầu đã gửi của sinh viên.   
-    \item onCancelRequest(requestID)\\
-    Cho phép hủy yêu cầu nếu trạng thái đang là \texttt{PENDING}.
-\end{itemize}
-
-
-
-\textbf{TutorRequestListView}
-\begin{itemize}
-    \item renderPendingRequests(requests)\\
-    Hiển thị danh sách yêu cầu cần duyệt.   
-    \item onAccept(requestID)\\
-    Chấp nhận yêu cầu và tạo buổi học mới.
-    \item  onReject(requestID)\\
-    Từ chối yêu cầu và gửi email thông báo lý do.
-\end{itemize}
 
 
 \textbf{NotificationUI}
@@ -539,28 +495,7 @@ Mỗi loại nghiệp vụ xử lý slot (ghi đè – đặt – huỷ) đượ
     Hủy đặt phòng theo mã cuộc họp.
 \end{itemize}
 
-\textbf{LearningAPI}
-\begin{itemize}
-    \item addCourse(courseData: Course): Course\\
-    Thêm khóa học mới.
-    \item getAllCourses(): List<CourseDTO>\\
-    Trả về danh sách khóa học ở dạng DTO.
-    \item getCourseById(courseId: int): CourseDetail\\
-    Lấy thông tin chi tiết khóa học.
-    \item registerCourse(studentId: int, courseId: int): Enrollment\\
-    Cho phép sinh viên đăng ký khóa học.
-    \item getEnrollmentsByStudent(studentId: int): List<Enrollment>\\
-    Trả về danh sách đăng ký của sinh viên.
-    \item submitRequest(requestData: Request): Request\\
-    Xử lý gửi yêu cầu tư vấn.
-    \item getMyRequests(userId: int): List<Request>\\
-    Trả về danh sách yêu cầu của người dùng hiện tại.
-    \item getRequestsByTutor(tutorId: int): List<Request>\\
-    Trả về danh sách yêu cầu dành cho tutor.
-    \item updateRequestStatus(requestId: int, newStatus: String): bool\\
-    Cập nhật trạng thái yêu cầu.
-  
-\end{itemize}
+
 
 \textbf{FeedbackAPI}
 \begin{itemize}
@@ -787,27 +722,6 @@ Gửi báo cáo tự động theo kỳ (ví dụ tháng/quý) đến phòng ban 
 
 
 
-\textbf{EnrollmentService} 
-\begin{itemize}
-    \item register(studentID: int, courseID: int): bool\\
-    Cho phép sinh viên đăng ký khóa học nếu chưa đăng ký trước đó.
-    \item getEnrollmentsByStudent(studentID: int): List<Course>\\
-    Trả về danh sách các khóa học mà sinh viên đã đăng ký.
-\end{itemize}
-
-
-
-\textbf{RequestService} 
-\begin{itemize}
-    \item createRequest(studentID: int, tutorID: int, courseID: int, topic: String): int\\
-    Tạo yêu cầu mới, gửi email đến tutor và trả về \texttt{requestID}.
-    \item getRequestsByStudent(studentID: int): List<Request>\\
-    Trả về danh sách yêu cầu của sinh viên.
-    \item getRequestsByTutor(tutorID: int): List<Request>\\
-    Trả về danh sách yêu cầu đang chờ tutor duyệt.
-    \item updateStatus(requestID: int, status: String): bool\\
-    Cập nhật trạng thái yêu cầu từ \texttt{PENDING} sang \texttt{APPROVED} hoặc \texttt{REJECTED}.
-\end{itemize}
 
 
 
@@ -1022,15 +936,7 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
     Xóa toàn bộ slot của một ngày cụ thể để chuẩn bị cho việc ghi đè dữ liệu mới.
 \end{itemize}
 
-\textbf{CourseRepository}
-\begin{itemize}
-    \item save(course: Course): Course\\
-    Dùng để lưu hoặc cập nhật khoá học.
-    \item findById(courseID: int): Course\\
-    Tìm khóa học theo ID.
-    \item findAll(): List<Course>\\
-    Trả về tất cả khóa học.
-\end{itemize}
+
 
 
 
@@ -1065,13 +971,7 @@ Sinh tệp báo cáo từ dữ liệu đầu vào \texttt{data} theo mẫu/đị
     Cập nhật user.
 \end{itemize}
 
-\textbf{ActivityRepository}
-\begin{itemize}
-    \item \textbf{getActivitiesByUserId(userId: String): List<ActivityEntity>} \\
-    Lấy danh sách hoạt động theo userId.
-    \item \textbf{saveActivity(activity: ActivityEntity): void} \\
-    Lưu hoạt động mới.
-\end{itemize}
+
 
 \textbf{AppointmentRepository}
 \begin{itemize}
